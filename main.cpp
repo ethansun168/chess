@@ -3,17 +3,17 @@
 #include "Player.h"
 using namespace std;
 int main() {
-    Piece pawn(PAWN, WHITE);
-    Piece bPawn(PAWN, BLACK);
+    Pawn pawn(WHITE);
+    Pawn bPawn(BLACK);
     Piece piece;
-
-    Piece vec[] = {pawn, piece, bPawn};
-    for (auto p : vec) {
-        cout << p;
+    King wKing(WHITE);
+    Piece* vec[] = {&pawn, &piece, &bPawn, &wKing};
+    for (int i = 0; i < 4; i++) {
+        vec[i]->print(cout);
     }
-    //cout << "\u0074";
 
     cout << endl;
-    Board board;
-    cout << board;
+    Board* board = new Board();
+    board->print(cout);
+    delete board;
 }

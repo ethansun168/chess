@@ -1,5 +1,5 @@
 #pragma once
-#include <vector>
+#include <array>
 #include <iostream>
 #include "Piece.h"
 //Representation of a Chess board
@@ -8,12 +8,12 @@ const int BOARD_SIZE = 8;
 
 class Board {
 private:
-	std::vector<std::vector<Piece>> board;
-	friend std::ostream& operator<<(std::ostream& os, Board& board);
+	Piece board[BOARD_SIZE][BOARD_SIZE];
+	//friend std::ostream& operator<<(std::ostream& os, Board& board);
 public:
 	//Initialize board to the starting position
 	Board();
-
+	void print(std::ostream& os);
 };
 //Print the current state of the board to the output stream
-std::ostream& operator<<(std::ostream& os, Board& board);
+//std::ostream& operator<<(std::ostream& os, Board& board);
