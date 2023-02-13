@@ -2,50 +2,56 @@
 #include <cassert>
 using namespace std;
 
-const string typeAbbreviations[] = {
-	"P",
-	"N",
-	"B",
-	"R",
-	"Q",
-	"K"
+const char typeAbbreviations[] = {
+	'P',
+	'N',
+	'B',
+	'R',
+	'Q',
+	'K',
+	' '
 };
 
-string pieceToString(Piece piece) {
-	for (int i = PAWN; i < KING; i++) {
+char pieceToChar(Piece piece) {
+	for (int i = PAWN; i <= NONE; i++) {
 		if (i == piece.getType()) {
-			return typeAbbreviations[i];
+			if (piece.getColor() == WHITE) {
+				return typeAbbreviations[i];
+			}
+			else if(piece.getColor() == BLACK) {
+				return (char)tolower(typeAbbreviations[i]);
+			}
+			else if(piece.getColor() == NEITHER) {
+				return ' ';
+			}
+			else {
+				assert(false);
+			}
 		}
 	}
 	assert(false);
 }
 
-string pieceColorToString(Piece piece) {
-	if (piece.getColor() == 0) {
-		return "w";
-	}
-	else if (piece.getColor() == 1) {
-		return "b";
-	}
-	else {
-		assert(false);
-	}
+Piece::Piece() {
+	color = NEITHER;
+	type = NONE;
 }
 
 Piece::Piece(Type type, Color color) {
+	assert(color == WHITE || color == BLACK);
 	this->type = type;
 	this->color = color;
 }
 
-Type Piece::getType() {
-	return type;
-}
-
-Color Piece::getColor() {
+Color Piece::getColor() const {
 	return color;
 }
 
+Type Piece::getType() const {
+	return type;
+}
+
 ostream& operator<<(ostream& os, Piece& piece) {
-	os << pieceToString(piece) << pieceColorToString(piece);
+	os << pieceToChar(piece);
 	return os;
 }

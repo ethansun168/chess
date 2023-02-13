@@ -8,27 +8,31 @@ enum Type {
 	BISHOP,
 	ROOK,
 	QUEEN,
-	KING
+	KING,
+	NONE
 };
 
 enum Color {
 	WHITE,
-	BLACK
+	BLACK,
+	NEITHER
 };
 
 class Piece {
 private:
-	Type type;
 	Color color;
-	friend std::ostream& operator<<(std::ostream& os, Piece& piece);
+	Type type;
+	friend std::ostream&operator<<(std::ostream& os, Piece& piece);
 public:
-	//Initialize piece to type and color
+	//Initialize to piece with no color
+	Piece();
+	//Initialize to piece with type and color
 	Piece(Type type, Color color);
-	//returns the type of piece
-	Type getType();
 	//returns the color of piece
-	Color getColor();
-
+	Color getColor() const;
+	//Gets the type
+	Type getType() const;
 };
+
 //Print the piece to the output stream in the form: pieceAbbreviation [NO SPACE] Color
 std::ostream& operator<<(std::ostream& os, Piece& piece);
