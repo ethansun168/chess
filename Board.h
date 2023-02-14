@@ -8,7 +8,7 @@ const int BOARD_SIZE = 8;
 
 class Board {
 private:
-	Piece board[BOARD_SIZE * BOARD_SIZE];
+	Piece* board[BOARD_SIZE * BOARD_SIZE];
 	friend std::ostream& operator<<(std::ostream& os, Board& board);
 public:
 	//Initialize board to the starting position
