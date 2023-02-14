@@ -16,4 +16,6 @@ int main() {
     Board board;
     cout << board;
     board.deleteBoard();
+    Move m1("e4");
+
 }

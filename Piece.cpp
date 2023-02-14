@@ -38,9 +38,10 @@ Piece::Piece() {
 	type = NONE;
 }
 
-Piece::Piece(Type type, Color color) {
+Piece::Piece(Type type, Color color, pair<int, int> location) {
 	setType(type);
 	setColor(color);
+	setLocation(location);
 }
 
 Color Piece::getColor() const {
@@ -51,6 +52,10 @@ Type Piece::getType() const {
 	return type;
 }
 
+pair<int, int> Piece::getLocation() {
+	return location;
+}
+
 void Piece::setColor(Color color) {
 	assert(color == WHITE || color == BLACK);
 	this->color = color;
@@ -58,6 +63,10 @@ void Piece::setColor(Color color) {
 
 void Piece::setType(Type type) {
 	this->type = type;
+}
+
+void Piece::setLocation(pair<int, int> location) {
+	this->location = location;
 }
 
 void Piece::print(ostream& os) const {
@@ -70,7 +79,7 @@ ostream& operator<<(ostream& os, const Piece& piece) {
 }
 
 //PAWN IMPLEMENTATIONS
-Pawn::Pawn(Color color) : Piece(PAWN, color) {
+Pawn::Pawn(Color color, pair<int, int> location) : Piece(PAWN, color, location) {
 
 }
 
@@ -87,8 +96,13 @@ void Pawn::print(ostream& os) const {
 	}
 }
 
+<<<<<<< HEAD
 //BISHOP implementations
 Bishop::Bishop(Color color) : Piece(BISHOP, color) {
+=======
+//bishop implementations
+Bishop::Bishop(Color color, pair<int, int> location) : Piece(BISHOP, color, location) {
+>>>>>>> f7d4bb2a1dc49c36f1c9f1ddf30a4a7fb8f7f745
 
 }
 
@@ -106,7 +120,7 @@ void Bishop::print(ostream& os) const {
 }
 
 //knight implementations
-Knight::Knight(Color color) : Piece(KNIGHT, color) {
+Knight::Knight(Color color, pair<int, int> location) : Piece(KNIGHT, color, location) {
 
 }
 
@@ -124,7 +138,7 @@ void Knight::print(ostream& os) const {
 }
 
 //rook implementations
-Rook::Rook(Color color) : Piece(ROOK, color) {
+Rook::Rook(Color color, pair<int, int> location) : Piece(ROOK, color, location) {
 
 }
 
@@ -141,8 +155,8 @@ void Rook::print(ostream& os) const {
 	}
 }
 
-//queen implementations
-Queen::Queen(Color color) : Piece(QUEEN, color) {
+//queen implementationscd 
+Queen::Queen(Color color, pair<int, int> location) : Piece(QUEEN, color, location) {
 
 }
 
@@ -160,7 +174,7 @@ void Queen::print(ostream& os) const {
 }
 
 //king implementations
-King::King(Color color) : Piece(KING, color) {
+King::King(Color color, pair<int, int> location) : Piece(KING, color, location) {
 
 }
 
