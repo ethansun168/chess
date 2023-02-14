@@ -38,7 +38,7 @@ public:
 	//set type
 	void setType(Type type);
 	virtual void print(std::ostream& os) const;
-	//~Piece();
+	virtual ~Piece() {};
 };
 
 std::ostream& operator<<(std::ostream& os, const Piece& piece);
