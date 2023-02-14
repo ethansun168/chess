@@ -15,7 +15,7 @@ public:
 	Board();
 	void print(std::ostream& os);
 	//Delete board object
-	//void deleteBoard();
+	void deleteBoard();
 };
 //Print the current state of the board to the output stream
 std::ostream& operator<<(std::ostream& os, Board& board);

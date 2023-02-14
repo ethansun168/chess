@@ -15,5 +15,5 @@ int main() {
     cout << endl;
     Board board;
     cout << board;
-    //board.deleteBoard();
+    board.deleteBoard();
 }

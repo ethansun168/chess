@@ -76,24 +76,25 @@ Board::Board() {
 }
 
 void Board::print(ostream& os) {
-	os << "  _________________\n";
+	os << "   _______________\n";
 	for (int r = 0; r < BOARD_SIZE; r++) {
-		os << BOARD_SIZE - r;
+		os << BOARD_SIZE - r << " ";
 		for (int c = 0; c < BOARD_SIZE; c++) {
 			//fix
-			os << " |" << *board[r][c];
+			os << "|" << *board[r][c];
+			if (c == BOARD_SIZE - 1) { os << "|"; }
 		}
 		os << endl;
 	}
 }
 
-//void Board::deleteBoard() {
-//	for (int i = 0; i < BOARD_SIZE; i++) {
-//		for (int j = 0; j < BOARD_SIZE; j++) {
-//			delete board[i][j];
-//		}
-//	}
-//}
+void Board::deleteBoard() {
+	for (int i = 0; i < BOARD_SIZE; i++) {
+		for (int j = 0; j < BOARD_SIZE; j++) {
+			delete board[i][j];
+		}
+	}
+}
 
 ostream& operator<<(ostream& os, Board& board) {
 	board.print(os);
