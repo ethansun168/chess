@@ -12,7 +12,6 @@ DIR 						 = $(wildcard *.d)
 # Flags passed to the preprocessor. -MMD and -MP will cause the preprocessor
 # to detect dependencies automatically.
 CPPFLAGS = -MMD -MP
-
 CXXFLAGS = -std=c++11 -Wall -Wextra -pedantic
 
 release: CXXFLAGS += -O3 -DNDEBUG
