@@ -6,8 +6,8 @@ LD_RUN_PATH := /usr/um/gcc-4.8.2/lib64
 CXX              = g++
 CPP_FILES        = $(wildcard *.cpp)
 COMPILED_OBJECTS = $(CPP_FILES:%.cpp=%.o)
-EXECUTABLE       = exe
-SUBMIT_FILE = submit.tar.gz
+EXECUTABLE       = $(wildcard *.exe)
+DIR 						 = $(wildcard *.d)
 
 # Flags passed to the preprocessor. -MMD and -MP will cause the preprocessor
 # to detect dependencies automatically.
@@ -30,7 +30,7 @@ all: $(COMPILED_OBJECTS)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $*.cpp
 
 clean:
-	rm -f $(COMPILED_OBJECTS) $(EXECUTABLE) $(SUBMIT_FILE)
+	rm -f $(COMPILED_OBJECTS) $(EXECUTABLE) $(DIR)
 
 test: debug
 # You add tests here
