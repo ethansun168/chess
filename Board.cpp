@@ -18,14 +18,15 @@ Board::Board() {
 	Piece piece;
 
 	//black back row
-	*at(0, 0) = bRook;
-	*at(0, 1) = bKnight;
-	*at(0, 2) = bBishop;
-	*at(0, 3) = bQueen;
-	*at(0, 4) = bKing;
-	*at(0, 5) = bBishop;
-	*at(0, 6) = bKnight;
-	*at(0, 7) = bRook;
+	board[0][0] = new Rook(BLACK);
+	board[0][1] = new Knight(BLACK);
+	board[0][2] = new Bishop(BLACK);
+	board[0][3] = new Queen(BLACK);
+	board[0][4] = new King(BLACK);
+	board[0][5] = new Bishop(BLACK);
+	board[0][6] = new Knight(BLACK);
+	board[0][7] = new Rook(BLACK);
+
 	/*board[0][0] = bRook;
 	board[0][1] = bKnight;
 	board[0][2] = bBishop;
@@ -39,31 +40,31 @@ Board::Board() {
 		for (int c = 0; c < BOARD_SIZE; c++) {
 			if (r == 1) {
 				//black pawns
-				*at(r, c) = bPawn;
 				//board[r][c] = bPawn;
+				board[r][c] = new Pawn(BLACK);
 			}
 			else if (r > 1 && r < 6) {
 				//empty
-				*at(r, c) = piece;
 				//board[r][c] = piece;
+				board[r][c] = new Piece();
 			}
 			else if (r == 6) {
 				//white pawns
-				*at(r, c) = wPawn;
 				//board[r][c] = wPawn;
+				board[r][c] = new Pawn(WHITE);
 			}
 		}
 	}
 
 	//white back row
-	*at(7, 0) = wRook;
-	*at(7, 1) = wKnight;
-	*at(7, 2) = wBishop;
-	*at(7, 3) = wQueen;
-	*at(7, 4) = wKing;
-	*at(7, 5) = wBishop;
-	*at(7, 6) = wKnight;
-	*at(7, 7) = wRook;
+	board[7][0] = new Rook(WHITE);
+	board[7][1] = new Knight(WHITE);
+	board[7][2] = new Bishop(WHITE);
+	board[7][3] = new Queen(WHITE);
+	board[7][4] = new King(WHITE);
+	board[7][5] = new Bishop(WHITE);
+	board[7][6] = new Knight(WHITE);
+	board[7][7] = new Rook(WHITE);
 	/*board[7][0] = wRook;
 	board[7][1] = wKnight;
 	board[7][2] = wBishop;
@@ -74,23 +75,25 @@ Board::Board() {
 	board[7][7] = wRook;*/
 }
 
-Piece* Board::at(int row, int col) {
-	assert(row >= 0 && row < BOARD_SIZE);
-	assert(col >= 0 && col < BOARD_SIZE);
-	return &board[row * BOARD_SIZE + col];
-}
-
 void Board::print(ostream& os) {
 	os << "  _________________\n";
 	for (int r = 0; r < BOARD_SIZE; r++) {
 		os << BOARD_SIZE - r;
 		for (int c = 0; c < BOARD_SIZE; c++) {
 			//fix
-			os << " |" << *at(r, c);
+			os << " |" << *board[r][c];
 		}
 		os << endl;
 	}
 }
+
+//void Board::deleteBoard() {
+//	for (int i = 0; i < BOARD_SIZE; i++) {
+//		for (int j = 0; j < BOARD_SIZE; j++) {
+//			delete board[i][j];
+//		}
+//	}
+//}
 
 ostream& operator<<(ostream& os, Board& board) {
 	board.print(os);

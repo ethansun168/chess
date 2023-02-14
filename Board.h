@@ -8,14 +8,14 @@ const int BOARD_SIZE = 8;
 
 class Board {
 private:
-	Piece board[BOARD_SIZE * BOARD_SIZE];
+	Piece* board[BOARD_SIZE][BOARD_SIZE];
 	friend std::ostream& operator<<(std::ostream& os, Board& board);
 public:
 	//Initialize board to the starting position
 	Board();
 	void print(std::ostream& os);
-	//returns a pointer to piece at row and col of board
-	Piece* at(int row, int col);
+	//Delete board object
+	//void deleteBoard();
 };
 //Print the current state of the board to the output stream
 std::ostream& operator<<(std::ostream& os, Board& board);
