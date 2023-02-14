@@ -2,36 +2,6 @@
 #include <cassert>
 using namespace std;
 
-//const char typeAbbreviations[] = {
-//	'P',
-//	'N',
-//	'B',
-//	'R',
-//	'Q',
-//	'K',
-//	' '
-//};
-//
-//char pieceToChar(Piece piece) {
-//	for (int i = PAWN; i <= NONE; i++) {
-//		if (i == piece.getType()) {
-//			if (piece.getColor() == WHITE) {
-//				return typeAbbreviations[i];
-//			}
-//			else if(piece.getColor() == BLACK) {
-//				return (char)tolower(typeAbbreviations[i]);
-//			}
-//			else if(piece.getColor() == NEITHER) {
-//				return ' ';
-//			}
-//			else {
-//				assert(false);
-//			}
-//		}
-//	}
-//	assert(false);
-//}
-
 //PIECE IMPLEMENTATIONS
 Piece::Piece() {
 	color = NEITHER;
@@ -96,13 +66,7 @@ void Pawn::print(ostream& os) const {
 	}
 }
 
-<<<<<<< HEAD
-//BISHOP implementations
-Bishop::Bishop(Color color) : Piece(BISHOP, color) {
-=======
-//bishop implementations
 Bishop::Bishop(Color color, pair<int, int> location) : Piece(BISHOP, color, location) {
->>>>>>> f7d4bb2a1dc49c36f1c9f1ddf30a4a7fb8f7f745
 
 }
 

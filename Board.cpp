@@ -33,14 +33,14 @@ Board::Board() {
 	}
 
 	//white back row
-	board[7][0] = new Rook(WHITE);
-	board[7][1] = new Knight(WHITE);
-	board[7][2] = new Bishop(WHITE);
-	board[7][3] = new Queen(WHITE);
-	board[7][4] = new King(WHITE);
-	board[7][5] = new Bishop(WHITE);
-	board[7][6] = new Knight(WHITE);
-	board[7][7] = new Rook(WHITE);
+	board[7][0] = new Rook(WHITE, { 7,0 });
+	board[7][1] = new Knight(WHITE, { 7,1 });
+	board[7][2] = new Bishop(WHITE, { 7,2 });
+	board[7][3] = new Queen(WHITE, { 7,3 });
+	board[7][4] = new King(WHITE, { 7,4 });
+	board[7][5] = new Bishop(WHITE, { 7,5 });
+	board[7][6] = new Knight(WHITE, { 7,6 });
+	board[7][7] = new Rook(WHITE, { 7,7 });
 }
 
 void Board::print(ostream& os) {
@@ -68,23 +68,23 @@ void Board::deleteBoard() {
 	}
 }
 
-Move Board::move(Piece* p, char locAlp, int locInt) {
-	switch (p->getType()) {
-	case PAWN:
-		if (locAlp != )
-		break;
-	case KNIGHT:
-		break;
-	case BISHOP:
-		break;
-	case ROOK:
-		break;
-	case QUEEN:
-		break;
-	case KING:
-		break;
-	}
-}
+//Move Board::move(Piece* p, char locAlp, int locInt) {
+//	switch (p->getType()) {
+//	case PAWN:
+//		if (locAlp != )
+//		break;
+//	case KNIGHT:
+//		break;
+//	case BISHOP:
+//		break;
+//	case ROOK:
+//		break;
+//	case QUEEN:
+//		break;
+//	case KING:
+//		break;
+//	}
+//}
 
 ostream& operator<<(ostream& os, Board& board) {
 	board.print(os);

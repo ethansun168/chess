@@ -3,10 +3,10 @@
 #include "Player.h"
 using namespace std;
 int main() {
-    Pawn pawn(WHITE);
-    Pawn bPawn(BLACK);
+    Pawn pawn(WHITE, {0,0});
+    Pawn bPawn(BLACK, {0,1});
     Piece piece;
-    King wKing(WHITE);
+    King wKing(WHITE, {0,2});
     Piece* vec[] = {&pawn, &piece, &bPawn, &wKing};
     for (int i = 0; i < 4; i++) {
         cout << *vec[i];
@@ -16,6 +16,4 @@ int main() {
     Board board;
     cout << board;
     board.deleteBoard();
-    Move m1("e4");
-
 }

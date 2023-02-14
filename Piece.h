@@ -50,13 +50,8 @@ public:
 	void setLocation(std::pair<int, int> location);
 	//print the piece
 	virtual void print(std::ostream& os) const;
-<<<<<<< HEAD
-	virtual Move move();
-	//~Piece();
-=======
 	//virtual destructor
 	virtual ~Piece() {};
->>>>>>> f7d4bb2a1dc49c36f1c9f1ddf30a4a7fb8f7f745
 };
 
 std::ostream& operator<<(std::ostream& os, const Piece& piece);
