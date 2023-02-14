@@ -77,7 +77,7 @@ Board::Board() {
 Piece* Board::at(int row, int col) {
 	assert(row >= 0 && row < BOARD_SIZE);
 	assert(col >= 0 && col < BOARD_SIZE);
-	return board[row * BOARD_SIZE + col];
+	return &board[row * BOARD_SIZE + col];
 }
 
 void Board::print(ostream& os) {
