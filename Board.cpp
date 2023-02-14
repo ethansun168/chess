@@ -96,6 +96,24 @@ void Board::deleteBoard() {
 	}
 }
 
+Move Board::move(Piece* p, char locAlp, int locInt) {
+	switch (p->getType()) {
+	case PAWN:
+		if (locAlp != )
+		break;
+	case KNIGHT:
+		break;
+	case BISHOP:
+		break;
+	case ROOK:
+		break;
+	case QUEEN:
+		break;
+	case KING:
+		break;
+	}
+}
+
 ostream& operator<<(ostream& os, Board& board) {
 	board.print(os);
 	return os;

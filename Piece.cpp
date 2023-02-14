@@ -87,7 +87,7 @@ void Pawn::print(ostream& os) const {
 	}
 }
 
-//bishop implementations
+//BISHOP implementations
 Bishop::Bishop(Color color) : Piece(BISHOP, color) {
 
 }

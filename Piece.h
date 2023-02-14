@@ -18,6 +18,11 @@ enum Color {
 	NEITHER
 };
 
+enum Move {
+	VALID,
+	ERROR
+};
+
 class Piece {
 private:
 	Color color;
@@ -38,6 +43,7 @@ public:
 	//set type
 	void setType(Type type);
 	virtual void print(std::ostream& os) const;
+	virtual Move move();
 	//~Piece();
 };
 
@@ -51,6 +57,8 @@ public:
 	Pawn(Color color);
 	//print piece to os
 	void print(std::ostream& os) const;
+
+	Move move();
 };
 
 class Knight : public Piece {
