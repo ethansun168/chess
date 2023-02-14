@@ -9,11 +9,10 @@ int main() {
     King wKing(WHITE);
     Piece* vec[] = {&pawn, &piece, &bPawn, &wKing};
     for (int i = 0; i < 4; i++) {
-        vec[i]->print(cout);
+        cout << *vec[i];
     }
 
     cout << endl;
-    Board* board = new Board();
-    board->print(cout);
-    delete board;
+    Board board;
+    cout << board;
 }

@@ -23,7 +23,7 @@ private:
 	Color color;
 	Type type;
 	char abbreviation = ' ';
-	//friend std::ostream&operator<<(std::ostream& os, Piece& piece);
+	friend std::ostream&operator<<(std::ostream& os, const Piece& piece);
 public:
 	//Initialize to piece with no color
 	Piece();
@@ -39,6 +39,8 @@ public:
 	void setType(Type type);
 	virtual void print(std::ostream& os) const;
 };
+
+std::ostream& operator<<(std::ostream& os, const Piece& piece);
 
 class Pawn : public Piece {
 private:
@@ -99,5 +101,3 @@ public:
 	//print piece to os
 	void print(std::ostream& os) const;
 };
-//Print the piece to the output stream in the form: pieceAbbreviation (uppercase or lowercase depending on color)
-//std::ostream& operator<<(std::ostream& os, Piece& piece);

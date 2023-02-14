@@ -64,6 +64,11 @@ void Piece::print(ostream& os) const {
 	os << abbreviation;
 }
 
+ostream& operator<<(ostream& os, const Piece& piece) {
+	piece.print(os);
+	return os;
+}
+
 //PAWN IMPLEMENTATIONS
 Pawn::Pawn(Color color) : Piece(PAWN, color) {
 
