@@ -16,9 +16,9 @@ public:
 	//helper function for the overloaded operator
 	void print(std::ostream& os);
 	//move white piece
-	void moveWhite(Piece* piece, std::pair<int,int> end);
+	bool moveWhite(std::pair<int, int> start, std::pair<int, int> end);
 	//move black piece
-	void moveBlack(Piece* piece, std::pair<int, int> end);
+	bool moveBlack(std::pair<int, int> start, std::pair<int, int> end);
 	//get the pointer to piece at location
 	Piece* getPiece(std::pair<int, int>) const;
 	//set the pointer to piece at location

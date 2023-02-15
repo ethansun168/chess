@@ -68,11 +68,12 @@ void Board::deleteBoard() {
 	}
 }
 
-void Board::moveWhite(Piece* piece, pair<int,int> end) {
-	switch (piece->getType()) {
+bool Board::moveWhite(pair<int,int> start, pair<int,int> end) {
+	//beautiful code
+	switch (getPiece(start)->getType()) {
 	case PAWN:
 		//e2 = [][6]
-		if (piece->getLocation().second == 6) {
+		if (start.second == 6) {
 			//can move 2
 		}
 		else {
@@ -92,13 +93,14 @@ void Board::moveWhite(Piece* piece, pair<int,int> end) {
 
 		break;
 	}
+	return false;
 }
 
-void Board::moveBlack(Piece* piece, pair<int, int> end) {
-	switch (piece->getType()) {
+bool Board::moveBlack(pair<int,int> start, pair<int, int> end) {
+	switch (getPiece(start)->getType()) {
 	case PAWN:
 		//e7 = [][1]
-		if (piece->getLocation().second == 1) {
+		if (start.second == 1) {
 			//can move 2
 		}
 		else {
@@ -118,6 +120,7 @@ void Board::moveBlack(Piece* piece, pair<int, int> end) {
 
 		break;
 	}
+	return false;
 }
 
 Piece* Board::getPiece(pair<int,int> location) const {
