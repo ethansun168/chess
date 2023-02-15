@@ -18,9 +18,9 @@ public:
 	//move a piece
 	void move(Piece* piece, std::pair<int,int> end);
 	//get the pointer to piece at location
-	Piece* getPiece(std::pair<int, int> location) const;
+	Piece* getPiece(std::pair<int, int>) const;
 	//set the pointer to piece at location
-	void setPiece(std::pair<int, int> location);
+	void setPiece(Piece* piece, std::pair<int, int> location);
 	//Delete board object
 	void deleteBoard();
 };
