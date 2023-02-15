@@ -92,6 +92,8 @@ bool Board::moveWhite(pair<int,int> start, pair<int,int> end) {
 	case KING:
 
 		break;
+	default:
+		return false;
 	}
 	return false;
 }
@@ -119,6 +121,8 @@ bool Board::moveBlack(pair<int,int> start, pair<int, int> end) {
 	case KING:
 
 		break;
+	default:
+		return false;
 	}
 	return false;
 }
