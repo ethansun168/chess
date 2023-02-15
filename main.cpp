@@ -21,14 +21,14 @@ int main() {
             break;
         }
         else if (regex_match(start, value) && regex_match(end, value)) {
-            Piece* current = board.getPiece({ start[0] - 'a', start[1] });
+            int x = start[1];
+            Piece* current = board.getPiece({ start[0] - 'a', start[1] - '0'});
             if (whitePlayer) {
-                board.moveWhite(current, { end[0] - 'a', end[1] });
+                board.moveWhite(current, { end[0] - 'a', end[1] - '0'});
             }
             else {
-                board.moveBlack(current, { end[0] - 'a', end[1] });
+                board.moveBlack(current, { end[0] - 'a', end[1] - '0'});
             }
-
         }
         else {
             cout << "Please enter a valid movement";
