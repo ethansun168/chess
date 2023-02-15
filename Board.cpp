@@ -68,23 +68,21 @@ void Board::deleteBoard() {
 	}
 }
 
-//Move Board::move(Piece* p, char locAlp, int locInt) {
-//	switch (p->getType()) {
-//	case PAWN:
-//		if (locAlp != )
-//		break;
-//	case KNIGHT:
-//		break;
-//	case BISHOP:
-//		break;
-//	case ROOK:
-//		break;
-//	case QUEEN:
-//		break;
-//	case KING:
-//		break;
-//	}
-//}
+void Board::move(Piece* piece, pair<int,int> end) {
+	switch (piece->getType()) {
+	case PAWN:
+
+		break;
+	}
+}
+
+Piece* Board::getPiece(pair<int,int> location) const {
+	return board[location.first][location.second];
+}
+
+void Board::setPiece(Piece* piece, pair<int, int> location) {
+	board[location.first][location.second] = piece;
+}
 
 ostream& operator<<(ostream& os, Board& board) {
 	board.print(os);

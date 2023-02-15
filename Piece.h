@@ -19,11 +19,6 @@ enum Color {
 	NEITHER
 };
 
-enum Move {
-	VALID,
-	ERROR
-};
-
 class Piece {
 private:
 	Color color;
@@ -64,8 +59,6 @@ public:
 	Pawn(Color color, std::pair<int, int> location);
 	//print piece to os
 	void print(std::ostream& os) const;
-
-	Move move();
 };
 
 class Knight : public Piece {
