@@ -15,21 +15,22 @@ Board::Board() {
 	board[0][6] = new Knight(BLACK, { 0,6 });
 	board[0][7] = new Rook(BLACK, { 0,7 });
 
-	for (int r = 1; r < BOARD_SIZE - 1; r++) {
-		for (int c = 0; c < BOARD_SIZE; c++) {
-			if (r == 1) {
-				//black pawns
-				board[r][c] = new Pawn(BLACK, { r,c });
-			}
-			else if (r > 1 && r < 6) {
-				//empty
-				board[r][c] = new Piece();
-			}
-			else if (r == 6) {
-				//white pawns
-				board[r][c] = new Pawn(WHITE, { r,c });
-			}
-		}
+	// Black pawns
+	for (int i = 0; i < BOARD_SIZE; ++i) {
+		board[1][i] = new Pawn(BLACK, { 1, i });
+	}
+
+	// White pawns
+	for (int i = 0; i < BOARD_SIZE; ++i) {
+		board[6][i] = new Pawn(WHITE, { 6, i });
+	}
+
+	// Empty Pieces
+	for (int i = 0; i < BOARD_SIZE; ++i) {
+		board[2][i] = new Piece();
+		board[3][i] = new Piece();
+		board[4][i] = new Piece();
+		board[5][i] = new Piece();
 	}
 
 	//white back row
@@ -68,16 +69,42 @@ void Board::deleteBoard() {
 	}
 }
 
-bool Board::moveWhite(pair<int,int> start, pair<int,int> end) {
+PieceMovement Board::moveWhite(pair<int,int> start, pair<int,int> end) {
 	//beautiful code
-	switch (getPiece(start)->getType()) {
-	case PAWN:
-		//e2 = [][6]
-		if (start.second == 6) {
-			//can move 2
-		}
-		else {
-			//only move 1 or diagonal
+	Piece* currentPiece = getPiece(start);
+	switch (currentPiece->getType()) {
+	case PAWN: //move two
+		if ((start.first - end.first) == 2 && pawnStartLocation(true, start.first)) {
+			if (pieceExists({ start.first - 1, start.second }) ||
+				pieceExists({ start.first - 2, start.second })) {
+				return PIECE_IN_WAY;
+			}
+			else {
+				currentPiece->setLocation(end);
+				setPiece(currentPiece, start, end);
+				return MOVE_SUCCESS;
+			}
+		}	//move one
+		else if ((start.first - end.first) == 1) {
+			if (pieceExists({ start.first - 1, start.second })) {
+				return PIECE_IN_WAY;
+			}
+			else {
+				currentPiece->setLocation(end);
+				setPiece(currentPiece, start, end);
+				return MOVE_SUCCESS;
+			}
+		}	// diagonal
+		else if ((abs(end.second - start.second)) == 1) {
+			if (pieceExists(end)) {
+				getPiece(end)->setType(NONE);
+				currentPiece->setLocation(end);
+				setPiece(currentPiece, start, end);
+				return MOVE_SUCCESS;
+			}
+			else {
+				return INVALID_MOVEMENT;
+			}
 		}
 		break;
 	case KNIGHT:
@@ -93,12 +120,12 @@ bool Board::moveWhite(pair<int,int> start, pair<int,int> end) {
 
 		break;
 	default:
-		return false;
+		return INVALID_MOVEMENT;
 	}
-	return false;
+	return INVALID_MOVEMENT;
 }
 
-bool Board::moveBlack(pair<int,int> start, pair<int, int> end) {
+PieceMovement Board::moveBlack(pair<int,int> start, pair<int, int> end) {
 	switch (getPiece(start)->getType()) {
 	case PAWN:
 		//e7 = [][1]
@@ -122,17 +149,26 @@ bool Board::moveBlack(pair<int,int> start, pair<int, int> end) {
 
 		break;
 	default:
-		return false;
+		return INVALID_MOVEMENT;
 	}
-	return false;
+	return INVALID_MOVEMENT;
 }
 
 Piece* Board::getPiece(pair<int,int> location) const {
 	return board[location.first][location.second];
 }
 
-void Board::setPiece(Piece* piece, pair<int, int> location) {
-	board[location.first][location.second] = piece;
+void Board::setPiece(Piece* piece, pair<int, int> start, pair<int, int> end) {
+	board[start.first][start.second]->setType(NONE);
+	board[end.first][end.second] = piece;
+}
+
+bool Board::pawnStartLocation(bool isWhite, int startLoc) {
+	return isWhite ? (startLoc == 1) : (startLoc == 6);
+}
+
+bool Board::pieceExists(pair<int, int> location) const {
+	return (board[location.first][location.second]->getColor() != NEITHER);
 }
 
 ostream& operator<<(ostream& os, Board& board) {
