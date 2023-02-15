@@ -23,10 +23,10 @@ int main() {
         else if (regex_match(start, value) && regex_match(end, value)) {
             Piece* current = board.getPiece({ start[0] - 'a', start[1] });
             if (whitePlayer) {
-                moveWhite(current, { end[0] - 'a', end[1] });
+                board.moveWhite(current, { end[0] - 'a', end[1] });
             }
             else {
-                moveBlack(current, { end[0] - 'a', end[1] });
+                board.moveBlack(current, { end[0] - 'a', end[1] });
             }
 
         }

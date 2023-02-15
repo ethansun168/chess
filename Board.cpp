@@ -68,9 +68,53 @@ void Board::deleteBoard() {
 	}
 }
 
-void Board::move(Piece* piece, pair<int,int> end) {
+void Board::moveWhite(Piece* piece, pair<int,int> end) {
 	switch (piece->getType()) {
 	case PAWN:
+		//e2 = [][6]
+		if (piece->getLocation().second == 6) {
+			//can move 2
+		}
+		else {
+			//only move 1 or diagonal
+		}
+		break;
+	case KNIGHT:
+
+		break;
+	case BISHOP:
+
+		break;
+	case QUEEN:
+
+		break;
+	case KING:
+
+		break;
+	}
+}
+
+void Board::moveBlack(Piece* piece, pair<int, int> end) {
+	switch (piece->getType()) {
+	case PAWN:
+		//e7 = [][1]
+		if (piece->getLocation().second == 1) {
+			//can move 2
+		}
+		else {
+			//only move 1 or diagonal
+		}
+		break;
+	case KNIGHT:
+
+		break;
+	case BISHOP:
+
+		break;
+	case QUEEN:
+
+		break;
+	case KING:
 
 		break;
 	}

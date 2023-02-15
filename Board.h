@@ -15,8 +15,10 @@ public:
 	Board();
 	//helper function for the overloaded operator
 	void print(std::ostream& os);
-	//move a piece
-	void move(Piece* piece, std::pair<int,int> end);
+	//move white piece
+	void moveWhite(Piece* piece, std::pair<int,int> end);
+	//move black piece
+	void moveBlack(Piece* piece, std::pair<int, int> end);
 	//get the pointer to piece at location
 	Piece* getPiece(std::pair<int, int>) const;
 	//set the pointer to piece at location
