@@ -5,7 +5,36 @@ Board::Board() {
 
 }
 
-void Board::fenCodeToBoard(string fenCode, ostream& os) {
+Piece Board::getPiece(Cell cell) const {
+	//e5 = board[row + BOARD_SIZE + col] = board[3][4]
+	return board[BOARD_SIZE - cell.rank][cell.file - 'a'];
+}
+
+void Board::setPiece(Piece piece, Cell cell) {
+	board[BOARD_SIZE - cell.rank][cell.file - 'a'] = piece;
+}
+
+bool Board::isCheck(bool turn) const {
+
+}
+
+bool Board::isCheckMate(bool turn) const {
+
+}
+
+bool Board::canCastle(bool turn, Player player) const {
+	if (!player.getCanCastle()) { return false; }
+}
+
+bool Board::isValidMove(bool turn, Cell start, Cell end) const {
+
+}
+
+void Board::move(Cell start, Cell end) {
+
+}
+
+void Board::fenCodeToBoardPrint(string fenCode, ostream& os) {
 	int rowNumber = 0, charNumber = 0, stringIndex = 0;
 	while (fenCode[stringIndex] != ' ') {
 		int numberOfBlanks = fenCode[stringIndex] - '0';
@@ -27,9 +56,3 @@ void Board::fenCodeToBoard(string fenCode, ostream& os) {
 	}
 }
 
-Piece Board::getPiece(Cell cell) const {
-	//e5 = board[row + BOARD_SIZE + col] = board[3][4]
-	int row = BOARD_SIZE - cell.rank;
-	int col = cell.file - 'a';
-	return board[row + BOARD_SIZE + col];
-}

@@ -1,6 +1,7 @@
 #pragma once
-#include "Piece.h"
 #include <vector>
+#include "Piece.h"
+#include "Player.h"
 
 int const BOARD_SIZE = 8;
 
@@ -12,7 +13,7 @@ struct Cell {
 //Representation of Board
 class Board {
 private:
-	std::vector<Piece> board;
+	Piece board[BOARD_SIZE][BOARD_SIZE];
 public:
 	//Initialize to the starting position
 	Board();
@@ -36,7 +37,7 @@ public:
 
 	//checks for castling rights
 	//turn = true check if white can castle, turn = false check if black can castle
-	bool canCastle(bool turn) const;
+	bool canCastle(bool turn, Player player) const;
 
 	//check if the move for the piece at start is valid
 	//turn = true is white's move, turn = false is black's move
@@ -47,7 +48,7 @@ public:
 	void move(Cell start, Cell end);
 
 	// Translate a line of FEN code into a board position
-	void fenCodeToBoard(std::string fenCode, ostream& os);
+	void fenCodeToBoardPrint(std::string fenCode, std::ostream& os);
 };
 //print the board to os
 std::ostream& operator<< (std::ostream& os, Board& board);
