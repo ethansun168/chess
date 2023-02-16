@@ -45,6 +45,9 @@ public:
 
 	//move piece after it passes isValidMove
 	void move(Cell start, Cell end);
+
+	// Translate a line of FEN code into a board position
+	void fenCodeToBoard(std::string fen, ostream& os);
 };
 //print the board to os
 std::ostream& operator<< (std::ostream& os, Board& board);
