@@ -2,6 +2,8 @@
 #include "Piece.h"
 #include <vector>
 
+int const BOARD_SIZE = 8;
+
 struct Cell {
 	char file;
 	int rank;
