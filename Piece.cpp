@@ -40,7 +40,31 @@ char pieceToChar(Piece piece) {
 	}
 }
 
-ostream& operator<< (ostream& os, Piece& piece) {
+Piece charToPiece(char ch) {
+	for (int i = EMPTY; i <= KING; i++) {
+		if ((char) toupper(ch) == abbreviations[i]) {
+			if (i == 0) {
+				//empty piece
+				Piece piece;
+				return piece;
+			}
+			//matches
+			Type type = (Type)i;
+			if (isupper(ch)) {
+				//white
+				Piece piece(type, WHITE);
+				return piece;
+			}
+			else {
+				//black
+				Piece piece(type, BLACK);
+				return piece;
+			}
+		}
+	}
+}
+
+ostream& operator<< (ostream& os, const Piece& piece) {
 	os << pieceToChar(piece);
 	return os;
 }

@@ -12,7 +12,7 @@ struct Cell {
 //Representation of Board
 class Board {
 private:
-	std::vector<Piece> board;
+	Piece board[BOARD_SIZE][BOARD_SIZE];
 public:
 	//Initialize to the starting position
 	Board();
@@ -47,7 +47,13 @@ public:
 	void move(Cell start, Cell end);
 
 	// Translate a line of FEN code into a board position
-	void fenCodeToBoard(std::string fenCode, ostream& os);
+	void fenCodeToBoardPrint(std::string fenCode, std::ostream& os) const;
+	
+	//Store the pieces to board based on fen code
+	void fenCodeToBoardStore(std::string fenCode);
+
+	//generates FEN code based on the board
+	std::string generateFenCode() const;
 };
 //print the board to os
-std::ostream& operator<< (std::ostream& os, Board& board);
+std::ostream& operator<< (std::ostream& os, const Board& board);

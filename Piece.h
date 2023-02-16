@@ -47,5 +47,8 @@ public:
 //turn piece to char
 char pieceToChar(Piece piece);
 
+//turn a char to piece
+Piece charToPiece(char ch);
+
 //print piece to os
-std::ostream& operator<< (std::ostream& os, Piece& piece);
+std::ostream& operator<< (std::ostream& os, const Piece& piece);
