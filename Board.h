@@ -1,6 +1,7 @@
 #pragma once
-#include "Piece.h"
 #include <vector>
+#include "Piece.h"
+#include "Player.h"
 
 int const BOARD_SIZE = 8;
 
@@ -36,7 +37,7 @@ public:
 
 	//checks for castling rights
 	//turn = true check if white can castle, turn = false check if black can castle
-	bool canCastle(bool turn) const;
+	bool canCastle(bool turn, Player player) const;
 
 	//check if the move for the piece at start is valid
 	//turn = true is white's move, turn = false is black's move
