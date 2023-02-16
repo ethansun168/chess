@@ -14,9 +14,7 @@ main
 # Visual debugger configurations
 .vscode/
 .vs/
-#*.vcxproj
-#*.vcxproj.*
-*.vcxproj.users
+*.vcxproj
 *.xcodeproj/
 
 # Output files
@@ -106,8 +104,8 @@ DerivedData/
 *.suo
 *.user
 *.userosscache
-#*.sln
-#*.sln.docstates
+*.sln
+*.sln.docstates
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
