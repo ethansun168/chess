@@ -21,7 +21,7 @@ public:
 	//get the piece at cell
 	Piece getPiece(Cell cell) const;
 
-	//set the piece to cell
+	//set the piece at cell
 	void setPiece(Piece piece, Cell cell);
 	
 	//checks for check

@@ -30,7 +30,7 @@ class Piece {
 private:
 	Type type;
 	Color color;
-	bool isEmpty;
+	bool empty;
 public:
 	//initialize to empty piece
 	Piece();
@@ -43,6 +43,9 @@ public:
 	//returns if the piece is empty
 	bool isEmpty() const;
 };
+
+//turn piece to char
+char pieceToChar(Piece piece);
 
 //print piece to os
 std::ostream& operator<< (std::ostream& os, Piece& piece);
