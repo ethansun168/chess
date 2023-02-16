@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 enum Type {
+	EMPTY,
 	PAWN,
 	BISHOP,
 	KNIGHT,
@@ -15,7 +16,8 @@ enum Color {
 	BLACK
 };
 
-char abbreviations[] = {
+const char abbreviations[] = {
+	' ',
 	'P',
 	'B',
 	'N',
@@ -28,13 +30,18 @@ class Piece {
 private:
 	Type type;
 	Color color;
+	bool isEmpty;
 public:
-	//Initialize to type and color
+	//initialize to empty piece
+	Piece();
+	//Initialize to type and color, type cannot be empty
 	Piece(Type type, Color color);
 	//get the type
 	Type getType() const;
 	//get the color
 	Color getColor() const;
+	//returns if the piece is empty
+	bool isEmpty() const;
 };
 
 //print piece to os
