@@ -15,6 +15,7 @@ main
 .vscode/
 .vs/
 *.vcxproj
+*.vcxproj.*
 *.xcodeproj/
 
 # Output files
