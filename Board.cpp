@@ -15,26 +15,29 @@ void Board::setPiece(Piece piece, Cell cell) {
 }
 
 bool Board::isCheck(bool turn) const {
-
+	return false;
 }
 
 bool Board::isCheckMate(bool turn) const {
-
+	return false;
 }
 
 bool Board::canCastle(bool turn, Player player) const {
-	if (!player.getCanCastle()) { return false; }
+	/*if (!player.getCanCastle()) { 
+		return false; 
+	}*/
+	return false;
 }
 
 bool Board::isValidMove(bool turn, Cell start, Cell end) const {
-
+	return false;
 }
 
 void Board::move(Cell start, Cell end) {
 
 }
 
-void Board::fenCodeToBoardPrint(string fenCode, ostream& os) {
+void Board::fenCodeToBoardPrint(string fenCode, ostream& os) const {
 	int rowNumber = 0, charNumber = 0, stringIndex = 0;
 	while (fenCode[stringIndex] != ' ') {
 		int numberOfBlanks = fenCode[stringIndex] - '0';
@@ -106,13 +109,6 @@ string Board::generateFenCode() const {
 	}
 	fenCode += " ";
 	return fenCode;
-}
-
-Piece Board::getPiece(Cell cell) const {
-	//e5 = board[row + BOARD_SIZE + col] = board[3][4]
-	int row = BOARD_SIZE - cell.rank;
-	int col = cell.file - 'a';
-	return board[row][col];
 }
 
 ostream& operator<< (ostream& os, const Board& board) {
