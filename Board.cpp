@@ -66,7 +66,9 @@ bool Board::move(Cell start, Cell end) {
 		Piece piece;
 		// this is really bad code
 		setPiece(piece, end);
+		return true;
 	}
+	return false;
 }
 
 void Board::fenCodeToBoardPrint(string fenCode, ostream& os) const {
@@ -125,10 +127,12 @@ string Board::generateFenCode() const {
 	for (int row = 0; row < BOARD_SIZE; row++) {
 		int blank = 0;
 		for (int col = 0; col < BOARD_SIZE; col++) {
+			//update the blanks
 			if (board[row][col].isEmpty()) {
 				blank++;
 			}
 			else {
+				//add to row string
 				if (blank != 0) {
 					fenCode += to_string(blank);
 					blank = 0;
@@ -136,7 +140,7 @@ string Board::generateFenCode() const {
 				fenCode += pieceToChar(board[row][col]);
 			}
 		}
-		//if the last one is empty
+		//if the last one in row is empty
 		if (board[row][BOARD_SIZE - 1].isEmpty()) {
 			fenCode += to_string(blank);
 		}

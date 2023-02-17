@@ -51,6 +51,8 @@ public:
 
 	//move piece after it passes isValidMove
 	//requires start and end to be valid cells
+	//returns true if move sucessfully executes
+	//returns false if it does not
 	bool move(Cell start, Cell end);
 
 	// Translate a line of FEN code into a board position
