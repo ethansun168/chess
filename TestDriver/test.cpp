@@ -23,8 +23,22 @@ TEST(PrintPiece, printVarious) {
 	ostringstream output;
 	output << wPawn << piece << bPawn << bBishop;
 	EXPECT_EQ(output.str(), "P pb");
+
 }
 
+TEST(charToPiece, printVarious) {
+	char a = 'r';
+	Piece bRook = charToPiece(a);
+
+	char b = ' ';
+	Piece empty = charToPiece(b);
+
+	char c = 'B';
+	Piece wBishop = charToPiece(c);
+	ostringstream output;
+	output << bRook << empty << wBishop;
+	EXPECT_EQ(output.str(), "r B");
+}
 
 
 /*
