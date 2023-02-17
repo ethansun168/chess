@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include <regex>
+
 enum Type {
 	EMPTY,
 	PAWN,

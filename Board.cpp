@@ -71,6 +71,7 @@ bool Board::move(Cell start, Cell end) {
 	return false;
 }
 
+// TODO redo
 void Board::fenCodeToBoardPrint(string fenCode, ostream& os) const {
 	int rowNumber = 0, charNumber = 0, stringIndex = 0;
 	os << "   _________________\n" << BOARD_SIZE << " | ";
@@ -161,52 +162,13 @@ bool validCell(Cell cell) {
 	return 1 <= cell.rank && 8 >= cell.rank && 'a' <= cell.file && 'h' >= cell.file;
 }
 
-bool validFenCode(string fen) {
-	
-	//check if it ends with a space
-	if (fen[fen.length() - 1] != ' ') {
-		return false;
-	}
-	
-	stringstream ss;
-	ss << fen;
-	char in;
-	int numSlash = 0;
-	int rowNumPieces = 0;
-	while (ss >> in) {
-		if (in == '/') {
-			numSlash++;
-			//check if rowNumPieces == 8
-			if (rowNumPieces != 8) {
-				return false;
-			}
-			rowNumPieces = 0;
-		}
-		else if (validFenChar(in)) {
-			rowNumPieces++;
-		}
-		else if(in <= '8' || in >= '1') {
-			rowNumPieces += (int)(in - '0');
-		}
-		else {
-			return false;
-		}
-	}
-	//check for slashes
-	if (numSlash != 7) {
-		return false;
-	}
-	
-	return true;
-	
+// TODO Fix this function
+bool validFenCode(string inputFenString) {
+	regex value("([rnbqkpRNBQKP1-8]+\/){7}([rnbqkpRNBQKP1-8]+)\s[wb]\s([K]?[Q]?[k]?[q]?|-)\s([a-h][1-8]|-)\s[0-50]\s(\d+)");
+	return regex_match(inputFenString, value);
 }
 
-bool validFenChar(char ch) {
-	//abbreviations[1] to abbreviations[6]
-	for (int i = PAWN; i <= KING; i++) {
-		if (ch == abbreviations[i] || ch == (char)tolower(abbreviations[i])) {
-			return true;
-		}
-	}
-	return false;
+bool validFenChar(char fenChar) {
+	regex value("[PBNRQK]", regex_constants::icase);
+	return regex_search(&fenChar, value);
 }
