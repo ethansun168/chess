@@ -46,7 +46,6 @@ int main() {
 	cout << "1. e4 c5 2. Nf3" << endl;
 	board.fenCodeToBoardStore("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2");
 	cout << board << endl << endl;
-	//cout << board.getPiece({ 'a',5 });
 	
 	cout << "***validCell() test cases***" << endl;
 	Cell cell = { 'a', 5 };
@@ -105,5 +104,22 @@ int main() {
 	string fen8 = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR";
 	cout << "Expected:\t0\nActual: \t";
 	cout << validFenCode(fen8) << endl << endl;
+
+	cout << "Expected:\t1\nActual: \t";
+	cout << validFenCode(board.generateFenCode()) << endl << endl;
+
+	cout << "***getPiece() test cases***" << endl;
+	cout << "Expected:\t pPNk\nActual: \t";
+	cout << board.getPiece({ 'a',5 }) 
+		 << board.getPiece({ 'c',5 }) 
+		 << board.getPiece({ 'e',4 }) 
+		 << board.getPiece({ 'f',3 }) 
+		 << board.getPiece({ 'e',8 })
+		 << endl << endl;
+
+	cout << "***setPiece() test cases" << endl;
+	board.setPiece(bBishop, { 'd', 3 });
+	cout << board << endl << endl;
+
 	return 0;
 }

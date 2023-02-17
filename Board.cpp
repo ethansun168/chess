@@ -56,12 +56,13 @@ void Board::move(Cell start, Cell end) {
 
 void Board::fenCodeToBoardPrint(string fenCode, ostream& os) const {
 	int rowNumber = 0, charNumber = 0, stringIndex = 0;
+	os << "   _________________\n" << BOARD_SIZE << " | ";
 	while (fenCode[stringIndex] != ' ') {
 		int numberOfBlanks = fenCode[stringIndex] - '0';
 		if (fenCode[stringIndex] == '/') {
-			os << "\n";
-			charNumber = 0;
 			rowNumber++;
+			charNumber = 0;
+			os << "|\n" << BOARD_SIZE - rowNumber << " | ";
 		}
 		else if (numberOfBlanks > 0 && numberOfBlanks < 9) {
 			for (int i = 0; i < numberOfBlanks; ++i) {
@@ -73,6 +74,10 @@ void Board::fenCodeToBoardPrint(string fenCode, ostream& os) const {
 			charNumber++;
 		}
 		stringIndex++;
+	}
+	os << "|\n  |_________________|\n    ";
+	for (char ch = 'a'; ch <= 'h'; ch++) {
+		os << ch << " ";
 	}
 }
 
