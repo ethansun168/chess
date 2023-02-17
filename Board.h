@@ -23,7 +23,9 @@ public:
 	//Initialize to the starting position
 	Board();
 
-	//use a FEN string to initialize the board https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+	//use a FEN string to initialize the board 
+	// https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+	// https://www.chess.com/terms/fen-chess
 	//input string must be a valid fen string
 	Board(std::string fen);
 
