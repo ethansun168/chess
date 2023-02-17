@@ -14,8 +14,10 @@ struct Cell {
 class Board {
 private:
 	Piece board[BOARD_SIZE][BOARD_SIZE];
-	bool whiteCanCastle;
-	bool blackCanCastle;
+	bool whiteCanCastleKingSide;
+	bool whiteCanCastleQueenSide;
+	bool blackCanCastleKingSide;
+	bool blackCanCastleQueenSide;
 	Color playerTurn;
 public:
 	//Initialize to the starting position
@@ -49,7 +51,7 @@ public:
 
 	//move piece after it passes isValidMove
 	//requires start and end to be valid cells
-	void move(Cell start, Cell end);
+	bool move(Cell start, Cell end);
 
 	// Translate a line of FEN code into a board position
 	void fenCodeToBoardPrint(std::string fenCode, std::ostream& os) const;

@@ -2,19 +2,26 @@
 #include <sstream>
 using namespace std;
 
-Board::Board() {
+Board::Board() :
+	whiteCanCastleKingSide(true),
+	whiteCanCastleQueenSide(true),
+	blackCanCastleKingSide(true),
+	blackCanCastleQueenSide(true),
+	playerTurn(WHITE)
+{
 	fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-	whiteCanCastle = true;
-	blackCanCastle = true;
-	playerTurn = WHITE;
 }
 
-Board::Board(string fen) {
+
+Board::Board(string fen) :
+	whiteCanCastleKingSide(true),
+	whiteCanCastleQueenSide(true),
+	blackCanCastleKingSide(true),
+	blackCanCastleQueenSide(true),
+	playerTurn(WHITE) 
+{
 	assert(validFenCode(fen));
 	fenCodeToBoardStore(fen);
-	whiteCanCastle = true;
-	blackCanCastle = true;
-	playerTurn = WHITE;
 }
 
 Piece Board::getPiece(Cell cell) const {
@@ -36,12 +43,13 @@ bool Board::isCheckMate(Color playerTurn) const {
 	return false;
 }
 
+// TODO: FIX LATER
 bool Board::canCastle(Color playerTurn) const {
 	if (playerTurn == WHITE) {
-		return whiteCanCastle;
+		return (whiteCanCastleKingSide) || (whiteCanCastleQueenSide);
 	}
 	else {
-		return blackCanCastle;
+		return (blackCanCastleKingSide || blackCanCastleQueenSide);
 	}
 }
 
@@ -50,8 +58,15 @@ bool Board::isValidMove(Color playerTurn, Cell start, Cell end) const {
 	return false;
 }
 
-void Board::move(Cell start, Cell end) {
+bool Board::move(Cell start, Cell end) {
 	assert(validCell(start) && validCell(end));
+	if (isValidMove(playerTurn, start, end)) {
+		// Gets the piece at start, and sets that piece to end location
+		setPiece(getPiece(start), end);
+		Piece piece;
+		// this is really bad code
+		setPiece(piece, end);
+	}
 }
 
 void Board::fenCodeToBoardPrint(string fenCode, ostream& os) const {
