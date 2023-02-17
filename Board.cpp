@@ -1,40 +1,57 @@
 #include "Board.h"
+#include <sstream>
 using namespace std;
 
 Board::Board() {
 	fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	whiteCanCastle = true;
+	blackCanCastle = true;
+	playerTurn = WHITE;
+}
+
+Board::Board(string fen) {
+	assert(validFenCode(fen));
+	fenCodeToBoardStore(fen);
+	whiteCanCastle = true;
+	blackCanCastle = true;
+	playerTurn = WHITE;
 }
 
 Piece Board::getPiece(Cell cell) const {
+	assert(validCell(cell));
 	//e5 = board[row + BOARD_SIZE + col] = board[3][4]
 	return board[BOARD_SIZE - cell.rank][cell.file - 'a'];
 }
 
 void Board::setPiece(Piece piece, Cell cell) {
+	assert(validCell(cell));
 	board[BOARD_SIZE - cell.rank][cell.file - 'a'] = piece;
 }
 
-bool Board::isCheck(bool turn) const {
+bool Board::isCheck(Color playerTurn) const {
 	return false;
 }
 
-bool Board::isCheckMate(bool turn) const {
+bool Board::isCheckMate(Color playerTurn) const {
 	return false;
 }
 
-bool Board::canCastle(bool turn, Player player) const {
-	/*if (!player.getCanCastle()) { 
-		return false; 
-	}*/
-	return false;
+bool Board::canCastle(Color playerTurn) const {
+	if (playerTurn == WHITE) {
+		return whiteCanCastle;
+	}
+	else {
+		return blackCanCastle;
+	}
 }
 
-bool Board::isValidMove(bool turn, Cell start, Cell end) const {
+bool Board::isValidMove(Color playerTurn, Cell start, Cell end) const {
+	assert(validCell(start) && validCell(end));
 	return false;
 }
 
 void Board::move(Cell start, Cell end) {
-
+	assert(validCell(start) && validCell(end));
 }
 
 void Board::fenCodeToBoardPrint(string fenCode, ostream& os) const {
@@ -114,4 +131,58 @@ string Board::generateFenCode() const {
 ostream& operator<< (ostream& os, const Board& board) {
 	board.fenCodeToBoardPrint(board.generateFenCode(), os);
 	return os;
+}
+
+bool validCell(Cell cell) {
+	return 1 <= cell.rank && 8 >= cell.rank && 'a' <= cell.file && 'h' >= cell.file;
+}
+
+bool validFenCode(string fen) {
+	
+	//check if it ends with a space
+	if (fen[fen.length() - 1] != ' ') {
+		return false;
+	}
+	
+	stringstream ss;
+	ss << fen;
+	char in;
+	int numSlash = 0;
+	int rowNumPieces = 0;
+	while (ss >> in) {
+		if (in == '/') {
+			numSlash++;
+			//check if rowNumPieces == 8
+			if (rowNumPieces != 8) {
+				return false;
+			}
+			rowNumPieces = 0;
+		}
+		else if (validFenChar(in)) {
+			rowNumPieces++;
+		}
+		else if(in <= '8' || in >= '1') {
+			rowNumPieces += (int)(in - '0');
+		}
+		else {
+			return false;
+		}
+	}
+	//check for slashes
+	if (numSlash != 7) {
+		return false;
+	}
+	
+	return true;
+	
+}
+
+bool validFenChar(char ch) {
+	//abbreviations[1] to abbreviations[6]
+	for (int i = PAWN; i <= KING; i++) {
+		if (ch == abbreviations[i] || ch == (char)tolower(abbreviations[i])) {
+			return true;
+		}
+	}
+	return false;
 }

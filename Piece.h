@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <string>
+#include <cassert>
 enum Type {
 	EMPTY,
 	PAWN,

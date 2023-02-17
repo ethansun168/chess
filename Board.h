@@ -14,37 +14,41 @@ struct Cell {
 class Board {
 private:
 	Piece board[BOARD_SIZE][BOARD_SIZE];
+	bool whiteCanCastle;
+	bool blackCanCastle;
+	Color playerTurn;
 public:
 	//Initialize to the starting position
 	Board();
 
 	//use a FEN string to initialize the board https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+	//input string must be a valid fen string
 	Board(std::string fen);
 
 	//get the piece at cell
+	//requires a valid cell
 	Piece getPiece(Cell cell) const;
 
 	//set the piece at cell
+	//requires a valid piece and a valid cell
 	void setPiece(Piece piece, Cell cell);
 	
 	//checks for check
-	//turn = true check if white is in check, turn = false check if black is in check
-	bool isCheck(bool turn) const;
+	bool isCheck(Color playerTurn) const;
 	
 	//checks for checkmate
-	//turn = true check if white is in checkmate, turn = false check if black is in checkmate
-	bool isCheckMate(bool turn) const;
+	bool isCheckMate(Color playerTurn) const;
 
 	//checks for castling rights
-	//turn = true check if white can castle, turn = false check if black can castle
-	bool canCastle(bool turn, Player player) const;
+	bool canCastle(Color playerTurn) const;
 
 	//check if the move for the piece at start is valid
-	//turn = true is white's move, turn = false is black's move
+	//requires start and end to be valid cells
 	//needs to account for piece obstruction, pins, in checks, can castle
-	bool isValidMove(bool turn, Cell start, Cell end) const;
+	bool isValidMove(Color playerTurn, Cell start, Cell end) const;
 
 	//move piece after it passes isValidMove
+	//requires start and end to be valid cells
 	void move(Cell start, Cell end);
 
 	// Translate a line of FEN code into a board position
@@ -58,3 +62,17 @@ public:
 };
 //print the board to os
 std::ostream& operator<< (std::ostream& os, const Board& board);
+
+//checks if the cell is a valid cell
+//valid cell means 1 <= rank <= 8 and a <= file <= h
+bool validCell(Cell cell);
+
+//checks if the string is a valid fen string
+//is valid if characters are only r n b q k p P R N B Q K, 1-8, /
+//must end with a space
+//must have 7 /'s
+//characters between each / must add up to 8
+bool validFenCode(std::string fen);
+
+//helper for validFenCode
+bool validFenChar(char ch);

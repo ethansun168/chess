@@ -1,5 +1,4 @@
 #include "Piece.h"
-#include <cassert>
 using namespace std;
 
 Piece::Piece() {
@@ -10,6 +9,8 @@ Piece::Piece() {
 
 //Initialize to type and color, type cannot be empty
 Piece::Piece(Type type, Color color) {
+	assert(color == WHITE || color == BLACK);
+	assert(type >= EMPTY && type <= KING);
 	this->type = type;
 	this->color = color;
 	empty = false;
@@ -38,6 +39,8 @@ char pieceToChar(Piece piece) {
 			}
 		}
 	}
+	//not a valid piece
+	assert(false);
 }
 
 Piece charToPiece(char ch) {
@@ -62,6 +65,8 @@ Piece charToPiece(char ch) {
 			}
 		}
 	}
+	//not a valid char
+	assert(false);
 }
 
 ostream& operator<< (ostream& os, const Piece& piece) {
