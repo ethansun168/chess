@@ -28,19 +28,13 @@ bool Piece::isEmpty() const {
 }
 
 char pieceToChar(Piece piece) {
-	for (int i = EMPTY; i <= KING; i++) {
-		if (i == piece.getType()) {
-			if (piece.getColor() == BLACK) {
-				return (char)tolower(abbreviations[i]);
-			}
-			else {
-				return abbreviations[i];
-			}
-		}
-	}
+	return (piece.getColor() == BLACK) ?
+		tolower(abbreviations[piece.getType()]) :
+		abbreviations[piece.getType()];
 }
 
 Piece charToPiece(char ch) {
+	if 
 	for (int i = EMPTY; i <= KING; i++) {
 		if ((char) toupper(ch) == abbreviations[i]) {
 			if (i == 0) {
