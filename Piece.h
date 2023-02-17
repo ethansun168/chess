@@ -41,6 +41,13 @@ public:
 	Type getType() const;
 	//get the color
 	Color getColor() const;
+	//set the color
+	void setColor(Color color);
+	//set the color
+	void setType(Type type);
+	//set if empty
+	void setEmpty(bool empty);
+
 	//returns if the piece is empty
 	bool isEmpty() const;
 };

@@ -13,7 +13,7 @@ Piece::Piece(Type type, Color color) {
 	assert(type >= EMPTY && type <= KING);
 	this->type = type;
 	this->color = color;
-	empty = false;
+	this->empty = false;
 }
 //get the type
 Type Piece::getType() const {
@@ -23,6 +23,19 @@ Type Piece::getType() const {
 Color Piece::getColor() const {
 	return color;
 }
+
+void Piece::setColor(Color color) {
+	this->color = color;
+}
+
+void Piece::setType(Type type) {
+	this->type = type;
+}
+
+void Piece::setEmpty(bool empty) {
+	this->empty = empty;
+}
+
 //returns if the piece is empty
 bool Piece::isEmpty() const {
 	return empty;
@@ -34,31 +47,18 @@ char pieceToChar(Piece piece) {
 		abbreviations[piece.getType()];
 }
 
-Piece charToPiece(char ch) {
-	for (int i = EMPTY; i <= KING; i++) {
-		if ((char) toupper(ch) == abbreviations[i]) {
-			if (i == 0) {
-				//empty piece
-				Piece piece;
-				return piece;
-			}
-			//matches
-			Type type = (Type)i;
-			if (isupper(ch)) {
-				//white
-				Piece piece(type, WHITE);
-				return piece;
-			}
-			else {
-				//black
-				Piece piece(type, BLACK);
-				return piece;
-			}
+Piece charToPiece(char charPiece) {
+	Piece newPiece;
+	for (uint8_t loopPiece = PAWN; loopPiece <= KING; loopPiece++) {
+		if (toupper(charPiece) == abbreviations[loopPiece]) {
+			isupper(charPiece) ? newPiece.setColor(WHITE) : newPiece.setColor(BLACK);
+			newPiece.setType( (Type) loopPiece);
+			newPiece.setEmpty(false);
 		}
 	}
-	//not a valid char
-	assert(false);
+	return newPiece;
 }
+
 
 ostream& operator<< (ostream& os, const Piece& piece) {
 	os << pieceToChar(piece);
