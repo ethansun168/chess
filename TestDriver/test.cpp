@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
 	return RUN_ALL_TESTS();
 }
 
-TEST(PrintPiece, printVarious) {
+TEST(Piece, printVarious) {
 	Piece wPawn(PAWN, WHITE);
 	Piece piece;
 	Piece bPawn(PAWN, BLACK);
@@ -26,7 +26,7 @@ TEST(PrintPiece, printVarious) {
 
 }
 
-TEST(charToPiece, printVarious) {
+TEST(Piece, charToPiece) {
 	char a = 'r';
 	Piece bRook = charToPiece(a);
 
@@ -40,127 +40,199 @@ TEST(charToPiece, printVarious) {
 	EXPECT_EQ(output.str(), "r B");
 }
 
+TEST(Board, fenCode1) {
+	Board board;
+	board.fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	EXPECT_EQ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR ", board.generateFenCode());
+}
 
-/*
-std::ostringstream output;
+TEST(Board, fenCode2) {
+	Board board;
+	board.fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR ");
+	EXPECT_EQ("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR ", board.generateFenCode());
+}
 
-printFoo(output);
+TEST(Board, fenCode3) {
+	Board board;
+	board.fenCodeToBoardStore("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ");
+	EXPECT_EQ("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ", board.generateFenCode());
+}
 
-// Not that familiar with gtest, but I think this is how you test they are
-// equal. Not sure if it will work with stringstream.
-EXPECT_EQ(output, "Successful");
+TEST(Board, printBoard1) {
+	Board board;
+	ostringstream os;
+	os << board;
+	ostringstream correct;
+	correct << "   _________________\n"
+		    << "8 | r n b q k b n r |\n"
+		    << "7 | p p p p p p p p |\n"
+		    << "6 | . . . . . . . . |\n"
+		    << "5 | . . . . . . . . |\n"
+		    << "4 | . . . . . . . . |\n"
+		    << "3 | . . . . . . . . |\n"
+		    << "2 | P P P P P P P P |\n"
+		    << "1 | R N B Q K B N R |\n"
+		    << "  |_________________|\n"
+		    << "    a b c d e f g h ";
+	EXPECT_EQ(os.str(), correct.str());
+}
 
-cout << "***Print piece test cases***" << endl;
+TEST(Board, printBoard2) {
+	Board board;
+	board.fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR ");
+	ostringstream os;
+	os << board;
+	ostringstream correct;
+	correct << "   _________________\n"
+		    << "8 | r n b q k b n r |\n"
+		    << "7 | p p p p p p p p |\n"
+		    << "6 | . . . . . . . . |\n"
+		    << "5 | . . . . . . . . |\n"
+		    << "4 | . . . . P . . . |\n"
+		    << "3 | . . . . . . . . |\n"
+		    << "2 | P P P P . P P P |\n"
+		    << "1 | R N B Q K B N R |\n"
+		    << "  |_________________|\n"
+		    << "    a b c d e f g h ";
+	EXPECT_EQ(os.str(), correct.str());
+}
 
-cout << "Expected:\tP pb\nActual: \t";
-cout << wPawn << piece << bPawn << bBishop << endl << endl;
+TEST(Board, printBoard3) {
+	Board board("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ");
+	ostringstream os;
+	os << board;
+	ostringstream correct;
+	correct << "   _________________\n"
+		    << "8 | r n b q k b n r |\n"
+		    << "7 | p p . p p p p p |\n"
+		    << "6 | . . . . . . . . |\n"
+		    << "5 | . . p . . . . . |\n"
+		    << "4 | . . . . P . . . |\n"
+		    << "3 | . . . . . . . . |\n"
+		    << "2 | P P P P . P P P |\n"
+		    << "1 | R N B Q K B N R |\n"
+		    << "  |_________________|\n"
+		    << "    a b c d e f g h ";
+	EXPECT_EQ(os.str(), correct.str());
+}
 
-cout << "***charToPiece() test cases***" << endl;
-cout << "Expected:\tr B\nActual: \t";
-char a = 'r';
-Piece bRook = charToPiece(a);
-cout << bRook;
+TEST(Board, printBoard4) {
+	Board board("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R ");
+	ostringstream os;
+	os << board;
+	ostringstream correct;
+	correct << "   _________________\n"
+		    << "8 | r n b q k b n r |\n"
+		    << "7 | p p . p p p p p |\n"
+		    << "6 | . . . . . . . . |\n"
+		    << "5 | . . p . . . . . |\n"
+		    << "4 | . . . . P . . . |\n"
+		    << "3 | . . . . . N . . |\n"
+		    << "2 | P P P P . P P P |\n"
+		    << "1 | R N B Q K B . R |\n"
+		    << "  |_________________|\n"
+		    << "    a b c d e f g h ";
+	EXPECT_EQ(os.str(), correct.str());
+}
 
-char b = ' ';
-Piece empty = charToPiece(b);
-cout << empty;
+TEST(Board, validCellGeneral) {
+	Cell cell = { 'a', 5 };
+	EXPECT_TRUE(validCell(cell));
+}
 
-char c = 'B';
-Piece wBishop = charToPiece(c);
-cout << wBishop << endl << endl;
+TEST(Board, validCellGeneralFail) {
+	Cell cell = { 'l', 5 };
+	EXPECT_FALSE(validCell(cell));
+}
 
-cout << "***fenCodeToBoardStore() and print board test cases***" << endl;
-Board board;
-board.fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-cout << "Expected:\trnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR\nActual: \t";
-cout << board.generateFenCode() << endl << endl;
+TEST(Board, validCellEdgeCase) {
+	Cell cell = { 'a', 8 };
+	EXPECT_TRUE(validCell(cell));
+}
 
-board.fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR ");
-cout << "Expected:\trnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR\nActual: \t";
-cout << board.generateFenCode() << endl << endl;
+TEST(Board, validCellGeneralFail2) {
+	Cell cell = { 'z', 1 };
+	EXPECT_FALSE(validCell(cell));
+}
 
-cout << "Expected:\trnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR\nActual: \t";
-board.fenCodeToBoardStore("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ");
-cout << board.generateFenCode() << endl << endl;
+TEST(Board, validCellEdgeCase2) {
+	Cell cell = { 'a', 0 };
+	EXPECT_FALSE(validCell(cell));
+}
 
-cout << "1. e4 c5" << endl;
-cout << board << endl << endl;
+TEST(Board, validFenCodeGeneral) {
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R ";
+	EXPECT_TRUE(validFenCode(fen));
+}
 
-cout << "1. e4 c5 2. Nf3" << endl;
-board.fenCodeToBoardStore("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 2");
-cout << board << endl << endl;
+TEST(Board, validFenCodeGeneral2) {
+	string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR ";
+	EXPECT_TRUE(validFenCode(fen));
+}
 
-cout << "***validCell() test cases***" << endl;
-Cell cell = { 'a', 5 };
-cout << "Expected:\t1\nActual: \t";
-cout << validCell(cell) << endl << endl;
+TEST(Board, validFenCodeGeneral3) {
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ";
+	EXPECT_TRUE(validFenCode(fen));
+}
 
-Cell cell2 = { 'l', 5 };
-cout << "Expected:\t0\nActual: \t";
-cout << validCell(cell2) << endl << endl;
+TEST(Board, validFenCodeGeneralFail) {
+	string fen = "fehwuifuiewf";
+	EXPECT_FALSE(validFenCode(fen));
+}
 
-Cell cell3 = { 'a', 8 };
-cout << "Expected:\t1\nActual: \t";
-cout << validCell(cell3) << endl << endl;
+TEST(Board, validFenCodeSlashFail) {
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR/ ";
+	EXPECT_FALSE(validFenCode(fen));
+}
 
-Cell cell4 = { 'z', 1 };
-cout << "Expected:\t0\nActual: \t";
-cout << validCell(cell4) << endl << endl;
+TEST(Board, validFenCodeRowNumberFail) {
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/9/PPPP1PPP/RNBQKBNR ";
+	EXPECT_FALSE(validFenCode(fen));
+}
 
-Cell cell5 = { 'a', 0 };
-cout << "Expected:\t0\nActual: \t";
-cout << validCell(cell5) << endl << endl;
+TEST(Board, validFenCodeRowNumberFail2) {
+	string fen = "rnbqkbnr/pp1pppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ";
+	EXPECT_FALSE(validFenCode(fen));
+}
 
-Cell cell6 = { 'd', 7 };
-cout << "Expected:\t1\nActual: \t";
-cout << validCell(cell6) << endl << endl;
+TEST(Board, validFenCodeNoSpaceFail) {
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR";
+	EXPECT_FALSE(validFenCode(fen));
+}
 
-cout << "***validFenCode() test cases***" << endl;
-string fen1 = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R ";
-cout << "Expected:\t1\nActual: \t";
-cout << validFenCode(fen1) << endl << endl;
+TEST(Board, validFenCodeImplementedFen) {
+	Board board;
+	EXPECT_TRUE(validFenCode(board.generateFenCode()));
+}
 
-string fen2 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR ";
-cout << "Expected:\t1\nActual: \t";
-cout << validFenCode(fen2) << endl << endl;
+TEST(Board, getPiece) {
+	Board board;
+	ostringstream os;
+	os << board.getPiece({ 'a',5 })
+	   << board.getPiece({ 'c',7 })
+	   << board.getPiece({ 'e',2 })
+	   << board.getPiece({ 'f',1 })
+	   << board.getPiece({ 'e',8 });
+	EXPECT_EQ(" pPBk", os.str());
+}
 
-string fen3 = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ";
-cout << "Expected:\t1\nActual: \t";
-cout << validFenCode(fen3) << endl << endl;
-
-string fen4 = "fehwuifuiewf";
-cout << "Expected:\t0\nActual: \t";
-cout << validFenCode(fen4) << endl << endl;
-
-string fen5 = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR/ ";
-cout << "Expected:\t0\nActual: \t";
-cout << validFenCode(fen5) << endl << endl;
-
-string fen6 = "rnbqkbnr/pp1ppppp/8/2p5/4P3/9/PPPP1PPP/RNBQKBNR ";
-cout << "Expected:\t0\nActual: \t";
-cout << validFenCode(fen6) << endl << endl;
-
-string fen7 = "rnbqkbnr/pp1pppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ";
-cout << "Expected:\t0\nActual: \t";
-cout << validFenCode(fen7) << endl << endl;
-
-string fen8 = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR";
-cout << "Expected:\t0\nActual: \t";
-cout << validFenCode(fen8) << endl << endl;
-
-cout << "Expected:\t1\nActual: \t";
-cout << validFenCode(board.generateFenCode()) << endl << endl;
-
-cout << "***getPiece() test cases***" << endl;
-cout << "Expected:\t pPNk\nActual: \t";
-cout << board.getPiece({ 'a',5 })
-<< board.getPiece({ 'c',5 })
-<< board.getPiece({ 'e',4 })
-<< board.getPiece({ 'f',3 })
-<< board.getPiece({ 'e',8 })
-<< endl << endl;
-
-cout << "***setPiece() test cases" << endl;
-board.setPiece(bBishop, { 'd', 3 });
-cout << board << endl << endl;
-*/
+TEST(Board, setPiece) {
+	Board board;
+	Piece bBishop(BISHOP, BLACK);
+	board.setPiece(bBishop, { 'd', 3 });
+	ostringstream os;
+	os << board;
+	ostringstream correct;
+	correct << "   _________________\n"
+		    << "8 | r n b q k b n r |\n"
+		    << "7 | p p p p p p p p |\n"
+		    << "6 | . . . . . . . . |\n"
+		    << "5 | . . . . . . . . |\n"
+		    << "4 | . . . . . . . . |\n"
+		    << "3 | . . . b . . . . |\n"
+		    << "2 | P P P P P P P P |\n"
+		    << "1 | R N B Q K B N R |\n"
+		    << "  |_________________|\n"
+		    << "    a b c d e f g h ";
+	EXPECT_EQ(os.str(), correct.str());
+}
