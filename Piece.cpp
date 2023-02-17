@@ -29,18 +29,9 @@ bool Piece::isEmpty() const {
 }
 
 char pieceToChar(Piece piece) {
-	for (int i = EMPTY; i <= KING; i++) {
-		if (i == piece.getType()) {
-			if (piece.getColor() == BLACK) {
-				return (char)tolower(abbreviations[i]);
-			}
-			else {
-				return abbreviations[i];
-			}
-		}
-	}
-	//not a valid piece
-	assert(false);
+	return (piece.getColor() == BLACK) ?
+		tolower(abbreviations[piece.getType()]) :
+		abbreviations[piece.getType()];
 }
 
 Piece charToPiece(char ch) {
