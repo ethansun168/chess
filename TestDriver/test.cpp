@@ -48,13 +48,13 @@ TEST(Board, fenCode1) {
 
 TEST(Board, fenCode2) {
 	Board board;
-	board.fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR ");
+	board.fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1");
 	EXPECT_EQ("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR ", board.generateFenCode());
 }
 
 TEST(Board, fenCode3) {
 	Board board;
-	board.fenCodeToBoardStore("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ");
+	board.fenCodeToBoardStore("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2");
 	EXPECT_EQ("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ", board.generateFenCode());
 }
 
@@ -79,7 +79,7 @@ TEST(Board, printBoard1) {
 
 TEST(Board, printBoard2) {
 	Board board;
-	board.fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR ");
+	board.fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1");
 	ostringstream os;
 	os << board;
 	ostringstream correct;
@@ -98,7 +98,7 @@ TEST(Board, printBoard2) {
 }
 
 TEST(Board, printBoard3) {
-	Board board("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ");
+	Board board("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2");
 	ostringstream os;
 	os << board;
 	ostringstream correct;
@@ -117,7 +117,7 @@ TEST(Board, printBoard3) {
 }
 
 TEST(Board, printBoard4) {
-	Board board("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R ");
+	Board board("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2");
 	ostringstream os;
 	os << board;
 	ostringstream correct;
@@ -161,17 +161,17 @@ TEST(Board, validCellEdgeCase2) {
 }
 
 TEST(Board, validFenCodeGeneral) {
-	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R ";
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2";
 	EXPECT_TRUE(validFenCode(fen));
 }
 
 TEST(Board, validFenCodeGeneral2) {
-	string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR ";
+	string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 	EXPECT_TRUE(validFenCode(fen));
 }
 
 TEST(Board, validFenCodeGeneral3) {
-	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ";
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w - e3 0 1";
 	EXPECT_TRUE(validFenCode(fen));
 }
 
@@ -181,22 +181,22 @@ TEST(Board, validFenCodeGeneralFail) {
 }
 
 TEST(Board, validFenCodeSlashFail) {
-	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR/ ";
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR/ w KQkq - 0 1";
 	EXPECT_FALSE(validFenCode(fen));
 }
 
 TEST(Board, validFenCodeRowNumberFail) {
-	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/9/PPPP1PPP/RNBQKBNR ";
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/9/PPPP1PPP/RNBQKBNR w KQkq - 0 1";
 	EXPECT_FALSE(validFenCode(fen));
 }
 
 TEST(Board, validFenCodeRowNumberFail2) {
-	string fen = "rnbqkbnr/pp1pppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ";
+	string fen = "rnbqkbnr/pp1pppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1";
 	EXPECT_FALSE(validFenCode(fen));
 }
 
-TEST(Board, validFenCodeNoSpaceFail) {
-	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR";
+TEST(Board, validFenCodeNoEndingFail) {
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ";
 	EXPECT_FALSE(validFenCode(fen));
 }
 
