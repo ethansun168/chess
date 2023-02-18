@@ -22,6 +22,9 @@ private:
 	Cell enPassant;
 	int halfMoves;
 	int fullMoves;
+
+	//helper function for fenCodeToBoardStore
+	void castleModify(bool K, bool Q, bool k, bool q);
 public:
 	//Initialize to the starting position
 	Board();
@@ -65,9 +68,6 @@ public:
 	
 	//Store the pieces to board based on fen code
 	void fenCodeToBoardStore(std::string fenCode);
-
-	//helper function for fenCodeToBoardStore
-	void castleModify(bool K, bool Q, bool k, bool q);
 
 	//generates FEN code based on the board
 	std::string generateFenCode() const;
