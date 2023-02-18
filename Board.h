@@ -19,6 +19,9 @@ private:
 	bool blackCanCastleKingSide;
 	bool blackCanCastleQueenSide;
 	Color playerTurn;
+	Cell enPassant;
+	int halfMoves;
+	int fullMoves;
 public:
 	//Initialize to the starting position
 	Board();
@@ -63,9 +66,15 @@ public:
 	//Store the pieces to board based on fen code
 	void fenCodeToBoardStore(std::string fenCode);
 
+	//helper function for fenCodeToBoardStore
+	void castleModify(bool K, bool Q, bool k, bool q);
+
 	//generates FEN code based on the board
 	std::string generateFenCode() const;
 };
+
+
+
 //print the board to os
 std::ostream& operator<< (std::ostream& os, const Board& board);
 
