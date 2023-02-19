@@ -40,25 +40,25 @@ TEST(Piece, charToPiece) {
 	EXPECT_EQ(output.str(), "r B");
 }
 
-TEST(Board, fenCode1) {
+TEST(BoardFenCode, general) {
 	Board board;
 	board.fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 	EXPECT_EQ("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", board.generateFenCode());
 }
 
-TEST(Board, fenCode2) {
+TEST(BoardFenCode, general2) {
 	Board board;
 	board.fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1");
 	EXPECT_EQ("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1", board.generateFenCode());
 }
 
-TEST(Board, fenCode3) {
+TEST(BoardFenCode, general3) {
 	Board board;
 	board.fenCodeToBoardStore("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2");
 	EXPECT_EQ("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2", board.generateFenCode());
 }
 
-TEST(Board, printBoard1) {
+TEST(BoardPrint, general) {
 	Board board;
 	ostringstream os;
 	os << board;
@@ -77,7 +77,7 @@ TEST(Board, printBoard1) {
 	EXPECT_EQ(os.str(), correct.str());
 }
 
-TEST(Board, printBoard2) {
+TEST(BoardPrint, general2) {
 	Board board;
 	board.fenCodeToBoardStore("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1");
 	ostringstream os;
@@ -97,7 +97,7 @@ TEST(Board, printBoard2) {
 	EXPECT_EQ(os.str(), correct.str());
 }
 
-TEST(Board, printBoard3) {
+TEST(BoardPrint, general3) {
 	Board board("rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2");
 	ostringstream os;
 	os << board;
@@ -116,7 +116,7 @@ TEST(Board, printBoard3) {
 	EXPECT_EQ(os.str(), correct.str());
 }
 
-TEST(Board, printBoard4) {
+TEST(BoardPrint, general4) {
 	Board board("rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2");
 	ostringstream os;
 	os << board;
@@ -135,92 +135,92 @@ TEST(Board, printBoard4) {
 	EXPECT_EQ(os.str(), correct.str());
 }
 
-TEST(Board, validCellGeneral) {
+TEST(BoardValidCell, general) {
 	Cell cell = { 'a', 5 };
 	EXPECT_TRUE(validCell(cell));
 }
 
-TEST(Board, validCellGeneralFail) {
+TEST(BoardValidCell, generalFail) {
 	Cell cell = { 'l', 5 };
 	EXPECT_FALSE(validCell(cell));
 }
 
-TEST(Board, validCellEdgeCase) {
+TEST(BoardValidCell, edgeCase) {
 	Cell cell = { 'a', 8 };
 	EXPECT_TRUE(validCell(cell));
 }
 
-TEST(Board, validCellGeneralFail2) {
+TEST(BoardValidCell, generalFail2) {
 	Cell cell = { 'z', 1 };
 	EXPECT_FALSE(validCell(cell));
 }
 
-TEST(Board, validCellEdgeCase2) {
+TEST(BoardValidCell, edgeCase2) {
 	Cell cell = { 'a', 0 };
 	EXPECT_FALSE(validCell(cell));
 }
 
-TEST(Board, validFenCodeGeneral) {
+TEST(BoardValidFenCode, general) {
 	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2";
 	EXPECT_TRUE(validFenCode(fen));
 }
 
-TEST(Board, validFenCodeGeneral2) {
+TEST(BoardValidFenCode, general2) {
 	string fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 	EXPECT_TRUE(validFenCode(fen));
 }
 
-TEST(Board, validFenCodeGeneral3) {
+TEST(BoardValidFenCode, general3) {
 	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w - e3 0 1";
 	EXPECT_TRUE(validFenCode(fen));
 }
 
-TEST(Board, validFenCodeGeneralFail) {
+TEST(BoardValidFenCode, generalFail) {
 	string fen = "fehwuifuiewf";
 	EXPECT_FALSE(validFenCode(fen));
 }
 
-TEST(Board, validFenCodeSlashFail) {
+TEST(BoardValidFenCode, slashFail) {
 	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR/ w KQkq - 0 1";
 	EXPECT_FALSE(validFenCode(fen));
 }
 
-TEST(Board, validFenCodeRowNumberFail) {
+TEST(BoardValidFenCode, rowNumberFail) {
 	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/9/PPPP1PPP/RNBQKBNR w KQkq - 0 1";
 	EXPECT_FALSE(validFenCode(fen));
 }
 
-TEST(Board, validFenCodeRowNumberFail2) {
+TEST(BoardValidFenCode, rowNumberFail2) {
 	string fen = "rnbqkbnr/pp1pppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1";
 	EXPECT_FALSE(validFenCode(fen));
 }
 
-TEST(Board, validFenCodeNoEndingFail) {
+TEST(BoardValidFenCode, noEndingFail) {
 	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR ";
 	EXPECT_FALSE(validFenCode(fen));
 }
 
-TEST(Board, validFenCodeImplementedFen) {
+TEST(BoardValidFenCode, implementedFen) {
 	Board board;
 	EXPECT_TRUE(validFenCode(board.generateFenCode()));
 }
 
-TEST(Board, validFenCodeCastle1) {
+TEST(BoardValidFenCode, castle1) {
 	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w K e3 0 1";
 	EXPECT_TRUE(validFenCode(fen));
 }
 
-TEST(Board, validFenCodeCastle2) {
+TEST(BoardValidFenCode, castle2) {
 	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w Kq e3 0 1";
 	EXPECT_TRUE(validFenCode(fen));
 }
 
-TEST(Board, validFenCodeCastle4) {
+TEST(BoardValidFenCode, castle4) {
 	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w Kk e3 0 1";
 	EXPECT_TRUE(validFenCode(fen));
 }
 
-TEST(Board, getPiece) {
+TEST(BoardGetPiece, getPiece) {
 	Board board;
 	ostringstream os;
 	os << board.getPiece({ 'a',5 })
@@ -231,7 +231,7 @@ TEST(Board, getPiece) {
 	EXPECT_EQ(" pPBk", os.str());
 }
 
-TEST(Board, setPiece) {
+TEST(BoardSetPiece, setPiece) {
 	Board board;
 	Piece bBishop(BISHOP, BLACK);
 	board.setPiece(bBishop, { 'd', 3 });
@@ -252,95 +252,95 @@ TEST(Board, setPiece) {
 	EXPECT_EQ(os.str(), correct.str());
 }
 
-TEST(Board, bishopCheck) {
+TEST(BoardIsCheck, bishopCheck) {
 	Board board("rnbqkbnr/ppppp1pp/8/5p1B/8/8/PPPPPPPP/RNBQK1NR w KQkq - 0 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 	EXPECT_FALSE(board.isCheck(WHITE));
 }
 
-TEST(Board, bishopCheckBlocked) {
+TEST(BoardIsCheck, bishopCheckBlocked) {
 	Board board("rnbqkbnr/pppppppp/8/7B/8/8/PPPPPPPP/RNBQK1NR w KQkq - 0 1");
 	EXPECT_FALSE(board.isCheck(BLACK));
 }
 
-TEST(Board, bishopCheck2) {
+TEST(BoardIsCheck, bishopCheck2) {
 	Board board("8/5K2/4B3/8/2k5/8/8/8 w - - 1 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 }
 
-TEST(Board, knightCheck) {
+TEST(BoardIsCheck, knightCheck) {
 	Board board("rnbqkbnr/pppp2pp/5N2/4pp2/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 	EXPECT_FALSE(board.isCheck(WHITE));
 }
 
-TEST(Board, knightCheckBlocked) {
+TEST(BoardIsCheck, knightCheckBlocked) {
 	Board board("rnbqkbnr/pppppppp/5N2/8/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 	EXPECT_FALSE(board.isCheck(WHITE));
 }
 
-TEST(Board, knightCheck2) {
+TEST(BoardIsCheck, knightCheck2) {
 	Board board("rnbqkbnr/pppppppp/3N4/8/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 }
 
-TEST(Board, queenCheckDiag) {
+TEST(BoardIsCheck, queenCheckDiag) {
 	Board board("8/5K2/4Q3/8/2k5/8/8/8 w - - 1 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 }
 
-TEST(Board, queenCheckDiagBlocked) {
+TEST(BoardIsCheck, queenCheckDiagBlocked) {
 	Board board("8/5K2/4Q3/3b4/2k5/8/8/8 w - - 1 1");
 	EXPECT_FALSE(board.isCheck(BLACK));
 }
 
-TEST(Board, queenCheckUp) {
+TEST(BoardIsCheck, queenCheckUp) {
 	Board board("8/2Q2K2/8/8/2k5/8/8/8 w - - 1 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 }
 
-TEST(Board, queenCheckUpBlocked) {
+TEST(BoardIsCheck, queenCheckUpBlocked) {
 	Board board("8/2Q2K2/8/2b5/2k5/8/8/8 w - - 1 1");
 	EXPECT_FALSE(board.isCheck(BLACK));
 }
 
-TEST(Board, queenCheckRight) {
+TEST(BoardIsCheck, queenCheckRight) {
 	Board board("8/5K2/8/2b5/2k4Q/8/8/8 w - - 1 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 }
 
-TEST(Board, queenCheckLeft) {
+TEST(BoardIsCheck, queenCheckLeft) {
 	Board board("8/5K2/8/2b5/Q1k5/8/8/8 w - - 1 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 }
 
-TEST(Board, queenCheckDiag2) {
+TEST(BoardIsCheck, queenCheckDiag2) {
 	Board board("8/5K2/8/2b5/2k5/8/Q7/8 w - - 1 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 }
 
-TEST(Board, rookCheckUpBlocked) {
+TEST(BoardIsCheck, rookCheckUpBlocked) {
 	Board board("2R5/5K2/8/2b5/2k5/8/8/8 w - - 1 1");
 	EXPECT_FALSE(board.isCheck(BLACK));
 }
 
-TEST(Board, rookCheckUp) {
+TEST(BoardIsCheck, rookCheckUp) {
 	Board board("2R5/5K2/8/8/2kb4/8/8/8 w - - 1 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 }
 
-TEST(Board, rookCheckRightBlocked) {
+TEST(BoardIsCheck, rookCheckRightBlocked) {
 	Board board("8/5K2/8/8/2kb3R/8/8/8 w - - 1 1");
 	EXPECT_FALSE(board.isCheck(BLACK));
 }
 
-TEST(Board, rookCheckRight) {
+TEST(BoardIsCheck, rookCheckRight) {
 	Board board("8/5K2/8/2b5/2k4R/8/8/8 w - - 1 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 }
 
-TEST(Board, rookCheckRight2) {
+TEST(BoardIsCheck, rookCheckRight2) {
 	Board board("8/5k2/8/2b5/2K4r/8/8/8 w - - 1 1");
 	EXPECT_TRUE(board.isCheck(WHITE));
 }
