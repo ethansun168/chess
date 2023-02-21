@@ -64,3 +64,7 @@ ostream& operator<< (ostream& os, const Piece& piece) {
 	os << pieceToChar(piece);
 	return os;
 }
+
+bool operator== (const Piece& lPiece, const Piece& rPiece) {
+	return lPiece.getType() == rPiece.getType() && lPiece.getColor() == rPiece.getColor();
+}

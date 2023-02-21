@@ -62,3 +62,5 @@ Piece charToPiece(char ch);
 
 //print piece to os
 std::ostream& operator<< (std::ostream& os, const Piece& piece);
+
+bool operator== (const Piece& lPiece, const Piece& rPiece);

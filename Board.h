@@ -25,6 +25,9 @@ private:
 
 	//helper function for fenCodeToBoardStore
 	void castleModify(bool K, bool Q, bool k, bool q);
+	//check if knights can check the king in kingCell based on color
+	bool knightChecks(Cell kingCell, Color color) const;
+
 public:
 	//Initialize to the starting position
 	Board();
@@ -91,3 +94,12 @@ bool validFenCode(std::string fen);
 
 //helper for validFenCode
 bool validFenChar(char ch);
+
+//convert cell to row and col for the board
+//requires cell to be a valid cell
+std::pair<int, int> cellToBoard(Cell cell);
+
+//convert row and col of board to corresponding cell
+//0 <= row < BOARD_SIZE
+//0 <= col < BOARD_SIZE
+Cell boardToCell(int row, int col);

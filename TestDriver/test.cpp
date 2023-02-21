@@ -220,6 +220,16 @@ TEST(BoardValidFenCode, castle4) {
 	EXPECT_TRUE(validFenCode(fen));
 }
 
+TEST(BoardValidFenCode, castleFail) {
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w fheuwiufhu e3 0 1";
+	EXPECT_FALSE(validFenCode(fen));
+}
+
+TEST(BoardValidFenCode, castleFailEdge) {
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w K-Qq e3 0 1";
+	EXPECT_FALSE(validFenCode(fen));
+}
+
 TEST(BoardGetPiece, getPiece) {
 	Board board;
 	ostringstream os;
@@ -326,7 +336,7 @@ TEST(BoardIsCheck, whiteQueenCheckDiagBlocked) {
 }
 
 TEST(BoardIsCheck, whiteQueenCheckUp) {
-	Board board("8/2Q2K2/8/8/2k5/8/8/8 w - - 1 1");
+	Board board("4Q3/8/2B5/8/1p1p4/2n3K1/8/4k3 w - - 0 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 }
 
@@ -341,12 +351,22 @@ TEST(BoardIsCheck, whiteQueenCheckRight) {
 }
 
 TEST(BoardIsCheck, whiteQueenCheckLeft) {
-	Board board("8/5K2/8/2b5/Q1k5/8/8/8 w - - 1 1");
+	Board board("8/8/2B5/8/1p1pQ2k/2n3K1/8/8 b - - 0 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 }
 
 TEST(BoardIsCheck, whiteQueenCheckDiag2) {
 	Board board("8/5K2/8/2b5/2k5/8/Q7/8 w - - 1 1");
+	EXPECT_TRUE(board.isCheck(BLACK));
+}
+
+TEST(BoardIsCheck, whiteQueenCheckDownBlocked) {
+	Board board("3k4/8/2B5/8/1p1p4/2n3K1/8/3Q4 w - - 0 1");
+	EXPECT_FALSE(board.isCheck(BLACK));
+}
+
+TEST(BoardIsCheck, whiteQueenCheckDown) {
+	Board board("8/8/2B5/5K2/1p1p4/2n3k1/8/6Q1 w - - 0 1");
 	EXPECT_TRUE(board.isCheck(BLACK));
 }
 
@@ -406,7 +426,7 @@ TEST(BoardIsCheck, blackQueenCheckDownBlocked) {
 }
 
 TEST(BoardIsCheck, whiteRookCheckUpBlocked) {
-	Board board("8/8/2B5/2K5/1p1p4/2n3k1/8/2q5 w - - 0 1");
+	Board board("2R5/5K2/8/2B5/2kb4/8/8/8 w - - 1 1");
 	EXPECT_FALSE(board.isCheck(BLACK));
 }
 
@@ -468,4 +488,34 @@ TEST(BoardIsCheck, blackRookCheckUp) {
 TEST(BoardIsCheck, blackRookCheckUpBlocked) {
 	Board board("8/8/3B4/1pKp4/8/2n3k1/8/2r5 w - - 0 1");
 	EXPECT_FALSE(board.isCheck(WHITE));
+}
+
+TEST(CellToBoard, general) {
+	Cell cell = {'e', 5};
+	EXPECT_EQ(cellToBoard(cell).first, 3);
+	EXPECT_EQ(cellToBoard(cell).second, 4);
+}
+
+TEST(CellToBoard, general2) {
+	Cell cell = { 'h', 2 };
+	EXPECT_EQ(cellToBoard(cell).first, 6);
+	EXPECT_EQ(cellToBoard(cell).second, 7);
+}
+
+TEST(BoardToCell, general) {
+	Cell cell = boardToCell(3, 4);
+	EXPECT_EQ(cell.file, 'e');
+	EXPECT_EQ(cell.rank, 5);
+}
+
+TEST(BoardToCell, general2) {
+	Cell cell = boardToCell(6, 7);
+	EXPECT_EQ(cell.file, 'h');
+	EXPECT_EQ(cell.rank, 2);
+}
+
+TEST(BoardToCell, general3) {
+	Cell cell = boardToCell(7, 4);
+	EXPECT_EQ(cell.file, 'e');
+	EXPECT_EQ(cell.rank, 1);
 }

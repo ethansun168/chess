@@ -14,16 +14,88 @@ Board::Board(string fen) {
 Piece Board::getPiece(Cell cell) const {
 	assert(validCell(cell));
 	//e5 = board[row + BOARD_SIZE + col] = board[3][4]
-	return board[BOARD_SIZE - cell.rank][cell.file - 'a'];
+	return board[cellToBoard(cell).first][cellToBoard(cell).second];
 }
 
 void Board::setPiece(Piece piece, Cell cell) {
 	assert(validCell(cell));
-	board[BOARD_SIZE - cell.rank][cell.file - 'a'] = piece;
+	board[cellToBoard(cell).first][cellToBoard(cell).second] = piece;
 }
 
 bool Board::isCheck(Color playerTurn) const {
+	Cell kingCell;
+	if (playerTurn == WHITE) {
+		//check white king
+		for (int row = 0; row < BOARD_SIZE; row++) {
+			for (int col = 0; col < BOARD_SIZE; col++) {
+				if (board[row][col] == Piece(KING,  WHITE)) {
+					kingCell = boardToCell(row, col);
+				}
+			}
+		}
+		//check knight checks
+		if (knightChecks(kingCell, BLACK)) {
+			return true;
+		}
+	}
+	else {
+		//check black king
+		for (int row = 0; row < BOARD_SIZE; row++) {
+			for (int col = 0; col < BOARD_SIZE; col++) {
+				if (board[row][col] == Piece(KING, BLACK)) {
+					kingCell = boardToCell(row, col);
+				}
+			}
+		}
+		//check knight checks
+		if (knightChecks(kingCell, WHITE)) {
+			return true;
+		}
+	}
 	return false;
+}
+
+bool Board::knightChecks(Cell kingCell, Color color) const {
+	if (kingCell.file - 'a' + 2 < BOARD_SIZE &&
+		kingCell.rank + 1 <= BOARD_SIZE &&
+		getPiece({ (char)(kingCell.file + 2), kingCell.rank + 1 }) == Piece(KNIGHT, color)) {
+		return true;
+	}
+	if (kingCell.file - 'a' + 1 < BOARD_SIZE &&
+		kingCell.rank + 2 <= BOARD_SIZE &&
+		getPiece({ (char)(kingCell.file + 1), kingCell.rank + 2 }) == Piece(KNIGHT, color)) {
+		return true;
+	}
+	if (kingCell.file - 'a' - 2 >= 1 &&
+		kingCell.rank + 1 <= BOARD_SIZE &&
+		getPiece({ (char)(kingCell.file - 2), kingCell.rank + 1 }) == Piece(KNIGHT, color)) {
+		return true;
+	}
+	if (kingCell.file - 'a' - 1 >= 1 &&
+		kingCell.rank + 2 <= BOARD_SIZE &&
+		getPiece({ (char)(kingCell.file - 1), kingCell.rank + 2 }) == Piece(KNIGHT, color)) {
+		return true;
+	}
+	if (kingCell.file - 'a' + 2 < BOARD_SIZE &&
+		kingCell.rank - 1 >= 1 &&
+		getPiece({ (char)(kingCell.file + 2), kingCell.rank - 1 }) == Piece(KNIGHT, color)) {
+		return true;
+	}
+	if (kingCell.file - 'a' + 1 < BOARD_SIZE &&
+		kingCell.rank - 2 >= 1 &&
+		getPiece({ (char)(kingCell.file + 1), kingCell.rank - 2 }) == Piece(KNIGHT, color)) {
+		return true;
+	}
+	if (kingCell.file - 'a' - 1 >= 1 &&
+		kingCell.rank - 2 >= 1 &&
+		getPiece({ (char)(kingCell.file - 1), kingCell.rank - 2 }) == Piece(KNIGHT, color)) {
+		return true;
+	}
+	if (kingCell.file - 'a' - 2 >= 1 &&
+		kingCell.rank - 1 >= 1 &&
+		getPiece({ (char)(kingCell.file - 2), kingCell.rank - 1 }) == Piece(KNIGHT, color)) {
+		return true;
+	}
 }
 
 bool Board::isCheckMate(Color playerTurn) const {
@@ -201,8 +273,6 @@ void Board::fenCodeToBoardStore(string fenCode) {
 }
 
 string Board::generateFenCode() const {
-	//"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-	//may want to add the other parts of the fen code later
 	string fenCode;
 	for (int row = 0; row < BOARD_SIZE; row++) {
 		int blank = 0;
@@ -342,4 +412,23 @@ bool validFenChar(char ch) {
 		}
 	}
 	return false;
+}
+
+pair<int, int> cellToBoard(Cell cell) {
+	assert(validCell(cell));
+	//e5 -> [3][4]
+	//cell.rank = row = 5 -> 3
+	//cell.file = col = e -> 4
+	pair<int, int> boardRowCol = {BOARD_SIZE - cell.rank, cell.file - 'a'};
+	return boardRowCol;
+}
+
+Cell boardToCell(int row, int col) {
+ 	assert(0 <= row && row < BOARD_SIZE);
+	assert(0 <= col && col < BOARD_SIZE);
+	//[3][4] -> e5
+	//4 = col -> cell.file
+	//3 = row -> cell.rank
+	Cell cell = {(char) (col + 'a'), BOARD_SIZE - row};
+	return cell;
 }
