@@ -6,6 +6,8 @@
 #include "../Board.cpp"
 #include "../Piece.h"
 #include "../Piece.cpp"
+#include "../Cell.h"
+#include "../Cell.cpp"
 
 using namespace std;
 
