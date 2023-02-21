@@ -12,23 +12,24 @@ Board::Board(string fen) {
 }
 
 Piece Board::getPiece(Cell cell) const {
-	assert(validCell(cell));
+	assert(cell.isValid());
 	//e5 = board[row + BOARD_SIZE + col] = board[3][4]
-	return board[cellToBoard(cell).first][cellToBoard(cell).second];
+	return board[cell.toBoard().first][cell.toBoard().second];
 }
 
 void Board::setPiece(Piece piece, Cell cell) {
-	assert(validCell(cell));
-	board[cellToBoard(cell).first][cellToBoard(cell).second] = piece;
+	assert(cell.isValid());
+	board[cell.toBoard().first][cell.toBoard().second] = piece;
 }
 
 bool Board::isCheck(Color playerTurn) const {
 	Cell kingCell;
 	if (playerTurn == WHITE) {
 		//check white king
+		//get white king cell
 		for (int row = 0; row < BOARD_SIZE; row++) {
 			for (int col = 0; col < BOARD_SIZE; col++) {
-				if (board[row][col] == Piece(KING,  WHITE)) {
+				if (board[row][col] == Piece(KING, WHITE)) {
 					kingCell = boardToCell(row, col);
 				}
 			}
@@ -37,9 +38,13 @@ bool Board::isCheck(Color playerTurn) const {
 		if (knightChecks(kingCell, BLACK)) {
 			return true;
 		}
+		else if (bishopChecks(kingCell, BLACK)) {
+			return true;
+		}
 	}
 	else {
 		//check black king
+		//get black king cell
 		for (int row = 0; row < BOARD_SIZE; row++) {
 			for (int col = 0; col < BOARD_SIZE; col++) {
 				if (board[row][col] == Piece(KING, BLACK)) {
@@ -51,51 +56,61 @@ bool Board::isCheck(Color playerTurn) const {
 		if (knightChecks(kingCell, WHITE)) {
 			return true;
 		}
+		else if (bishopChecks(kingCell, BLACK)) {
+			return true;
+		}
 	}
 	return false;
 }
 
 bool Board::knightChecks(Cell kingCell, Color color) const {
-	if (kingCell.file - 'a' + 2 < BOARD_SIZE &&
-		kingCell.rank + 1 <= BOARD_SIZE &&
-		getPiece({ (char)(kingCell.file + 2), kingCell.rank + 1 }) == Piece(KNIGHT, color)) {
+	if (kingCell.addFile(2) <= BOARD_SIZE &&
+		kingCell.addRank(1) <= BOARD_SIZE &&
+		getPiece(Cell(kingCell.addFile(2) + 'a' - 1, kingCell.addRank(1))) == Piece(KNIGHT, color)) {
 		return true;
 	}
-	if (kingCell.file - 'a' + 1 < BOARD_SIZE &&
-		kingCell.rank + 2 <= BOARD_SIZE &&
-		getPiece({ (char)(kingCell.file + 1), kingCell.rank + 2 }) == Piece(KNIGHT, color)) {
+	if (kingCell.addFile(1) <= BOARD_SIZE &&
+		kingCell.addRank(2) <= BOARD_SIZE &&
+		getPiece(Cell(kingCell.addFile(1) + 'a' - 1, kingCell.addRank(2))) == Piece(KNIGHT, color)) {
 		return true;
 	}
-	if (kingCell.file - 'a' - 2 >= 1 &&
-		kingCell.rank + 1 <= BOARD_SIZE &&
-		getPiece({ (char)(kingCell.file - 2), kingCell.rank + 1 }) == Piece(KNIGHT, color)) {
+	if (kingCell.addFile(-2) >= 1 &&
+		kingCell.addRank(1) <= BOARD_SIZE &&
+		getPiece(Cell(kingCell.addFile(-2) + 'a' - 1, kingCell.addRank(1))) == Piece(KNIGHT, color)) {
 		return true;
 	}
-	if (kingCell.file - 'a' - 1 >= 1 &&
-		kingCell.rank + 2 <= BOARD_SIZE &&
-		getPiece({ (char)(kingCell.file - 1), kingCell.rank + 2 }) == Piece(KNIGHT, color)) {
+	if (kingCell.addFile(-1) >= 1 &&
+		kingCell.addRank(2) <= BOARD_SIZE &&
+		getPiece(Cell(kingCell.addFile(-1) + 'a' - 1, kingCell.addRank(2))) == Piece(KNIGHT, color)) {
 		return true;
 	}
-	if (kingCell.file - 'a' + 2 < BOARD_SIZE &&
-		kingCell.rank - 1 >= 1 &&
-		getPiece({ (char)(kingCell.file + 2), kingCell.rank - 1 }) == Piece(KNIGHT, color)) {
+	if (kingCell.addFile(2) <= BOARD_SIZE &&
+		kingCell.addRank(-1) >= 1 &&
+		getPiece(Cell(kingCell.addFile(2) + 'a' - 1, kingCell.addRank(-1))) == Piece(KNIGHT, color)) {
 		return true;
 	}
-	if (kingCell.file - 'a' + 1 < BOARD_SIZE &&
-		kingCell.rank - 2 >= 1 &&
-		getPiece({ (char)(kingCell.file + 1), kingCell.rank - 2 }) == Piece(KNIGHT, color)) {
+	if (kingCell.addFile(1) <= BOARD_SIZE &&
+		kingCell.addRank(-2) >= 1 &&
+		getPiece(Cell(kingCell.addFile(1) + 'a' - 1, kingCell.addRank(-2))) == Piece(KNIGHT, color)) {
 		return true;
 	}
-	if (kingCell.file - 'a' - 1 >= 1 &&
-		kingCell.rank - 2 >= 1 &&
-		getPiece({ (char)(kingCell.file - 1), kingCell.rank - 2 }) == Piece(KNIGHT, color)) {
+	if (kingCell.addFile(-1) >= 1 &&
+		kingCell.addRank(-2) >= 1 &&
+		getPiece(Cell(kingCell.addFile(-1) + 'a' - 1, kingCell.addRank(-2))) == Piece(KNIGHT, color)) {
 		return true;
 	}
-	if (kingCell.file - 'a' - 2 >= 1 &&
-		kingCell.rank - 1 >= 1 &&
-		getPiece({ (char)(kingCell.file - 2), kingCell.rank - 1 }) == Piece(KNIGHT, color)) {
+	if (kingCell.addFile(-2) >= 1 &&
+		kingCell.addRank(-1) >= 1 &&
+		getPiece(Cell(kingCell.addFile(-2) + 'a' - 1, kingCell.addRank(-1))) == Piece(KNIGHT, color)) {
 		return true;
 	}
+	return false;
+}
+
+bool Board::bishopChecks(Cell kingCell, Color color) const {
+	//up left diag
+	//while (kingCell.file - 'a' + 1){}
+	return false;
 }
 
 bool Board::isCheckMate(Color playerTurn) const {
@@ -113,12 +128,12 @@ bool Board::canCastle(Color playerTurn) const {
 }
 
 bool Board::isValidMove(Color playerTurn, Cell start, Cell end) const {
-	assert(validCell(start) && validCell(end));
+	assert(start.isValid() && end.isValid());
 	return false;
 }
 
 bool Board::move(Cell start, Cell end) {
-	assert(validCell(start) && validCell(end));
+	assert(start.isValid() && end.isValid());
 	if (isValidMove(playerTurn, start, end)) {
 		// Gets the piece at start, and sets that piece to end location
 		setPiece(getPiece(start), end);
@@ -342,10 +357,6 @@ ostream& operator<< (ostream& os, const Board& board) {
 	return os;
 }
 
-bool validCell(Cell cell) {
-	return 1 <= cell.rank && 8 >= cell.rank && 'a' <= cell.file && 'h' >= cell.file;
-}
-
 bool validFenCode(string fen) {
 
 	stringstream ss;
@@ -414,21 +425,14 @@ bool validFenChar(char ch) {
 	return false;
 }
 
-pair<int, int> cellToBoard(Cell cell) {
-	assert(validCell(cell));
-	//e5 -> [3][4]
-	//cell.rank = row = 5 -> 3
-	//cell.file = col = e -> 4
-	pair<int, int> boardRowCol = {BOARD_SIZE - cell.rank, cell.file - 'a'};
-	return boardRowCol;
-}
-
 Cell boardToCell(int row, int col) {
  	assert(0 <= row && row < BOARD_SIZE);
 	assert(0 <= col && col < BOARD_SIZE);
 	//[3][4] -> e5
 	//4 = col -> cell.file
 	//3 = row -> cell.rank
-	Cell cell = {(char) (col + 'a'), BOARD_SIZE - row};
+	Cell cell;
+	cell.setFile((char)(col + 'a'));
+	cell.setRank(BOARD_SIZE - row);
 	return cell;
 }

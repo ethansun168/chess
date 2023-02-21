@@ -137,27 +137,27 @@ TEST(BoardPrint, general4) {
 
 TEST(BoardValidCell, general) {
 	Cell cell = { 'a', 5 };
-	EXPECT_TRUE(validCell(cell));
+	EXPECT_TRUE(cell.isValid());
 }
 
 TEST(BoardValidCell, generalFail) {
 	Cell cell = { 'l', 5 };
-	EXPECT_FALSE(validCell(cell));
+	EXPECT_FALSE(cell.isValid());
 }
 
 TEST(BoardValidCell, edgeCase) {
 	Cell cell = { 'a', 8 };
-	EXPECT_TRUE(validCell(cell));
+	EXPECT_TRUE(cell.isValid());
 }
 
 TEST(BoardValidCell, generalFail2) {
 	Cell cell = { 'z', 1 };
-	EXPECT_FALSE(validCell(cell));
+	EXPECT_FALSE(cell.isValid());
 }
 
 TEST(BoardValidCell, edgeCase2) {
 	Cell cell = { 'a', 0 };
-	EXPECT_FALSE(validCell(cell));
+	EXPECT_FALSE(cell.isValid());
 }
 
 TEST(BoardValidFenCode, general) {
@@ -492,30 +492,30 @@ TEST(BoardIsCheck, blackRookCheckUpBlocked) {
 
 TEST(CellToBoard, general) {
 	Cell cell = {'e', 5};
-	EXPECT_EQ(cellToBoard(cell).first, 3);
-	EXPECT_EQ(cellToBoard(cell).second, 4);
+	EXPECT_EQ(cell.toBoard().first, 3);
+	EXPECT_EQ(cell.toBoard().second, 4);
 }
 
 TEST(CellToBoard, general2) {
 	Cell cell = { 'h', 2 };
-	EXPECT_EQ(cellToBoard(cell).first, 6);
-	EXPECT_EQ(cellToBoard(cell).second, 7);
+	EXPECT_EQ(cell.toBoard().first, 6);
+	EXPECT_EQ(cell.toBoard().second, 7);
 }
 
 TEST(BoardToCell, general) {
 	Cell cell = boardToCell(3, 4);
-	EXPECT_EQ(cell.file, 'e');
-	EXPECT_EQ(cell.rank, 5);
+	EXPECT_EQ(cell.getFile(), 'e');
+	EXPECT_EQ(cell.getRank(), 5);
 }
 
 TEST(BoardToCell, general2) {
 	Cell cell = boardToCell(6, 7);
-	EXPECT_EQ(cell.file, 'h');
-	EXPECT_EQ(cell.rank, 2);
+	EXPECT_EQ(cell.getFile(), 'h');
+	EXPECT_EQ(cell.getRank(), 2);
 }
 
 TEST(BoardToCell, general3) {
 	Cell cell = boardToCell(7, 4);
-	EXPECT_EQ(cell.file, 'e');
-	EXPECT_EQ(cell.rank, 1);
+	EXPECT_EQ(cell.getFile(), 'e');
+	EXPECT_EQ(cell.getRank(), 1);
 }

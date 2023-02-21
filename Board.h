@@ -2,13 +2,7 @@
 #include <vector>
 #include "Piece.h"
 #include "Player.h"
-
-int const BOARD_SIZE = 8;
-
-struct Cell {
-	char file;
-	int rank;
-};
+#include "Cell.h"
 
 //Representation of Board
 class Board {
@@ -25,9 +19,10 @@ private:
 
 	//helper function for fenCodeToBoardStore
 	void castleModify(bool K, bool Q, bool k, bool q);
-	//check if knights can check the king in kingCell based on color
+	//check if [color] knights can check the king in [kingCell]
 	bool knightChecks(Cell kingCell, Color color) const;
-
+	//check if the [color] bishop can check the king in [kingCell]
+	bool bishopChecks(Cell kingCell, Color color) const;
 public:
 	//Initialize to the starting position
 	Board();
@@ -76,14 +71,8 @@ public:
 	std::string generateFenCode() const;
 };
 
-
-
 //print the board to os
 std::ostream& operator<< (std::ostream& os, const Board& board);
-
-//checks if the cell is a valid cell
-//valid cell means 1 <= rank <= 8 and a <= file <= h
-bool validCell(Cell cell);
 
 //checks if the string is a valid fen string
 //is valid if characters are only r n b q k p P R N B Q K, 1-8, /
@@ -94,10 +83,6 @@ bool validFenCode(std::string fen);
 
 //helper for validFenCode
 bool validFenChar(char ch);
-
-//convert cell to row and col for the board
-//requires cell to be a valid cell
-std::pair<int, int> cellToBoard(Cell cell);
 
 //convert row and col of board to corresponding cell
 //0 <= row < BOARD_SIZE
