@@ -11,103 +11,52 @@ Board::Board(string fen) {
 	fenCodeToBoardStore(fen);
 }
 
-Piece Board::getPiece(Cell cell) const {
-	assert(cell.isValid());
-	//e5 = board[row + BOARD_SIZE + col] = board[3][4]
-	return board[cell.toBoard().first][cell.toBoard().second];
+Piece Board::getPiece(pair<int, int> location) const {
+	assert(isValidLocation(location));
+	return board[location.first][location.second];
 }
 
-void Board::setPiece(Piece piece, Cell cell) {
-	assert(cell.isValid());
-	board[cell.toBoard().first][cell.toBoard().second] = piece;
+void Board::setPiece(Piece piece, pair<int, int> location) {
+	assert(isValidLocation(location));
+	board[location.first][location.second] = piece;
+}
+
+bool Board::isValidLocation(pair<int, int> location) const {
+	return (
+		location.first >= 0 &&
+		location.first < 8 &&
+		location.second >= 0 &&
+		location.second < 8
+	);
 }
 
 bool Board::isCheck(Color playerTurn) const {
-	Cell kingCell;
 	if (playerTurn == WHITE) {
-		//check white king
-		//get white king cell
-		for (int row = 0; row < BOARD_SIZE; row++) {
-			for (int col = 0; col < BOARD_SIZE; col++) {
-				if (board[row][col] == Piece(KING, WHITE)) {
-					kingCell = boardToCell(row, col);
-				}
-			}
-		}
-		//check knight checks
-		if (knightChecks(kingCell, BLACK)) {
-			return true;
-		}
-		else if (bishopChecks(kingCell, BLACK)) {
-			return true;
-		}
+		return (knightChecks(BLACK, whiteKingLocation) || bishopChecks(BLACK, whiteKingLocation));
 	}
-	else {
-		//check black king
-		//get black king cell
-		for (int row = 0; row < BOARD_SIZE; row++) {
-			for (int col = 0; col < BOARD_SIZE; col++) {
-				if (board[row][col] == Piece(KING, BLACK)) {
-					kingCell = boardToCell(row, col);
-				}
-			}
-		}
-		//check knight checks
-		if (knightChecks(kingCell, WHITE)) {
-			return true;
-		}
-		else if (bishopChecks(kingCell, BLACK)) {
-			return true;
-		}
-	}
-	return false;
+	// Otherwise Black Piece
+	return (knightChecks(WHITE, blackKingLocation) || bishopChecks(WHITE, blackKingLocation));
 }
 
-bool Board::knightChecks(Cell kingCell, Color color) const {
-	if (kingCell.addFile(2) <= BOARD_SIZE &&
-		kingCell.addRank(1) <= BOARD_SIZE &&
-		getPiece(Cell(kingCell.addFile(2) + 'a' - 1, kingCell.addRank(1))) == Piece(KNIGHT, color)) {
-		return true;
-	}
-	if (kingCell.addFile(1) <= BOARD_SIZE &&
-		kingCell.addRank(2) <= BOARD_SIZE &&
-		getPiece(Cell(kingCell.addFile(1) + 'a' - 1, kingCell.addRank(2))) == Piece(KNIGHT, color)) {
-		return true;
-	}
-	if (kingCell.addFile(-2) >= 1 &&
-		kingCell.addRank(1) <= BOARD_SIZE &&
-		getPiece(Cell(kingCell.addFile(-2) + 'a' - 1, kingCell.addRank(1))) == Piece(KNIGHT, color)) {
-		return true;
-	}
-	if (kingCell.addFile(-1) >= 1 &&
-		kingCell.addRank(2) <= BOARD_SIZE &&
-		getPiece(Cell(kingCell.addFile(-1) + 'a' - 1, kingCell.addRank(2))) == Piece(KNIGHT, color)) {
-		return true;
-	}
-	if (kingCell.addFile(2) <= BOARD_SIZE &&
-		kingCell.addRank(-1) >= 1 &&
-		getPiece(Cell(kingCell.addFile(2) + 'a' - 1, kingCell.addRank(-1))) == Piece(KNIGHT, color)) {
-		return true;
-	}
-	if (kingCell.addFile(1) <= BOARD_SIZE &&
-		kingCell.addRank(-2) >= 1 &&
-		getPiece(Cell(kingCell.addFile(1) + 'a' - 1, kingCell.addRank(-2))) == Piece(KNIGHT, color)) {
-		return true;
-	}
-	if (kingCell.addFile(-1) >= 1 &&
-		kingCell.addRank(-2) >= 1 &&
-		getPiece(Cell(kingCell.addFile(-1) + 'a' - 1, kingCell.addRank(-2))) == Piece(KNIGHT, color)) {
-		return true;
-	}
-	if (kingCell.addFile(-2) >= 1 &&
-		kingCell.addRank(-1) >= 1 &&
-		getPiece(Cell(kingCell.addFile(-2) + 'a' - 1, kingCell.addRank(-1))) == Piece(KNIGHT, color)) {
-		return true;
-	}
-	return false;
+bool Board::knightChecks(Color color, pair<int, int> kingLocation) const {
+	return (kingCheckHelper(kingLocation, 2, 1, color, KNIGHT) ||
+		kingCheckHelper(kingLocation, 1, 2, color, KNIGHT) ||
+		kingCheckHelper(kingLocation, -2, 1, color, KNIGHT) ||
+		kingCheckHelper(kingLocation, -1, 2, color, KNIGHT) ||
+		kingCheckHelper(kingLocation, 2, -1, color, KNIGHT) ||
+		kingCheckHelper(kingLocation, 1, -2, color, KNIGHT) ||
+		kingCheckHelper(kingLocation, -1, -2, color, KNIGHT) ||
+		kingCheckHelper(kingLocation, -2, -1, color, KNIGHT)
+	);
 }
 
-bool Board::bishopChecks(Cell kingCell, Color color) const {
+bool Board::kingCheckHelper(pair<int, int> kingLocation, int rowAdd, int colAdd, Color color, Type pieceType ) const {
+	return (isValidLocation({ kingLocation.first + rowAdd, kingLocation.second + colAdd }) &&
+		getPiece({ kingLocation.first + rowAdd, kingLocation.second + colAdd }).getType() == pieceType &&
+		getPiece({ kingLocation.first + rowAdd, kingLocation.second + colAdd }).getColor() == color);
+}
+
+bool Board::bishopChecks(Color color, pair<int, int> kingLocation) const {
 	//up left diag
 	//while (kingCell.file - 'a' + 1){}
 	return false;
@@ -122,18 +71,16 @@ bool Board::canCastle(Color playerTurn) const {
 	if (playerTurn == WHITE) {
 		return (whiteCanCastleKingSide) || (whiteCanCastleQueenSide);
 	}
-	else {
-		return (blackCanCastleKingSide || blackCanCastleQueenSide);
-	}
+	return (blackCanCastleKingSide || blackCanCastleQueenSide);
 }
 
-bool Board::isValidMove(Color playerTurn, Cell start, Cell end) const {
-	assert(start.isValid() && end.isValid());
+bool Board::isValidMove(Color playerTurn, pair<int, int> start, pair<int, int> end) const {
+	assert(isValidLocation(start) && isValidLocation(end));
 	return false;
 }
 
-bool Board::move(Cell start, Cell end) {
-	assert(start.isValid() && end.isValid());
+bool Board::move(pair<int, int> start, pair<int, int> end) {
+	assert(isValidLocation(start) && isValidLocation(end));
 	if (isValidMove(playerTurn, start, end)) {
 		// Gets the piece at start, and sets that piece to end location
 		setPiece(getPiece(start), end);
@@ -423,16 +370,4 @@ bool validFenChar(char ch) {
 		}
 	}
 	return false;
-}
-
-Cell boardToCell(int row, int col) {
- 	assert(0 <= row && row < BOARD_SIZE);
-	assert(0 <= col && col < BOARD_SIZE);
-	//[3][4] -> e5
-	//4 = col -> cell.file
-	//3 = row -> cell.rank
-	Cell cell;
-	cell.setFile((char)(col + 'a'));
-	cell.setRank(BOARD_SIZE - row);
-	return cell;
 }

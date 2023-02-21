@@ -6,8 +6,6 @@
 #include "../Board.cpp"
 #include "../Piece.h"
 #include "../Piece.cpp"
-#include "../Cell.h"
-#include "../Cell.cpp"
 
 using namespace std;
 
@@ -135,31 +133,6 @@ TEST(BoardPrint, general4) {
 		    << "  |_________________|\n"
 		    << "    a b c d e f g h ";
 	EXPECT_EQ(os.str(), correct.str());
-}
-
-TEST(BoardValidCell, general) {
-	Cell cell = { 'a', 5 };
-	EXPECT_TRUE(cell.isValid());
-}
-
-TEST(BoardValidCell, generalFail) {
-	Cell cell = { 'l', 5 };
-	EXPECT_FALSE(cell.isValid());
-}
-
-TEST(BoardValidCell, edgeCase) {
-	Cell cell = { 'a', 8 };
-	EXPECT_TRUE(cell.isValid());
-}
-
-TEST(BoardValidCell, generalFail2) {
-	Cell cell = { 'z', 1 };
-	EXPECT_FALSE(cell.isValid());
-}
-
-TEST(BoardValidCell, edgeCase2) {
-	Cell cell = { 'a', 0 };
-	EXPECT_FALSE(cell.isValid());
 }
 
 TEST(BoardValidFenCode, general) {
@@ -290,7 +263,7 @@ TEST(BoardIsCheck, blackBishopCheck2) {
 	EXPECT_TRUE(board.isCheck(WHITE));
 }
 
-TEST(BoardIsCheck, blackBishopCheckBLocked) {
+TEST(BoardIsCheck, blackBishopCheckBlocked) {
 	Board board("8/8/8/2K5/3p4/4b1k1/8/8 w - - 0 1");
 	EXPECT_FALSE(board.isCheck(WHITE));
 }
@@ -490,34 +463,4 @@ TEST(BoardIsCheck, blackRookCheckUp) {
 TEST(BoardIsCheck, blackRookCheckUpBlocked) {
 	Board board("8/8/3B4/1pKp4/8/2n3k1/8/2r5 w - - 0 1");
 	EXPECT_FALSE(board.isCheck(WHITE));
-}
-
-TEST(CellToBoard, general) {
-	Cell cell = {'e', 5};
-	EXPECT_EQ(cell.toBoard().first, 3);
-	EXPECT_EQ(cell.toBoard().second, 4);
-}
-
-TEST(CellToBoard, general2) {
-	Cell cell = { 'h', 2 };
-	EXPECT_EQ(cell.toBoard().first, 6);
-	EXPECT_EQ(cell.toBoard().second, 7);
-}
-
-TEST(BoardToCell, general) {
-	Cell cell = boardToCell(3, 4);
-	EXPECT_EQ(cell.getFile(), 'e');
-	EXPECT_EQ(cell.getRank(), 5);
-}
-
-TEST(BoardToCell, general2) {
-	Cell cell = boardToCell(6, 7);
-	EXPECT_EQ(cell.getFile(), 'h');
-	EXPECT_EQ(cell.getRank(), 2);
-}
-
-TEST(BoardToCell, general3) {
-	Cell cell = boardToCell(7, 4);
-	EXPECT_EQ(cell.getFile(), 'e');
-	EXPECT_EQ(cell.getRank(), 1);
 }

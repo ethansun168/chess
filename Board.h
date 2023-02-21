@@ -2,7 +2,8 @@
 #include <vector>
 #include "Piece.h"
 #include "Player.h"
-#include "Cell.h"
+
+#define BOARD_SIZE 8
 
 //Representation of Board
 class Board {
@@ -12,17 +13,20 @@ private:
 	bool whiteCanCastleQueenSide;
 	bool blackCanCastleKingSide;
 	bool blackCanCastleQueenSide;
-	Color playerTurn;
-	Cell enPassant;
+	Color playerTurn;;
 	int halfMoves;
 	int fullMoves;
+	std::pair<int, int> whiteKingLocation;
+	std::pair<int, int> blackKingLocation;
 
 	//helper function for fenCodeToBoardStore
 	void castleModify(bool K, bool Q, bool k, bool q);
 	//check if [color] knights can check the king in [kingCell]
-	bool knightChecks(Cell kingCell, Color color) const;
+	bool knightChecks(Color currentPlayer, std::pair<int, int> kingLocation) const;
+	// Helper function to reduce code, passes in horse arguments
+	bool kingCheckHelper(std::pair<int, int> kingLocation, int rowAdd, int colAdd, Color color, Type pieceType) const;
 	//check if the [color] bishop can check the king in [kingCell]
-	bool bishopChecks(Cell kingCell, Color color) const;
+	bool bishopChecks(Color currentPlayer, std::pair<int, int> kingLocation) const;
 public:
 	//Initialize to the starting position
 	Board();
@@ -35,11 +39,13 @@ public:
 
 	//get the piece at cell
 	//requires a valid cell
-	Piece getPiece(Cell cell) const;
+	Piece getPiece(std::pair<int, int> location) const;
 
 	//set the piece at cell
 	//requires a valid piece and a valid cell
-	void setPiece(Piece piece, Cell cell);
+	void setPiece(Piece piece, std::pair<int, int> location);
+
+	bool isValidLocation(std::pair<int, int> location) const;
 	
 	//checks for check
 	bool isCheck(Color playerTurn) const;
@@ -53,13 +59,13 @@ public:
 	//check if the move for the piece at start is valid
 	//requires start and end to be valid cells
 	//needs to account for piece obstruction, pins, in checks, can castle
-	bool isValidMove(Color playerTurn, Cell start, Cell end) const;
+	bool isValidMove(Color playerTurn, std::pair<int, int> start, std::pair<int, int> end) const;
 
 	//move piece after it passes isValidMove
 	//requires start and end to be valid cells
 	//returns true if move sucessfully executes
 	//returns false if it does not
-	bool move(Cell start, Cell end);
+	bool move(std::pair<int, int> start, std::pair<int, int> end);
 
 	// Translate a line of FEN code into a board position
 	void fenCodeToBoardPrint(std::string fenCode, std::ostream& os) const;
@@ -83,8 +89,3 @@ bool validFenCode(std::string fen);
 
 //helper for validFenCode
 bool validFenChar(char ch);
-
-//convert row and col of board to corresponding cell
-//0 <= row < BOARD_SIZE
-//0 <= col < BOARD_SIZE
-Cell boardToCell(int row, int col);
