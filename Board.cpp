@@ -33,13 +33,17 @@ bool Board::isValidLocation(pair<int, int> location) const {
 bool Board::isCheck(Color playerTurn) const {
 	if (playerTurn == WHITE) {
 		return (knightChecks(BLACK, whiteKingLocation) || 
-			bishopChecks(BLACK, whiteKingLocation) ||
-			pawnChecks(BLACK, whiteKingLocation));
+				bishopChecks(BLACK, whiteKingLocation) ||
+				pawnChecks(BLACK, whiteKingLocation) ||
+				rookChecks(BLACK, whiteKingLocation) ||
+				queenChecks(BLACK, whiteKingLocation));
 	}
 	// Otherwise Black Piece
 	return (knightChecks(WHITE, blackKingLocation) ||
-		bishopChecks(WHITE, blackKingLocation) ||
-		pawnChecks(WHITE, blackKingLocation));
+			bishopChecks(WHITE, blackKingLocation) ||
+			pawnChecks(WHITE, blackKingLocation) ||
+			rookChecks(WHITE, blackKingLocation) ||
+			queenChecks(WHITE, blackKingLocation));
 }
 
 bool Board::knightChecks(Color color, pair<int, int> kingLocation) const {
@@ -86,6 +90,46 @@ bool Board::pawnChecks(Color color, pair<int, int> kingLocation) const {
 		kingCheckHelper(kingLocation, -1, -1, color, PAWN) ||
 		kingCheckHelper(kingLocation, -1, 1, color, PAWN)
 	);
+}
+
+bool Board::rookChecks(Color color, pair<int, int> kingLocation) const {
+	int rowKing = kingLocation.first;
+	int colKing = kingLocation.second;
+	int increment = 1;
+	bool checkUpper = true, checkUnder = true, checkRight = true, checkLeft = true;
+	while (increment < BOARD_SIZE) {
+		if (checkUpper && kingCheckHelper(kingLocation, increment * -1, 0, color, ROOK)) { return true; }
+		if (checkUnder && kingCheckHelper(kingLocation, increment, 0, color, ROOK)) { return true; }
+		if (checkRight && kingCheckHelper(kingLocation, 0, increment, color, ROOK)) { return true; }
+		if (checkLeft && kingCheckHelper(kingLocation, 0, increment * -1, color, ROOK)) { return true; }
+
+		if (!kingCheckHelper(kingLocation, increment * -1, 0, WHITE, EMPTY) &&
+			!kingCheckHelper(kingLocation, increment * -1, 0, color, ROOK)) {
+			checkUpper = false;
+		}
+
+		if (!kingCheckHelper(kingLocation, increment, 0, WHITE, EMPTY) &&
+			!kingCheckHelper(kingLocation, increment, 0, color, ROOK)) {
+			checkUnder = false;
+		}
+
+		if (!kingCheckHelper(kingLocation, 0, increment, WHITE, EMPTY) &&
+			!kingCheckHelper(kingLocation, 0, increment, color, ROOK)) {
+			checkRight = false;
+		}
+
+		if (!kingCheckHelper(kingLocation, 0, increment * -1, WHITE, EMPTY) &&
+			!kingCheckHelper(kingLocation, 0, increment * -1, color, ROOK)) {
+			checkLeft = false;
+		}
+
+		increment++;
+	}
+	return false;
+}
+
+bool Board::queenChecks(Color color, pair<int, int> kingLocation) const {
+	return false;
 }
 
 bool Board::isCheckMate(Color playerTurn) const {
