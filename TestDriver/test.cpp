@@ -208,18 +208,24 @@ TEST(BoardValidFenCode, castleFailEdge) {
 TEST(BoardGetPiece, getPiece) {
 	Board board;
 	ostringstream os;
-	os << board.getPiece({ 'a',5 })
+
+	os << board.getPiece({ 3, 0 })
+		<< board.getPiece({ 1, 2 })
+		<< board.getPiece({ 6, 4 })
+		<< board.getPiece({ 7,5 })
+		<< board.getPiece({ 0,4 });
+	/*os << board.getPiece({ 'a',5 })
 	   << board.getPiece({ 'c',7 })
 	   << board.getPiece({ 'e',2 })
 	   << board.getPiece({ 'f',1 })
-	   << board.getPiece({ 'e',8 });
+	   << board.getPiece({ 'e',8 });*/
 	EXPECT_EQ(" pPBk", os.str());
 }
 
 TEST(BoardSetPiece, setPiece) {
 	Board board;
 	Piece bBishop(BISHOP, BLACK);
-	board.setPiece(bBishop, { 'd', 3 });
+	board.setPiece(bBishop, { 5, 3 });
 	ostringstream os;
 	os << board;
 	ostringstream correct;
