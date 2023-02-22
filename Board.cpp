@@ -51,8 +51,8 @@ bool Board::knightChecks(Color color, pair<int, int> kingLocation) const {
 }
 
 bool Board::bishopChecks(Color color, pair<int, int> kingLocation) const {
-	//up left diag HOW??
-	
+	//up left diag
+	//while (kingCell.file - 'a' + 1){}
 	return false;
 }
 
@@ -152,12 +152,20 @@ void Board::fenCodeToBoardStore(string fenCode) {
 		else if (numberOfBlanks > 0 && numberOfBlanks < 9) {
 			for (int i = 0; i < numberOfBlanks; ++i) {
 				Piece piece;
-				board[row][col] = piece;
+				setPiece(piece, { row, col });
+				//board[row][col] = piece;
 				col++;
 			}
 		}
 		else {
-			board[row][col] = charToPiece(fenCode[stringIndex]);
+			setPiece(charToPiece(fenCode[stringIndex]), { row, col });
+			if (fenCode[stringIndex] == 'K') {
+				whiteKingLocation = { row, col };
+			}
+			if (fenCode[stringIndex] == 'k') {
+				blackKingLocation = { row, col };
+			}
+			//board[row][col] = charToPiece(fenCode[stringIndex]);
 			col++;
 		}
 		stringIndex++;

@@ -16,19 +16,23 @@ private:
 	Color playerTurn;;
 	int halfMoves;
 	int fullMoves;
+	std::pair<int, int> enPassant;
+
+	//make sure to update the king locations after a move
 	std::pair<int, int> whiteKingLocation;
 	std::pair<int, int> blackKingLocation;
 
 	//helper function for fenCodeToBoardStore
 	void castleModify(bool K, bool Q, bool k, bool q);
+	
 	//check if [color] knights can check the king in [kingCell]
-	bool knightChecks(Color currentPlayer, std::pair<int, int> kingLocation) const;
-	// Helper function to reduce code, passes in horse arguments
-	bool kingCheckHelper(std::pair<int, int> kingLocation, int rowAdd, int colAdd, Color color, Type pieceType) const;
+	bool knightChecks(Color color, std::pair<int, int> kingLocation) const;
 	//check if the [color] bishop can check the king in [kingCell]
 	bool bishopChecks(Color currentPlayer, std::pair<int, int> kingLocation) const;
-	// check if the [color] pawn can check the king
-	bool pawnChecks(Color currentPlayer, std::pair<int, int> kingLocation) const;
+	bool pawnChecks(Color currentPlaayer, std::pair<int, int> kingLocation) const;
+
+	// Helper function to reduce code, passes in horse arguments
+	bool kingCheckHelper(std::pair<int, int> kingLocation, int rowAdd, int colAdd, Color color, Type pieceType) const;
 public:
 	//Initialize to the starting position
 	Board();
@@ -39,14 +43,16 @@ public:
 	//input string must be a valid fen string
 	Board(std::string fen);
 
-	//get the piece at cell
-	//requires a valid cell
+	//get the piece at location
+	//requires a valid location
 	Piece getPiece(std::pair<int, int> location) const;
 
-	//set the piece at cell
-	//requires a valid piece and a valid cell
+	//set the piece at location
+	//requires a valid piece and a valid location
 	void setPiece(Piece piece, std::pair<int, int> location);
 
+	//check if the location is valid
+	//0 <= first <= 8, 0 <= second <= 8
 	bool isValidLocation(std::pair<int, int> location) const;
 	
 	//checks for check
