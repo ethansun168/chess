@@ -96,13 +96,16 @@ bool Board::rookChecks(Color color, pair<int, int> kingLocation) const {
 	int rowKing = kingLocation.first;
 	int colKing = kingLocation.second;
 	int increment = 1;
+	//true if there is no obstruction in the given direction
 	bool checkUpper = true, checkUnder = true, checkRight = true, checkLeft = true;
 	while (increment < BOARD_SIZE) {
+		//check if there are rooks and no obstructions
 		if (checkUpper && kingCheckHelper(kingLocation, increment * -1, 0, color, ROOK)) { return true; }
 		if (checkUnder && kingCheckHelper(kingLocation, increment, 0, color, ROOK)) { return true; }
 		if (checkRight && kingCheckHelper(kingLocation, 0, increment, color, ROOK)) { return true; }
 		if (checkLeft && kingCheckHelper(kingLocation, 0, increment * -1, color, ROOK)) { return true; }
 
+		//check if there are obstructions
 		if (!kingCheckHelper(kingLocation, increment * -1, 0, WHITE, EMPTY) &&
 			!kingCheckHelper(kingLocation, increment * -1, 0, color, ROOK)) {
 			checkUpper = false;
@@ -122,7 +125,6 @@ bool Board::rookChecks(Color color, pair<int, int> kingLocation) const {
 			!kingCheckHelper(kingLocation, 0, increment * -1, color, ROOK)) {
 			checkLeft = false;
 		}
-
 		increment++;
 	}
 	return false;
