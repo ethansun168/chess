@@ -27,6 +27,8 @@ private:
 	bool kingCheckHelper(std::pair<int, int> kingLocation, int rowAdd, int colAdd, Color color, Type pieceType) const;
 	//check if the [color] bishop can check the king in [kingCell]
 	bool bishopChecks(Color currentPlayer, std::pair<int, int> kingLocation) const;
+	// check if the [color] pawn can check the king
+	bool pawnChecks(Color currentPlayer, std::pair<int, int> kingLocation) const;
 public:
 	//Initialize to the starting position
 	Board();

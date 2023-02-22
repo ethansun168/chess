@@ -41,6 +41,11 @@ bool Piece::isEmpty() const {
 	return empty;
 }
 
+Color opposite(Color color) {
+	return (color == WHITE) ? BLACK : WHITE;
+}
+
+
 char pieceToChar(Piece piece) {
 	return (piece.getColor() == BLACK) ?
 		tolower(abbreviations[piece.getType()]) :
@@ -58,7 +63,6 @@ Piece charToPiece(char charPiece) {
 	}
 	return newPiece;
 }
-
 
 ostream& operator<< (ostream& os, const Piece& piece) {
 	os << pieceToChar(piece);

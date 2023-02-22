@@ -50,20 +50,34 @@ bool Board::knightChecks(Color color, pair<int, int> kingLocation) const {
 	);
 }
 
-bool Board::kingCheckHelper(pair<int, int> kingLocation, int rowAdd, int colAdd, Color color, Type pieceType ) const {
-	return (isValidLocation({ kingLocation.first + rowAdd, kingLocation.second + colAdd }) &&
-		getPiece({ kingLocation.first + rowAdd, kingLocation.second + colAdd }).getType() == pieceType &&
-		getPiece({ kingLocation.first + rowAdd, kingLocation.second + colAdd }).getColor() == color);
+bool Board::bishopChecks(Color color, pair<int, int> kingLocation) const {
+	//up left diag HOW??
+	
+	return false;
 }
 
-bool Board::bishopChecks(Color color, pair<int, int> kingLocation) const {
-	//up left diag
-	//while (kingCell.file - 'a' + 1){}
-	return false;
+// Because A8 is 00 so pawn moves have to be inverted
+bool Board::pawnChecks(Color color, pair<int, int> kingLocation) const {
+	if (color == WHITE) {
+		return(
+			kingCheckHelper(kingLocation, -1, -1, BLACK, PAWN) ||
+			kingCheckHelper(kingLocation, 1, -1, BLACK, PAWN)
+		);
+	}
+	return(
+		kingCheckHelper(kingLocation, -1, 1, WHITE, PAWN) ||
+		kingCheckHelper(kingLocation, 1, 1, WHITE, PAWN)
+	);	
 }
 
 bool Board::isCheckMate(Color playerTurn) const {
 	return false;
+}
+
+bool Board::kingCheckHelper(pair<int, int> kingLocation, int rowAdd, int colAdd, Color color, Type pieceType) const {
+	return (isValidLocation({ kingLocation.first + rowAdd, kingLocation.second + colAdd }) &&
+		getPiece({ kingLocation.first + rowAdd, kingLocation.second + colAdd }).getType() == pieceType &&
+		getPiece({ kingLocation.first + rowAdd, kingLocation.second + colAdd }).getColor() == color);
 }
 
 // TODO: FIX LATER
@@ -234,6 +248,13 @@ void Board::fenCodeToBoardStore(string fenCode) {
 	fullMoves = moves;
 }
 
+void Board::castleModify(bool K, bool Q, bool k, bool q) {
+	whiteCanCastleKingSide = K;
+	whiteCanCastleQueenSide = Q;
+	blackCanCastleKingSide = k;
+	blackCanCastleQueenSide = q;
+}
+
 string Board::generateFenCode() const {
 	string fenCode;
 	for (int row = 0; row < BOARD_SIZE; row++) {
@@ -290,18 +311,6 @@ string Board::generateFenCode() const {
 	fenCode += " ";
 	fenCode += to_string(fullMoves);
 	return fenCode;
-}
-
-void Board::castleModify(bool K, bool Q, bool k, bool q) {
-	whiteCanCastleKingSide = K;
-	whiteCanCastleQueenSide = Q;
-	blackCanCastleKingSide = k;
-	blackCanCastleQueenSide = q;
-}
-
-ostream& operator<< (ostream& os, const Board& board) {
-	board.fenCodeToBoardPrint(board.generateFenCode(), os);
-	return os;
 }
 
 bool validFenCode(string fen) {
@@ -370,4 +379,9 @@ bool validFenChar(char ch) {
 		}
 	}
 	return false;
+}
+
+ostream& operator<< (ostream& os, const Board& board) {
+	board.fenCodeToBoardPrint(board.generateFenCode(), os);
+	return os;
 }

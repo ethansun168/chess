@@ -60,6 +60,8 @@ char pieceToChar(Piece piece);
 //turn a char to piece
 Piece charToPiece(char ch);
 
+Color opposite(Color color);
+
 //print piece to os
 std::ostream& operator<< (std::ostream& os, const Piece& piece);
 
