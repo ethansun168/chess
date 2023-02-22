@@ -25,13 +25,23 @@ private:
 	//helper function for fenCodeToBoardStore
 	void castleModify(bool K, bool Q, bool k, bool q);
 	
-	//check if [color] knights can check the king in [kingCell]
+	//check if [color] knights can check the king in [kingLocation]
 	bool knightChecks(Color color, std::pair<int, int> kingLocation) const;
-	//check if the [color] bishop can check the king in [kingCell]
-	bool bishopChecks(Color currentPlayer, std::pair<int, int> kingLocation) const;
-	bool pawnChecks(Color currentPlaayer, std::pair<int, int> kingLocation) const;
+	
+	//check if the [color] bishop can check the king in [kingLocation]
+	bool bishopChecks(Color color, std::pair<int, int> kingLocation) const;
+	
+	//check if the [color] pawn can check the king in [kingLocation]
+	bool pawnChecks(Color color, std::pair<int, int> kingLocation) const;
 
-	// Helper function to reduce code, passes in horse arguments
+	//check if the [color] rook can check the king in [kingLocation]
+	bool rookChecks(Color color, std::pair<int, int> kingLocation) const;
+
+	//check if the [color] queen can check the king in [kingLocation]
+	bool queenChecks(Color color, std::pair<int, int> kingLocation) const;
+
+	// Helper function to reduce code
+	//IMPORTANT: colAdd is flipped because of the board representation
 	bool kingCheckHelper(std::pair<int, int> kingLocation, int rowAdd, int colAdd, Color color, Type pieceType) const;
 public:
 	//Initialize to the starting position
@@ -56,6 +66,7 @@ public:
 	bool isValidLocation(std::pair<int, int> location) const;
 	
 	//checks for check
+	//is the [playerTurn] king in check?
 	bool isCheck(Color playerTurn) const;
 	
 	//checks for checkmate

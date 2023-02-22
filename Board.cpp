@@ -32,10 +32,14 @@ bool Board::isValidLocation(pair<int, int> location) const {
 
 bool Board::isCheck(Color playerTurn) const {
 	if (playerTurn == WHITE) {
-		return (knightChecks(BLACK, whiteKingLocation) || bishopChecks(BLACK, whiteKingLocation));
+		return (knightChecks(BLACK, whiteKingLocation) || 
+			bishopChecks(BLACK, whiteKingLocation) ||
+			pawnChecks(BLACK, whiteKingLocation));
 	}
 	// Otherwise Black Piece
-	return (knightChecks(WHITE, blackKingLocation) || bishopChecks(WHITE, blackKingLocation));
+	return (knightChecks(WHITE, blackKingLocation) ||
+		bishopChecks(WHITE, blackKingLocation) ||
+		pawnChecks(WHITE, blackKingLocation));
 }
 
 bool Board::knightChecks(Color color, pair<int, int> kingLocation) const {
@@ -60,14 +64,16 @@ bool Board::bishopChecks(Color color, pair<int, int> kingLocation) const {
 bool Board::pawnChecks(Color color, pair<int, int> kingLocation) const {
 	if (color == WHITE) {
 		return(
-			kingCheckHelper(kingLocation, -1, -1, BLACK, PAWN) ||
-			kingCheckHelper(kingLocation, 1, -1, BLACK, PAWN)
+			//black king
+			kingCheckHelper(kingLocation, 1, -1, color, PAWN) ||
+			kingCheckHelper(kingLocation, 1, 1, color, PAWN)
 		);
 	}
 	return(
-		kingCheckHelper(kingLocation, -1, 1, WHITE, PAWN) ||
-		kingCheckHelper(kingLocation, 1, 1, WHITE, PAWN)
-	);	
+		//white king
+		kingCheckHelper(kingLocation, -1, -1, color, PAWN) ||
+		kingCheckHelper(kingLocation, -1, 1, color, PAWN)
+	);
 }
 
 bool Board::isCheckMate(Color playerTurn) const {
@@ -81,6 +87,7 @@ bool Board::kingCheckHelper(pair<int, int> kingLocation, int rowAdd, int colAdd,
 }
 
 // TODO: FIX LATER
+//this function is probably useless
 bool Board::canCastle(Color playerTurn) const {
 	if (playerTurn == WHITE) {
 		return (whiteCanCastleKingSide) || (whiteCanCastleQueenSide);
@@ -93,6 +100,7 @@ bool Board::isValidMove(Color playerTurn, pair<int, int> start, pair<int, int> e
 	return false;
 }
 
+//TODO: update king move if it is moved
 bool Board::move(pair<int, int> start, pair<int, int> end) {
 	assert(isValidLocation(start) && isValidLocation(end));
 	if (isValidMove(playerTurn, start, end)) {

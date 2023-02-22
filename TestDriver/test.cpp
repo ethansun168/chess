@@ -470,3 +470,23 @@ TEST(BoardIsCheck, blackRookCheckUpBlocked) {
 	Board board("8/8/3B4/1pKp4/8/2n3k1/8/2r5 w - - 0 1");
 	EXPECT_FALSE(board.isCheck(WHITE));
 }
+
+TEST(BoardIsCheck, whitePawnCheckEdge) {
+	Board board("k7/1P6/8/5K2/8/8/8/8 w - - 1 1");
+	EXPECT_TRUE(board.isCheck(BLACK));
+}
+
+TEST(BoardIsCheck, whitePawnCheck) {
+	Board board("1k6/1P6/8/5K2/8/8/8/8 w - - 1 1");
+	EXPECT_FALSE(board.isCheck(BLACK));
+}
+
+TEST(BoardIsCheck, blackPawnCheckEdge) {
+	Board board("1k6/1P6/8/8/8/8/6p1/7K w - - 1 1");
+	EXPECT_TRUE(board.isCheck(WHITE));
+}
+
+TEST(BoardIsCheck, blackPawnCheck) {
+	Board board("1k6/1P6/8/8/8/8/6p1/6K1 w - - 1 1");
+	EXPECT_FALSE(board.isCheck(WHITE));
+}
