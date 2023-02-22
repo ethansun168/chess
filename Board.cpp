@@ -47,82 +47,115 @@ bool Board::isCheck(Color playerTurn) const {
 }
 
 bool Board::knightChecks(Color color, pair<int, int> kingLocation) const {
-	return (kingCheckHelper(kingLocation, 2, 1, color, KNIGHT) ||
-		kingCheckHelper(kingLocation, 1, 2, color, KNIGHT) ||
-		kingCheckHelper(kingLocation, -2, 1, color, KNIGHT) ||
-		kingCheckHelper(kingLocation, -1, 2, color, KNIGHT) ||
-		kingCheckHelper(kingLocation, 2, -1, color, KNIGHT) ||
-		kingCheckHelper(kingLocation, 1, -2, color, KNIGHT) ||
-		kingCheckHelper(kingLocation, -1, -2, color, KNIGHT) ||
-		kingCheckHelper(kingLocation, -2, -1, color, KNIGHT)
+	Piece knight(KNIGHT, color);
+	return (kingCheckHelper(kingLocation, 2, 1, knight) ||
+		kingCheckHelper(kingLocation, 1, 2, knight) ||
+		kingCheckHelper(kingLocation, -2, 1, knight) ||
+		kingCheckHelper(kingLocation, -1, 2, knight) ||
+		kingCheckHelper(kingLocation, 2, -1, knight) ||
+		kingCheckHelper(kingLocation, 1, -2, knight) ||
+		kingCheckHelper(kingLocation, -1, -2, knight) ||
+		kingCheckHelper(kingLocation, -2, -1, knight)
 	);
 }
 
 bool Board::bishopChecks(Color color, pair<int, int> kingLocation) const {
-	//up left diag
-	//TODO: finish / fix this
-	int row = kingLocation.first + 1;
-	int col = kingLocation.second + 1;
+	return diagonalChecks(Piece(BISHOP, color), kingLocation);
+}
+
+bool Board::diagonalChecks(Piece piece, pair<int, int> kingLocation) const {
+	int row = kingLocation.first;
+	int col = kingLocation.second;
 	int increment = 1;
-	while (row > BOARD_SIZE || col < 0) {
-		if (kingCheckHelper(kingLocation, increment, increment, color, BISHOP)) {
-			if(!getPiece({kingLocation.first + increment, kingLocation.second + increment}).isEmpty())
-			return true;
+	//true if there is no obstruction in the given direction
+	bool checkUpLeft = true, checkUpRight = true, checkDownRight = true, checkDownLeft = true;
+	Piece empty;
+	while (increment < BOARD_SIZE) {
+		//check if there are bishops and no obstructions
+		if (checkUpLeft && kingCheckHelper(kingLocation, increment * -1, increment, piece)) { return true; }
+		if (checkUpRight && kingCheckHelper(kingLocation, increment * -1, increment * -1, piece)) { return true; }
+		if (checkDownRight && kingCheckHelper(kingLocation, increment, increment, piece)) { return true; }
+		if (checkDownLeft && kingCheckHelper(kingLocation, increment, increment * -1, piece)) { return true; }
+
+		//check if there are obstructions
+		if (!kingCheckHelper(kingLocation, increment * -1, increment, empty) &&
+			!kingCheckHelper(kingLocation, increment * -1, increment, piece)) {
+			checkUpLeft = false;
 		}
+
+		if (!kingCheckHelper(kingLocation, increment * -1, increment * -1, empty) &&
+			!kingCheckHelper(kingLocation, increment * -1, increment * -1, piece)) {
+			checkUpRight = false;
+		}
+
+		if (!kingCheckHelper(kingLocation, increment, increment, empty) &&
+			!kingCheckHelper(kingLocation, increment, increment, piece)) {
+			checkDownRight = false;
+		}
+
+		if (!kingCheckHelper(kingLocation, increment, increment * -1, empty) &&
+			!kingCheckHelper(kingLocation, increment, increment * -1, piece)) {
+			checkDownLeft = false;
+		}
+
 		increment++;
-		row++;
-		col--;
 	}
 	return false;
 }
 
 // Because A8 is 00 so pawn moves have to be inverted
 bool Board::pawnChecks(Color color, pair<int, int> kingLocation) const {
+	Piece pawn(PAWN, color);
 	if (color == WHITE) {
 		return(
 			//black king
-			kingCheckHelper(kingLocation, 1, -1, color, PAWN) ||
-			kingCheckHelper(kingLocation, 1, 1, color, PAWN)
+			kingCheckHelper(kingLocation, 1, -1, pawn) ||
+			kingCheckHelper(kingLocation, 1, 1, pawn)
 		);
 	}
 	return(
 		//white king
-		kingCheckHelper(kingLocation, -1, -1, color, PAWN) ||
-		kingCheckHelper(kingLocation, -1, 1, color, PAWN)
+		kingCheckHelper(kingLocation, -1, -1, pawn) ||
+		kingCheckHelper(kingLocation, -1, 1, pawn)
 	);
 }
 
 bool Board::rookChecks(Color color, pair<int, int> kingLocation) const {
+	return horizontalChecks(Piece(ROOK, color), kingLocation);
+}
+
+bool Board::horizontalChecks(Piece piece, pair<int, int> kingLocation) const {
 	int rowKing = kingLocation.first;
 	int colKing = kingLocation.second;
 	int increment = 1;
 	//true if there is no obstruction in the given direction
 	bool checkUpper = true, checkUnder = true, checkRight = true, checkLeft = true;
+	Piece empty;
 	while (increment < BOARD_SIZE) {
 		//check if there are rooks and no obstructions
-		if (checkUpper && kingCheckHelper(kingLocation, increment * -1, 0, color, ROOK)) { return true; }
-		if (checkUnder && kingCheckHelper(kingLocation, increment, 0, color, ROOK)) { return true; }
-		if (checkRight && kingCheckHelper(kingLocation, 0, increment, color, ROOK)) { return true; }
-		if (checkLeft && kingCheckHelper(kingLocation, 0, increment * -1, color, ROOK)) { return true; }
+		if (checkUpper && kingCheckHelper(kingLocation, increment * -1, 0, piece)) { return true; }
+		if (checkUnder && kingCheckHelper(kingLocation, increment, 0, piece)) { return true; }
+		if (checkRight && kingCheckHelper(kingLocation, 0, increment, piece)) { return true; }
+		if (checkLeft && kingCheckHelper(kingLocation, 0, increment * -1, piece)) { return true; }
 
 		//check if there are obstructions
-		if (!kingCheckHelper(kingLocation, increment * -1, 0, WHITE, EMPTY) &&
-			!kingCheckHelper(kingLocation, increment * -1, 0, color, ROOK)) {
+		if (!kingCheckHelper(kingLocation, increment * -1, 0, empty) &&
+			!kingCheckHelper(kingLocation, increment * -1, 0, piece)) {
 			checkUpper = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, increment, 0, WHITE, EMPTY) &&
-			!kingCheckHelper(kingLocation, increment, 0, color, ROOK)) {
+		if (!kingCheckHelper(kingLocation, increment, 0, empty) &&
+			!kingCheckHelper(kingLocation, increment, 0, piece)) {
 			checkUnder = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, 0, increment, WHITE, EMPTY) &&
-			!kingCheckHelper(kingLocation, 0, increment, color, ROOK)) {
+		if (!kingCheckHelper(kingLocation, 0, increment, empty) &&
+			!kingCheckHelper(kingLocation, 0, increment, piece)) {
 			checkRight = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, 0, increment * -1, WHITE, EMPTY) &&
-			!kingCheckHelper(kingLocation, 0, increment * -1, color, ROOK)) {
+		if (!kingCheckHelper(kingLocation, 0, increment * -1, empty) &&
+			!kingCheckHelper(kingLocation, 0, increment * -1, piece)) {
 			checkLeft = false;
 		}
 		increment++;
@@ -131,17 +164,16 @@ bool Board::rookChecks(Color color, pair<int, int> kingLocation) const {
 }
 
 bool Board::queenChecks(Color color, pair<int, int> kingLocation) const {
-	return false;
+	return horizontalChecks(Piece(QUEEN, color), kingLocation) || diagonalChecks(Piece(QUEEN, color), kingLocation);
 }
 
 bool Board::isCheckMate(Color playerTurn) const {
 	return false;
 }
 
-bool Board::kingCheckHelper(pair<int, int> kingLocation, int rowAdd, int colAdd, Color color, Type pieceType) const {
+bool Board::kingCheckHelper(pair<int, int> kingLocation, int rowAdd, int colAdd, Piece piece) const {
 	return (isValidLocation({ kingLocation.first + rowAdd, kingLocation.second + colAdd }) &&
-		getPiece({ kingLocation.first + rowAdd, kingLocation.second + colAdd }).getType() == pieceType &&
-		getPiece({ kingLocation.first + rowAdd, kingLocation.second + colAdd }).getColor() == color);
+		getPiece({ kingLocation.first + rowAdd, kingLocation.second + colAdd }) == piece);
 }
 
 // TODO: FIX LATER

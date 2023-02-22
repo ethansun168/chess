@@ -40,9 +40,20 @@ private:
 	//check if the [color] queen can check the king in [kingLocation]
 	bool queenChecks(Color color, std::pair<int, int> kingLocation) const;
 
-	// Helper function to reduce code
+	//Horizontal checks
+	//increment is the number of rowAdd or colAdd from [kingLocation]
+	//Piece is the piece that is checking the king horizontally
+	bool horizontalChecks(Piece piece, std::pair<int, int> kingLocation) const;
+
+	//diag checks
+	//increment is the number of rowAdd or colAdd from [kingLocation]
+	//Piece is the piece that is checking the king diagonally
+	bool diagonalChecks(Piece piece, std::pair<int, int> kingLocation) const;
+
+	//Helper function to reduce code
+	//Check if the piece on kingLocation + rowAdd + colAdd is [color] and [type]
 	//IMPORTANT: colAdd is flipped because of the board representation
-	bool kingCheckHelper(std::pair<int, int> kingLocation, int rowAdd, int colAdd, Color color, Type pieceType) const;
+	bool kingCheckHelper(std::pair<int, int> kingLocation, int rowAdd, int colAdd, Piece piece) const;
 public:
 	//Initialize to the starting position
 	Board();
