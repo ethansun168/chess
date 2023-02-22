@@ -6,8 +6,6 @@
 #include "../Board.cpp"
 #include "../Piece.h"
 #include "../Piece.cpp"
-#include "../Cell.h"
-#include "../Cell.cpp"
 
 using namespace std;
 
@@ -137,31 +135,6 @@ TEST(BoardPrint, general4) {
 	EXPECT_EQ(os.str(), correct.str());
 }
 
-TEST(BoardValidCell, general) {
-	Cell cell = { 'a', 5 };
-	EXPECT_TRUE(cell.isValid());
-}
-
-TEST(BoardValidCell, generalFail) {
-	Cell cell = { 'l', 5 };
-	EXPECT_FALSE(cell.isValid());
-}
-
-TEST(BoardValidCell, edgeCase) {
-	Cell cell = { 'a', 8 };
-	EXPECT_TRUE(cell.isValid());
-}
-
-TEST(BoardValidCell, generalFail2) {
-	Cell cell = { 'z', 1 };
-	EXPECT_FALSE(cell.isValid());
-}
-
-TEST(BoardValidCell, edgeCase2) {
-	Cell cell = { 'a', 0 };
-	EXPECT_FALSE(cell.isValid());
-}
-
 TEST(BoardValidFenCode, general) {
 	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2";
 	EXPECT_TRUE(validFenCode(fen));
@@ -235,18 +208,24 @@ TEST(BoardValidFenCode, castleFailEdge) {
 TEST(BoardGetPiece, getPiece) {
 	Board board;
 	ostringstream os;
-	os << board.getPiece({ 'a',5 })
+
+	os << board.getPiece({ 3, 0 })
+		<< board.getPiece({ 1, 2 })
+		<< board.getPiece({ 6, 4 })
+		<< board.getPiece({ 7,5 })
+		<< board.getPiece({ 0,4 });
+	/*os << board.getPiece({ 'a',5 })
 	   << board.getPiece({ 'c',7 })
 	   << board.getPiece({ 'e',2 })
 	   << board.getPiece({ 'f',1 })
-	   << board.getPiece({ 'e',8 });
+	   << board.getPiece({ 'e',8 });*/
 	EXPECT_EQ(" pPBk", os.str());
 }
 
 TEST(BoardSetPiece, setPiece) {
 	Board board;
 	Piece bBishop(BISHOP, BLACK);
-	board.setPiece(bBishop, { 'd', 3 });
+	board.setPiece(bBishop, { 5, 3 });
 	ostringstream os;
 	os << board;
 	ostringstream correct;
@@ -290,7 +269,7 @@ TEST(BoardIsCheck, blackBishopCheck2) {
 	EXPECT_TRUE(board.isCheck(WHITE));
 }
 
-TEST(BoardIsCheck, blackBishopCheckBLocked) {
+TEST(BoardIsCheck, blackBishopCheckBlocked) {
 	Board board("8/8/8/2K5/3p4/4b1k1/8/8 w - - 0 1");
 	EXPECT_FALSE(board.isCheck(WHITE));
 }
@@ -492,32 +471,22 @@ TEST(BoardIsCheck, blackRookCheckUpBlocked) {
 	EXPECT_FALSE(board.isCheck(WHITE));
 }
 
-TEST(CellToBoard, general) {
-	Cell cell = {'e', 5};
-	EXPECT_EQ(cell.toBoard().first, 3);
-	EXPECT_EQ(cell.toBoard().second, 4);
+TEST(BoardIsCheck, whitePawnCheckEdge) {
+	Board board("k7/1P6/8/5K2/8/8/8/8 w - - 1 1");
+	EXPECT_TRUE(board.isCheck(BLACK));
 }
 
-TEST(CellToBoard, general2) {
-	Cell cell = { 'h', 2 };
-	EXPECT_EQ(cell.toBoard().first, 6);
-	EXPECT_EQ(cell.toBoard().second, 7);
+TEST(BoardIsCheck, whitePawnCheck) {
+	Board board("1k6/1P6/8/5K2/8/8/8/8 w - - 1 1");
+	EXPECT_FALSE(board.isCheck(BLACK));
 }
 
-TEST(BoardToCell, general) {
-	Cell cell = boardToCell(3, 4);
-	EXPECT_EQ(cell.getFile(), 'e');
-	EXPECT_EQ(cell.getRank(), 5);
+TEST(BoardIsCheck, blackPawnCheckEdge) {
+	Board board("1k6/1P6/8/8/8/8/6p1/7K w - - 1 1");
+	EXPECT_TRUE(board.isCheck(WHITE));
 }
 
-TEST(BoardToCell, general2) {
-	Cell cell = boardToCell(6, 7);
-	EXPECT_EQ(cell.getFile(), 'h');
-	EXPECT_EQ(cell.getRank(), 2);
-}
-
-TEST(BoardToCell, general3) {
-	Cell cell = boardToCell(7, 4);
-	EXPECT_EQ(cell.getFile(), 'e');
-	EXPECT_EQ(cell.getRank(), 1);
+TEST(BoardIsCheck, blackPawnCheck) {
+	Board board("1k6/1P6/8/8/8/8/6p1/6K1 w - - 1 1");
+	EXPECT_FALSE(board.isCheck(WHITE));
 }
