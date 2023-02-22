@@ -56,7 +56,19 @@ bool Board::knightChecks(Color color, pair<int, int> kingLocation) const {
 
 bool Board::bishopChecks(Color color, pair<int, int> kingLocation) const {
 	//up left diag
-	//while (kingCell.file - 'a' + 1){}
+	//TODO: finish / fix this
+	int row = kingLocation.first + 1;
+	int col = kingLocation.second + 1;
+	int increment = 1;
+	while (row > BOARD_SIZE || col < 0) {
+		if (kingCheckHelper(kingLocation, increment, increment, color, BISHOP)) {
+			if(!getPiece({kingLocation.first + increment, kingLocation.second + increment}).isEmpty())
+			return true;
+		}
+		increment++;
+		row++;
+		col--;
+	}
 	return false;
 }
 
