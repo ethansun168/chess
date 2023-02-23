@@ -56,9 +56,11 @@ private:
 	bool kingCheckHelper(std::pair<int, int> kingLocation, int rowAdd, int colAdd, Piece piece) const;
 
 	//helper function that checks if [piece] is [color] king and [color] is castling king side
+	//must pass isValidMove before call
 	bool isCastleKing(Piece piece, Color color, std::pair<int, int> start, std::pair<int, int> end) const;
 
 	//helper function that checks if [piece] is [color] king and [color] is castling queen side
+	//must pass isValidMove before call
 	bool isCastleQueen(Piece piece, Color color, std::pair<int, int> start, std::pair<int, int> end) const;
 
 	//set the position for [color] to castled position on king side
