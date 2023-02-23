@@ -7,7 +7,6 @@ Piece::Piece() {
 	type = EMPTY;
 }
 
-//Initialize to type and color, type cannot be empty
 Piece::Piece(Type type, Color color) {
 	assert(color == WHITE || color == BLACK);
 	assert(type >= EMPTY && type <= KING);
@@ -15,11 +14,11 @@ Piece::Piece(Type type, Color color) {
 	this->color = color;
 	this->empty = false;
 }
-//get the type
+
 Type Piece::getType() const {
 	return type;
 }
-//get the color
+
 Color Piece::getColor() const {
 	return color;
 }
@@ -36,7 +35,6 @@ void Piece::setEmpty(bool empty) {
 	this->empty = empty;
 }
 
-//returns if the piece is empty
 bool Piece::isEmpty() const {
 	return empty;
 }
@@ -44,7 +42,6 @@ bool Piece::isEmpty() const {
 Color opposite(Color color) {
 	return (color == WHITE) ? BLACK : WHITE;
 }
-
 
 char pieceToChar(Piece piece) {
 	return (piece.getColor() == BLACK) ?

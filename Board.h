@@ -13,7 +13,7 @@ private:
 	bool whiteCanCastleQueenSide;
 	bool blackCanCastleKingSide;
 	bool blackCanCastleQueenSide;
-	Color playerTurn;;
+	Color playerTurn;
 	int halfMoves;
 	int fullMoves;
 	std::pair<int, int> enPassant;
@@ -54,6 +54,21 @@ private:
 	//Check if the piece on kingLocation + rowAdd + colAdd is [color] and [type]
 	//IMPORTANT: colAdd is flipped because of the board representation
 	bool kingCheckHelper(std::pair<int, int> kingLocation, int rowAdd, int colAdd, Piece piece) const;
+
+	//helper function that checks if [piece] is [color] king and [color] is castling king side
+	bool isCastleKing(Piece piece, Color color, std::pair<int, int> start, std::pair<int, int> end) const;
+
+	//helper function that checks if [piece] is [color] king and [color] is castling queen side
+	bool isCastleQueen(Piece piece, Color color, std::pair<int, int> start, std::pair<int, int> end) const;
+
+	//set the position for [color] to castled position on king side
+	//must pass isValidMove() and isCastleKing()
+	void setCastleKing(Color color);
+
+	//set the position for [color] to castled position on queen side
+	//must pass isValidMove() and isCastleKing()
+	void setCastleQueen(Color color);
+
 public:
 	//Initialize to the starting position
 	Board();
@@ -82,9 +97,6 @@ public:
 	
 	//checks for checkmate
 	bool isCheckMate(Color playerTurn) const;
-
-	//checks for castling rights
-	bool canCastle(Color playerTurn) const;
 
 	//check if the move for the piece at start is valid
 	//requires start and end to be valid cells

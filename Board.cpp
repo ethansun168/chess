@@ -176,32 +176,158 @@ bool Board::kingCheckHelper(pair<int, int> kingLocation, int rowAdd, int colAdd,
 		getPiece({ kingLocation.first + rowAdd, kingLocation.second + colAdd }) == piece);
 }
 
-// TODO: FIX LATER
-//this function is probably useless
-bool Board::canCastle(Color playerTurn) const {
-	if (playerTurn == WHITE) {
-		return (whiteCanCastleKingSide) || (whiteCanCastleQueenSide);
-	}
-	return (blackCanCastleKingSide || blackCanCastleQueenSide);
-}
-
 bool Board::isValidMove(Color playerTurn, pair<int, int> start, pair<int, int> end) const {
 	assert(isValidLocation(start) && isValidLocation(end));
-	return false;
+	if (getPiece(start).isEmpty()) {
+		//start is empty
+		return false;
+	}
+	if (!getPiece(end).isEmpty() && getPiece(end).getColor() == playerTurn) {
+		//end contains a piece with the same color as playerTurn
+		return false;
+	}
+	
+	//check for invalid piece moves
+	switch (getPiece(start).getType()) {
+	case PAWN:
+		break;
+	case BISHOP:
+		break;
+	case KNIGHT:
+		break;
+	case ROOK:
+		break;
+	case QUEEN:
+		break;
+	case KING:
+		break;
+	}
+
+	return true;
 }
 
-//TODO: update king move if it is moved
 bool Board::move(pair<int, int> start, pair<int, int> end) {
 	assert(isValidLocation(start) && isValidLocation(end));
 	if (isValidMove(playerTurn, start, end)) {
 		// Gets the piece at start, and sets that piece to end location
-		setPiece(getPiece(start), end);
-		Piece piece;
-		// this is really bad code
+		Piece piece = getPiece(start);
+		Piece empty;
+
+		//check if the king castled
+		if (isCastleKing(piece, WHITE, start, end)) {
+			setCastleKing(WHITE);
+			return true;
+		}
+		if (isCastleKing(piece, BLACK, start, end)) {
+			setCastleKing(BLACK);
+			return true;
+		}
+		if (isCastleQueen(piece, WHITE, start, end)) {
+			setCastleQueen(WHITE);
+			return true;
+		}
+		if (isCastleQueen(piece, BLACK, start, end)) {
+			setCastleQueen(BLACK);
+			return true;
+		}
 		setPiece(piece, end);
+		setPiece(empty, start);
+		if (piece == Piece(KING, WHITE)) {
+			whiteKingLocation = end;
+			whiteCanCastleKingSide = false;
+			whiteCanCastleQueenSide = false;
+		}
+		if (piece == Piece(KING, BLACK)) {
+			blackKingLocation = end;
+			blackCanCastleKingSide = false;
+			blackCanCastleQueenSide = false;
+		}
+		playerTurn = opposite(playerTurn);
 		return true;
 	}
 	return false;
+}
+
+//values are hard coded..
+bool Board::isCastleKing(Piece piece, Color color, pair<int, int> start, pair<int, int> end) const {
+	if (color == WHITE) {
+		return start.first == 7 && start.second == 4 && 
+			end.first == 7 && end.second == 6 && 
+			piece == Piece(KING, color);
+	}
+	//black castle
+	return start.first == 0 && start.second == 4 && 
+		end.first == 0 && end.second == 6 &&
+		piece == Piece(KING, color);
+}
+
+//values are hard coded..
+bool Board::isCastleQueen(Piece piece, Color color, pair<int, int> start, pair<int, int> end) const {
+	if (color == WHITE) {
+		return start.first == 7 && start.second == 4 && 
+			end.first == 7 && end.second == 2 &&
+			piece == Piece(KING, color);
+	}
+	//black castle
+	return start.first == 0 && start.second == 4 && 
+		end.first == 0 && end.second == 2 &&
+		piece == Piece(KING, color);
+}
+
+//values are hard coded..
+void Board::setCastleKing(Color color) {
+	if (color == WHITE) {
+		pair<int, int> start = { 7,4 };
+		pair<int, int> end = { 7,6 };
+		whiteKingLocation = end;
+		//move king
+		setPiece(Piece(KING, WHITE), end);
+		setPiece(Piece(), start);
+		//move rook
+		setPiece(Piece(ROOK, WHITE), { 7, 5 });
+		setPiece(Piece(), {7,7});
+		whiteCanCastleKingSide = false;
+	}
+	else if (color == BLACK) {
+		pair<int, int> start = { 0,4 };
+		pair<int, int> end = { 0,6 };
+		blackKingLocation = end;
+		//move king
+		setPiece(Piece(KING, WHITE), end);
+		setPiece(Piece(), start);
+		//move rook
+		setPiece(Piece(ROOK, BLACK), { 0,5 });
+		setPiece(Piece(), { 0,7 });
+		blackCanCastleKingSide = false;
+	}
+}
+
+//values are hard coded..
+void Board::setCastleQueen(Color color) {
+	if (color == WHITE) {
+		pair<int, int> start = { 7,4 };
+		pair<int, int> end = { 7,2 };
+		whiteKingLocation = end;
+		//move king
+		setPiece(Piece(KING, WHITE), end);
+		setPiece(Piece(), start);
+		//move rook
+		setPiece(Piece(ROOK, WHITE), { 7, 3 });
+		setPiece(Piece(), { 7,0 });
+		whiteCanCastleQueenSide = false;
+	}
+	else if (color == BLACK) {
+		pair<int, int> start = { 0,4 };
+		pair<int, int> end = { 0,2 };
+		blackKingLocation = end;
+		//move king
+		setPiece(Piece(KING, WHITE), end);
+		setPiece(Piece(), start);
+		//move rook
+		setPiece(Piece(ROOK, BLACK), { 0,3 });
+		setPiece(Piece(), { 0,0 });
+		blackCanCastleKingSide = false;
+	}
 }
 
 // TODO redo
