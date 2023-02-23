@@ -57,11 +57,11 @@ private:
 
 	//helper function that checks if [piece] is [color] king and [color] is castling king side
 	//must pass isValidMove before call
-	bool isCastleKing(Piece piece, Color color, std::pair<int, int> start, std::pair<int, int> end) const;
+	bool attemptCastleKing(Piece piece, Color color, std::pair<int, int> start, std::pair<int, int> end) const;
 
 	//helper function that checks if [piece] is [color] king and [color] is castling queen side
 	//must pass isValidMove before call
-	bool isCastleQueen(Piece piece, Color color, std::pair<int, int> start, std::pair<int, int> end) const;
+	bool attemptCastleQueen(Piece piece, Color color, std::pair<int, int> start, std::pair<int, int> end) const;
 
 	//set the position for [color] to castled position on king side
 	//must pass isValidMove() and isCastleKing()
@@ -88,10 +88,6 @@ public:
 	//set the piece at location
 	//requires a valid piece and a valid location
 	void setPiece(Piece piece, std::pair<int, int> location);
-
-	//check if the location is valid
-	//0 <= first <= 8, 0 <= second <= 8
-	bool isValidLocation(std::pair<int, int> location) const;
 	
 	//checks for check
 	//is the [playerTurn] king in check?
@@ -133,3 +129,7 @@ bool validFenCode(std::string fen);
 
 //helper for validFenCode
 bool validFenChar(char ch);
+
+//check if the location is valid
+//0 <= first <= 8, 0 <= second <= 8
+bool validLocation(std::pair<int, int> location);

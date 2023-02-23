@@ -12,22 +12,13 @@ Board::Board(string fen) {
 }
 
 Piece Board::getPiece(pair<int, int> location) const {
-	assert(isValidLocation(location));
+	assert(validLocation(location));
 	return board[location.first][location.second];
 }
 
 void Board::setPiece(Piece piece, pair<int, int> location) {
-	assert(isValidLocation(location));
+	assert(validLocation(location));
 	board[location.first][location.second] = piece;
-}
-
-bool Board::isValidLocation(pair<int, int> location) const {
-	return (
-		location.first >= 0 &&
-		location.first < 8 &&
-		location.second >= 0 &&
-		location.second < 8
-	);
 }
 
 bool Board::isCheck(Color playerTurn) const {
@@ -72,6 +63,7 @@ bool Board::diagonalChecks(Piece piece, pair<int, int> kingLocation) const {
 	Piece empty;
 	while (increment < BOARD_SIZE) {
 		//check if there are bishops and no obstructions
+		//makes use of short circuit
 		if (checkUpLeft && kingCheckHelper(kingLocation, increment * -1, increment, piece)) { return true; }
 		if (checkUpRight && kingCheckHelper(kingLocation, increment * -1, increment * -1, piece)) { return true; }
 		if (checkDownRight && kingCheckHelper(kingLocation, increment, increment, piece)) { return true; }
@@ -97,7 +89,6 @@ bool Board::diagonalChecks(Piece piece, pair<int, int> kingLocation) const {
 			!kingCheckHelper(kingLocation, increment, increment * -1, piece)) {
 			checkDownLeft = false;
 		}
-
 		increment++;
 	}
 	return false;
@@ -133,6 +124,7 @@ bool Board::horizontalChecks(Piece piece, pair<int, int> kingLocation) const {
 	Piece empty;
 	while (increment < BOARD_SIZE) {
 		//check if there are rooks and no obstructions
+		//makes use of short circuit
 		if (checkUpper && kingCheckHelper(kingLocation, increment * -1, 0, piece)) { return true; }
 		if (checkUnder && kingCheckHelper(kingLocation, increment, 0, piece)) { return true; }
 		if (checkRight && kingCheckHelper(kingLocation, 0, increment, piece)) { return true; }
@@ -172,12 +164,12 @@ bool Board::isCheckMate(Color playerTurn) const {
 }
 
 bool Board::kingCheckHelper(pair<int, int> kingLocation, int rowAdd, int colAdd, Piece piece) const {
-	return (isValidLocation({ kingLocation.first + rowAdd, kingLocation.second + colAdd }) &&
+	return (validLocation({ kingLocation.first + rowAdd, kingLocation.second + colAdd }) &&
 		getPiece({ kingLocation.first + rowAdd, kingLocation.second + colAdd }) == piece);
 }
 
 bool Board::isValidMove(Color playerTurn, pair<int, int> start, pair<int, int> end) const {
-	assert(isValidLocation(start) && isValidLocation(end));
+	assert(validLocation(start) && validLocation(end));
 	if (getPiece(start).isEmpty()) {
 		//start is empty
 		return false;
@@ -207,26 +199,26 @@ bool Board::isValidMove(Color playerTurn, pair<int, int> start, pair<int, int> e
 }
 
 bool Board::move(pair<int, int> start, pair<int, int> end) {
-	assert(isValidLocation(start) && isValidLocation(end));
+	assert(validLocation(start) && validLocation(end));
 	if (isValidMove(playerTurn, start, end)) {
 		// Gets the piece at start, and sets that piece to end location
 		Piece piece = getPiece(start);
 		Piece empty;
 
 		//check if the king castled
-		if (isCastleKing(piece, WHITE, start, end)) {
+		if (attemptCastleKing(piece, WHITE, start, end)) {
 			setCastleKing(WHITE);
 			return true;
 		}
-		if (isCastleKing(piece, BLACK, start, end)) {
+		if (attemptCastleKing(piece, BLACK, start, end)) {
 			setCastleKing(BLACK);
 			return true;
 		}
-		if (isCastleQueen(piece, WHITE, start, end)) {
+		if (attemptCastleQueen(piece, WHITE, start, end)) {
 			setCastleQueen(WHITE);
 			return true;
 		}
-		if (isCastleQueen(piece, BLACK, start, end)) {
+		if (attemptCastleQueen(piece, BLACK, start, end)) {
 			setCastleQueen(BLACK);
 			return true;
 		}
@@ -249,7 +241,7 @@ bool Board::move(pair<int, int> start, pair<int, int> end) {
 }
 
 //values are hard coded..
-bool Board::isCastleKing(Piece piece, Color color, pair<int, int> start, pair<int, int> end) const {
+bool Board::attemptCastleKing(Piece piece, Color color, pair<int, int> start, pair<int, int> end) const {
 	if (color == WHITE) {
 		return start.first == 7 && start.second == 4 && 
 			end.first == 7 && end.second == 6 && 
@@ -262,7 +254,7 @@ bool Board::isCastleKing(Piece piece, Color color, pair<int, int> start, pair<in
 }
 
 //values are hard coded..
-bool Board::isCastleQueen(Piece piece, Color color, pair<int, int> start, pair<int, int> end) const {
+bool Board::attemptCastleQueen(Piece piece, Color color, pair<int, int> start, pair<int, int> end) const {
 	if (color == WHITE) {
 		return start.first == 7 && start.second == 4 && 
 			end.first == 7 && end.second == 2 &&
@@ -611,6 +603,15 @@ bool validFenChar(char ch) {
 		}
 	}
 	return false;
+}
+
+bool validLocation(pair<int, int> location) {
+	return (
+		location.first >= 0 &&
+		location.first < 8 &&
+		location.second >= 0 &&
+		location.second < 8
+		);
 }
 
 ostream& operator<< (ostream& os, const Board& board) {
