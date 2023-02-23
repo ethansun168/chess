@@ -5,6 +5,26 @@
 
 #define BOARD_SIZE 8
 
+enum Move_Type {
+	PAWN_MOVE,
+	ROOK_MOVE,
+	KNIGHT_MOVE,
+	BISHOP_MOVE,
+	QUEEN_MOVE,
+	KING_MOVE,
+	CASTLE_KING_SIDE,
+	CASTLE_QUEEN_SIDE
+};
+
+enum Error_Return {
+	MOVE_SUCCESSFUL,
+	MOVE_CASTLE_KING_SUCCESSFUL,
+	MOVE_CASTLE_QUEEN_SUCCESSFUL,
+	MOVE_INVALID,
+	MOVE_OBSTRUCTION,
+	MOVE_CASTLE_FAILURE
+};
+
 //Representation of Board
 class Board {
 private:
@@ -89,6 +109,10 @@ public:
 	//requires a valid piece and a valid location
 	void setPiece(Piece piece, std::pair<int, int> location);
 	
+	// Moves a piece from one location to another, deals with setting all the correct squqres to
+	// their respective values
+	void movePiece(std::pair<int, int> start, std::pair<int, int> end);
+
 	//checks for check
 	//is the [playerTurn] king in check?
 	bool isCheck(Color playerTurn) const;
@@ -105,7 +129,7 @@ public:
 	//requires start and end to be valid cells
 	//returns true if move sucessfully executes
 	//returns false if it does not
-	bool move(std::pair<int, int> start, std::pair<int, int> end);
+	bool move(std::pair<int, int> start, std::pair<int, int> end, Move_Type moveType);
 
 	// Translate a line of FEN code into a board position
 	void fenCodeToBoardPrint(std::string fenCode, std::ostream& os) const;

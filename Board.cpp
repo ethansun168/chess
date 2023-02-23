@@ -21,6 +21,11 @@ void Board::setPiece(Piece piece, pair<int, int> location) {
 	board[location.first][location.second] = piece;
 }
 
+void Board::movePiece(pair<int, int> start, pair<int, int> end) {
+	setPiece(getPiece(start), end);
+	setPiece(Piece(), start);
+}
+
 bool Board::isCheck(Color playerTurn) const {
 	if (playerTurn == WHITE) {
 		return (knightChecks(BLACK, whiteKingLocation) || 
@@ -60,7 +65,6 @@ bool Board::diagonalChecks(Piece piece, pair<int, int> kingLocation) const {
 	int increment = 1;
 	//true if there is no obstruction in the given direction
 	bool checkUpLeft = true, checkUpRight = true, checkDownRight = true, checkDownLeft = true;
-	Piece empty;
 	while (increment < BOARD_SIZE) {
 		//check if there are bishops and no obstructions
 		//makes use of short circuit
@@ -70,22 +74,22 @@ bool Board::diagonalChecks(Piece piece, pair<int, int> kingLocation) const {
 		if (checkDownLeft && kingCheckHelper(kingLocation, increment, increment * -1, piece)) { return true; }
 
 		//check if there are obstructions
-		if (!kingCheckHelper(kingLocation, increment * -1, increment, empty) &&
+		if (!kingCheckHelper(kingLocation, increment * -1, increment, Piece()) &&
 			!kingCheckHelper(kingLocation, increment * -1, increment, piece)) {
 			checkUpLeft = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, increment * -1, increment * -1, empty) &&
+		if (!kingCheckHelper(kingLocation, increment * -1, increment * -1, Piece()) &&
 			!kingCheckHelper(kingLocation, increment * -1, increment * -1, piece)) {
 			checkUpRight = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, increment, increment, empty) &&
+		if (!kingCheckHelper(kingLocation, increment, increment, Piece()) &&
 			!kingCheckHelper(kingLocation, increment, increment, piece)) {
 			checkDownRight = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, increment, increment * -1, empty) &&
+		if (!kingCheckHelper(kingLocation, increment, increment * -1, Piece()) &&
 			!kingCheckHelper(kingLocation, increment, increment * -1, piece)) {
 			checkDownLeft = false;
 		}
@@ -96,18 +100,16 @@ bool Board::diagonalChecks(Piece piece, pair<int, int> kingLocation) const {
 
 // Because A8 is 00 so pawn moves have to be inverted
 bool Board::pawnChecks(Color color, pair<int, int> kingLocation) const {
-	Piece pawn(PAWN, color);
+	//black king
 	if (color == WHITE) {
 		return(
-			//black king
-			kingCheckHelper(kingLocation, 1, -1, pawn) ||
-			kingCheckHelper(kingLocation, 1, 1, pawn)
+			kingCheckHelper(kingLocation, 1, -1, Piece(PAWN, color)) ||
+			kingCheckHelper(kingLocation, 1, 1, Piece(PAWN, color))
 		);
 	}
-	return(
-		//white king
-		kingCheckHelper(kingLocation, -1, -1, pawn) ||
-		kingCheckHelper(kingLocation, -1, 1, pawn)
+	return( //white king
+		kingCheckHelper(kingLocation, -1, -1, Piece(PAWN, color)) ||
+		kingCheckHelper(kingLocation, -1, 1, Piece(PAWN, color))
 	);
 }
 
@@ -121,7 +123,6 @@ bool Board::horizontalChecks(Piece piece, pair<int, int> kingLocation) const {
 	int increment = 1;
 	//true if there is no obstruction in the given direction
 	bool checkUpper = true, checkUnder = true, checkRight = true, checkLeft = true;
-	Piece empty;
 	while (increment < BOARD_SIZE) {
 		//check if there are rooks and no obstructions
 		//makes use of short circuit
@@ -129,24 +130,23 @@ bool Board::horizontalChecks(Piece piece, pair<int, int> kingLocation) const {
 		if (checkUnder && kingCheckHelper(kingLocation, increment, 0, piece)) { return true; }
 		if (checkRight && kingCheckHelper(kingLocation, 0, increment, piece)) { return true; }
 		if (checkLeft && kingCheckHelper(kingLocation, 0, increment * -1, piece)) { return true; }
-
 		//check if there are obstructions
-		if (!kingCheckHelper(kingLocation, increment * -1, 0, empty) &&
+		if (!kingCheckHelper(kingLocation, increment * -1, 0, Piece()) &&
 			!kingCheckHelper(kingLocation, increment * -1, 0, piece)) {
 			checkUpper = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, increment, 0, empty) &&
+		if (!kingCheckHelper(kingLocation, increment, 0, Piece()) &&
 			!kingCheckHelper(kingLocation, increment, 0, piece)) {
 			checkUnder = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, 0, increment, empty) &&
+		if (!kingCheckHelper(kingLocation, 0, increment, Piece()) &&
 			!kingCheckHelper(kingLocation, 0, increment, piece)) {
 			checkRight = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, 0, increment * -1, empty) &&
+		if (!kingCheckHelper(kingLocation, 0, increment * -1, Piece()) &&
 			!kingCheckHelper(kingLocation, 0, increment * -1, piece)) {
 			checkLeft = false;
 		}
@@ -198,8 +198,26 @@ bool Board::isValidMove(Color playerTurn, pair<int, int> start, pair<int, int> e
 	return true;
 }
 
-bool Board::move(pair<int, int> start, pair<int, int> end) {
+// TODO lots of work
+Move_Type Board::move(pair<int, int> start, pair<int, int> end, Move_Type moveType) {
 	assert(validLocation(start) && validLocation(end));
+	Move_Type returnedMoveType = isValidMove(start, end, moveType);
+	
+	switch (returnedMoveType) {
+	case MOVE_SUCCESSFUL:
+		movePiece(start, end);
+		break;
+	case MOVE_CASTLE_KING_SUCCESSFUL:
+		setCastleKing(start, end);
+		break;
+	case MOVE_CASTLE_QUEEN_SUCCESSFUL:
+		setCastleQueen(start, end);
+		break;
+	}
+
+	return returnedMoveType
+
+	/*
 	if (isValidMove(playerTurn, start, end)) {
 		// Gets the piece at start, and sets that piece to end location
 		Piece piece = getPiece(start);
@@ -238,6 +256,7 @@ bool Board::move(pair<int, int> start, pair<int, int> end) {
 		return true;
 	}
 	return false;
+	*/
 }
 
 //values are hard coded..
