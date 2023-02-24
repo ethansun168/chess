@@ -11,6 +11,10 @@ Board::Board(string fen) {
 	fenCodeToBoardStore(fen);
 }
 
+Color Board::getColor() const {
+	return playerTurn;
+}
+
 Piece Board::getPiece(pair<int, int> location) const {
 	assert(validLocation(location));
 	return board[location.first][location.second];
@@ -168,41 +172,66 @@ bool Board::kingCheckHelper(pair<int, int> kingLocation, int rowAdd, int colAdd,
 		getPiece({ kingLocation.first + rowAdd, kingLocation.second + colAdd }) == piece);
 }
 
-bool Board::isValidMove(Color playerTurn, pair<int, int> start, pair<int, int> end) const {
+Error_Return Board::isValidMove(pair<int, int> start, pair<int, int> end, Move_Type moveType) const {
 	assert(validLocation(start) && validLocation(end));
-	if (getPiece(start).isEmpty()) {
-		//start is empty
-		return false;
-	}
-	if (!getPiece(end).isEmpty() && getPiece(end).getColor() == playerTurn) {
-		//end contains a piece with the same color as playerTurn
-		return false;
-	}
 	
-	//check for invalid piece moves
-	switch (getPiece(start).getType()) {
-	case PAWN:
-		break;
-	case BISHOP:
-		break;
-	case KNIGHT:
-		break;
-	case ROOK:
-		break;
-	case QUEEN:
-		break;
-	case KING:
-		break;
+	switch (moveType) {
+	case PAWN_MOVE:
+		return validPawnMove(start, end);
+	case ROOK_MOVE:
+		return validRookMove(start, end);
+	case KNIGHT_MOVE:
+		return validKnightMove(start, end);
+	case BISHOP_MOVE:
+		return validBishopMove(start, end);
+	case QUEEN_MOVE:
+		return validQueenMove(start, end);
+	case KING_MOVE:
+		return validKingMove(start, end);
+	case CASTLE_KING_SIDE:
+		return validCastleKingSide(start, end);
+	case CASTLE_QUEEN_SIDE:
+		return validCastleQueenSide(start, end);
 	}
+}
 
-	return true;
+Error_Return Board::validPawnMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validRookMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validKnightMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validBishopMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validQueenMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validKingMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validCastleKingSide(std::pair<int, int> start, std::pair<int, int> end) const {
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validCastleQueenSide(std::pair<int, int> start, std::pair<int, int> end) const {
+	return MOVE_SUCCESSFUL;
 }
 
 // TODO lots of work
-Move_Type Board::move(pair<int, int> start, pair<int, int> end, Move_Type moveType) {
+Error_Return Board::move(pair<int, int> start, pair<int, int> end, Move_Type moveType) {
 	assert(validLocation(start) && validLocation(end));
-	Move_Type returnedMoveType = isValidMove(start, end, moveType);
-	
+	Error_Return returnedMoveType = isValidMove(start, end, moveType);
+
 	switch (returnedMoveType) {
 	case MOVE_SUCCESSFUL:
 		movePiece(start, end);
@@ -216,47 +245,6 @@ Move_Type Board::move(pair<int, int> start, pair<int, int> end, Move_Type moveTy
 	}
 
 	return returnedMoveType
-
-	/*
-	if (isValidMove(playerTurn, start, end)) {
-		// Gets the piece at start, and sets that piece to end location
-		Piece piece = getPiece(start);
-		Piece empty;
-
-		//check if the king castled
-		if (attemptCastleKing(piece, WHITE, start, end)) {
-			setCastleKing(WHITE);
-			return true;
-		}
-		if (attemptCastleKing(piece, BLACK, start, end)) {
-			setCastleKing(BLACK);
-			return true;
-		}
-		if (attemptCastleQueen(piece, WHITE, start, end)) {
-			setCastleQueen(WHITE);
-			return true;
-		}
-		if (attemptCastleQueen(piece, BLACK, start, end)) {
-			setCastleQueen(BLACK);
-			return true;
-		}
-		setPiece(piece, end);
-		setPiece(empty, start);
-		if (piece == Piece(KING, WHITE)) {
-			whiteKingLocation = end;
-			whiteCanCastleKingSide = false;
-			whiteCanCastleQueenSide = false;
-		}
-		if (piece == Piece(KING, BLACK)) {
-			blackKingLocation = end;
-			blackCanCastleKingSide = false;
-			blackCanCastleQueenSide = false;
-		}
-		playerTurn = opposite(playerTurn);
-		return true;
-	}
-	return false;
-	*/
 }
 
 //values are hard coded..

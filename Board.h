@@ -91,6 +91,15 @@ private:
 	//must pass isValidMove() and isCastleKing()
 	void setCastleQueen(Color color);
 
+	Error_Return validPawnMove(std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return validRookMove(std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return validKnightMove(std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return validBishopMove(std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return validQueenMove(std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return validKingMove(std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return validCastleKingSide(std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return validCastleQueenSide(std::pair<int, int> start, std::pair<int, int> end) const;
+
 public:
 	//Initialize to the starting position
 	Board();
@@ -100,6 +109,9 @@ public:
 	// https://www.chess.com/terms/fen-chess
 	//input string must be a valid fen string
 	Board(std::string fen);
+
+	// Gets the current color of the player
+	Color getColor() const;
 
 	//get the piece at location
 	//requires a valid location
@@ -123,13 +135,13 @@ public:
 	//check if the move for the piece at start is valid
 	//requires start and end to be valid cells
 	//needs to account for piece obstruction, pins, in checks, can castle
-	bool isValidMove(Color playerTurn, std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return isValidMove(std::pair<int, int> start, std::pair<int, int> end, Move_Type moveType) const;
 
 	//move piece after it passes isValidMove
 	//requires start and end to be valid cells
 	//returns true if move sucessfully executes
 	//returns false if it does not
-	bool move(std::pair<int, int> start, std::pair<int, int> end, Move_Type moveType);
+	Error_Return move(std::pair<int, int> start, std::pair<int, int> end, Move_Type moveType);
 
 	// Translate a line of FEN code into a board position
 	void fenCodeToBoardPrint(std::string fenCode, std::ostream& os) const;
