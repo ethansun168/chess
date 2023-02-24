@@ -121,7 +121,7 @@ public:
 	//requires a valid piece and a valid location
 	void setPiece(Piece piece, std::pair<int, int> location);
 	
-	// Moves a piece from one location to another, deals with setting all the correct squqres to
+	// Moves a piece from [start] to [end], deals with setting all the correct squares to
 	// their respective values
 	void movePiece(std::pair<int, int> start, std::pair<int, int> end);
 
