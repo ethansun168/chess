@@ -61,11 +61,13 @@ private:
 	bool queenChecks(Color color, std::pair<int, int> kingLocation) const;
 
 	//Horizontal checks
+	//requires kingLocation to be a valid location
 	//increment is the number of rowAdd or colAdd from [kingLocation]
 	//Piece is the piece that is checking the king horizontally
 	bool horizontalChecks(Piece piece, std::pair<int, int> kingLocation) const;
 
 	//diag checks
+	//requires kingLocation to be a valid location
 	//increment is the number of rowAdd or colAdd from [kingLocation]
 	//Piece is the piece that is checking the king diagonally
 	bool diagonalChecks(Piece piece, std::pair<int, int> kingLocation) const;
@@ -91,6 +93,15 @@ private:
 	//must pass isValidMove() and isCastleKing()
 	void setCastleQueen(Color color);
 
+	/*
+	check if the move for the piece at start is valid
+	the folliwng requires:	
+		start and end are valid cells
+		start is a [playerTurn] piece
+		end is empty or a (not [playerTurn]) piece
+		[start] is the same as the piece of the move it is checking
+		for example, [start] for validPawnMove needs to be a Pawn
+	*/
 	Error_Return validPawnMove(std::pair<int, int> start, std::pair<int, int> end) const;
 	Error_Return validRookMove(std::pair<int, int> start, std::pair<int, int> end) const;
 	Error_Return validKnightMove(std::pair<int, int> start, std::pair<int, int> end) const;
@@ -103,11 +114,13 @@ private:
 public:
 	//Initialize to the starting position
 	Board();
-
-	//use a FEN string to initialize the board 
-	// https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
-	// https://www.chess.com/terms/fen-chess
-	//input string must be a valid fen string
+	
+	/*
+	use a FEN string to initialize the board 
+	 https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+	 https://www.chess.com/terms/fen-chess
+	input string must be a valid fen string
+	*/
 	Board(std::string fen);
 
 	// Gets the current color of the player
@@ -131,10 +144,14 @@ public:
 	
 	//checks for checkmate
 	bool isCheckMate(Color playerTurn) const;
-
-	//check if the move for the piece at start is valid
-	//requires start and end to be valid cells
-	//needs to account for piece obstruction, pins, in checks, can castle
+	/*
+	check if the move for the piece at start is valid
+	requires:	start and end are valid cells
+				start is a [playerTurn] piece
+				end is empty or a (not [playerTurn]) piece
+	
+	needs to account for piece obstruction, pins, in checks, can castle
+	*/
 	Error_Return isValidMove(std::pair<int, int> start, std::pair<int, int> end, Move_Type moveType) const;
 
 	//move piece after it passes isValidMove

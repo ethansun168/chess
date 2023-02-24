@@ -174,7 +174,10 @@ bool Board::isCheckMate(Color playerTurn) const {
 
 Error_Return Board::isValidMove(pair<int, int> start, pair<int, int> end, Move_Type moveType) const {
 	assert(validLocation(start) && validLocation(end));
-	
+	assert(getPiece(start).getColor() == playerTurn);
+	assert(getPiece(end).isEmpty());
+	assert(opposite(getPiece(end).getColor()) == playerTurn);
+
 	switch (moveType) {
 	case PAWN_MOVE:
 		return validPawnMove(start, end);
