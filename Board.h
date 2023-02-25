@@ -79,19 +79,19 @@ private:
 
 	//helper function that checks if [color] is castling king side
 	//requires the piece at [start] to be a KING
-	bool attemptCastleKing(Color color, std::pair<int, int> start, std::pair<int, int> end) const;
+	bool attemptCastleKing(std::pair<int, int> start, std::pair<int, int> end) const;
 
 	//helper function that checks if [color] is castling queen side
 	//requires the piece at [start] to be a KING
-	bool attemptCastleQueen(Color color, std::pair<int, int> start, std::pair<int, int> end) const;
+	bool attemptCastleQueen(std::pair<int, int> start, std::pair<int, int> end) const;
 
 	//set the position for [color] to castled position on king side
 	//modifies king location and corresponding side's rook location
-	void setCastleKing(Color color);
+	void setCastleKing();
 
 	//set the position for [color] to castled position on queen side
 	//modifies king location and corresponding side's rook location
-	void setCastleQueen(Color color);
+	void setCastleQueen();
 
 	/*
 	check if the move for the piece at start is valid
