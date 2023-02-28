@@ -225,29 +225,38 @@ Error_Return Board::isValidMove(pair<int, int> start, pair<int, int> end) const 
 	case QUEEN:
 		return validQueenMove(start, end);
 	case KING:
-		if (attemptCastleKing(playerTurn, start, end)) {
-			return validCastleKingSide(start, end);
-		}
-		else if (attemptCastleQueen(playerTurn, start, end)) {
-			return validCastleQueenSide(start, end);
-		}
 		return validKingMove(start, end);
 	}
 }
 
 Error_Return Board::validPawnMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	// Four cases ignoring En Passant
+	// Diagonal to left
+	// Diagonal to right
+	// forward one step
+	// forward two steps
 	return MOVE_SUCCESSFUL;
 }
 
 Error_Return Board::validRookMove(std::pair<int, int> start, std::pair<int, int> end) const {
+
 	return MOVE_SUCCESSFUL;
 }
 
 Error_Return Board::validKnightMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	if (
+		!(abs(start.first - end.first) == 1 && abs(start.second - end.second) == 2) &&
+		!(abs(start.first - end.first) == 2 && abs(start.second - end.second) == 1)
+		) {
+		return MOVE_INVALID;
+	}
 	return MOVE_SUCCESSFUL;
 }
 
 Error_Return Board::validBishopMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	if ((start.first - end.first != start.second - end.second)) {
+		return MOVE_INVALID
+	}
 	return MOVE_SUCCESSFUL;
 }
 
@@ -256,6 +265,12 @@ Error_Return Board::validQueenMove(std::pair<int, int> start, std::pair<int, int
 }
 
 Error_Return Board::validKingMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	if (attemptCastleKing(playerTurn, start, end)) {
+		return validCastleKingSide(start, end);
+	}
+	else if (attemptCastleQueen(playerTurn, start, end)) {
+		return validCastleQueenSide(start, end);
+	}
 	return MOVE_SUCCESSFUL;
 }
 

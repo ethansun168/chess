@@ -8,7 +8,7 @@ int main() {
 	Board board;
 	cout << board << endl;
 	cout << board.getColor() << "'s turn" << endl;
-	board.move({ 7,6 }, { 5, 5 });
+	board.move({ 7,5 }, { 5, 5 });
 	cout << board << endl;
 	//board.move({ 7,4 }, { 7,6 });
 	cout << board.getColor() << "'s turn" << endl;
