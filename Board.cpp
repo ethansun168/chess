@@ -255,7 +255,7 @@ Error_Return Board::validKnightMove(std::pair<int, int> start, std::pair<int, in
 
 Error_Return Board::validBishopMove(std::pair<int, int> start, std::pair<int, int> end) const {
 	if ((start.first - end.first != start.second - end.second)) {
-		return MOVE_INVALID
+		return MOVE_INVALID;
 	}
 	return MOVE_SUCCESSFUL;
 }
@@ -265,12 +265,6 @@ Error_Return Board::validQueenMove(std::pair<int, int> start, std::pair<int, int
 }
 
 Error_Return Board::validKingMove(std::pair<int, int> start, std::pair<int, int> end) const {
-	if (attemptCastleKing(playerTurn, start, end)) {
-		return validCastleKingSide(start, end);
-	}
-	else if (attemptCastleQueen(playerTurn, start, end)) {
-		return validCastleQueenSide(start, end);
-	}
 	return MOVE_SUCCESSFUL;
 }
 
@@ -292,10 +286,10 @@ Error_Return Board::move(pair<int, int> start, pair<int, int> end) {
 		movePiece(start, end);
 		break;
 	case MOVE_CASTLE_KING_SUCCESSFUL:
-		setCastleKing(playerTurn);
+		//setCastleKing();
 		break;
 	case MOVE_CASTLE_QUEEN_SUCCESSFUL:
-		setCastleQueen(playerTurn);
+		//setCastleQueen();
 		break;
 	}
 	playerTurn = opposite(playerTurn);
@@ -303,9 +297,9 @@ Error_Return Board::move(pair<int, int> start, pair<int, int> end) {
 }
 
 //values are hard coded..
-bool Board::attemptCastleKing(Color color, pair<int, int> start, pair<int, int> end) const {
+bool Board::attemptCastleKing(pair<int, int> start, pair<int, int> end) const {
 	assert(getPiece(start).getType() == KING);
-	if (color == WHITE) {
+	if (playerTurn == WHITE) {
 		return start.first == 7 && start.second == 4 &&
 			end.first == 7 && end.second == 6;
 	}
@@ -315,9 +309,9 @@ bool Board::attemptCastleKing(Color color, pair<int, int> start, pair<int, int> 
 }
 
 //values are hard coded..
-bool Board::attemptCastleQueen(Color color, pair<int, int> start, pair<int, int> end) const {
+bool Board::attemptCastleQueen(pair<int, int> start, pair<int, int> end) const {
 	assert(getPiece(start).getType() == KING);
-	if (color == WHITE) {
+	if (playerTurn == WHITE) {
 		return start.first == 7 && start.second == 4 &&
 			end.first == 7 && end.second == 2;
 	}
@@ -327,8 +321,8 @@ bool Board::attemptCastleQueen(Color color, pair<int, int> start, pair<int, int>
 }
 
 //values are hard coded..
-void Board::setCastleKing(Color color) {
-	if (color == WHITE) {
+void Board::setCastleKing() {
+	if (playerTurn == WHITE) {
 		pair<int, int> start = { 7,4 };
 		pair<int, int> end = { 7,6 };
 		//move king
@@ -336,7 +330,7 @@ void Board::setCastleKing(Color color) {
 		//move rook from {7,7} to {7,5}
 		movePiece({ 7,7 }, { 7,5 });
 	}
-	else if (color == BLACK) {
+	else if (playerTurn == BLACK) {
 		pair<int, int> start = { 0,4 };
 		pair<int, int> end = { 0,6 };
 		//move king
@@ -347,8 +341,8 @@ void Board::setCastleKing(Color color) {
 }
 
 //values are hard coded..
-void Board::setCastleQueen(Color color) {
-	if (color == WHITE) {
+void Board::setCastleQueen() {
+	if (playerTurn == WHITE) {
 		pair<int, int> start = { 7,4 };
 		pair<int, int> end = { 7,2 };
 		whiteKingLocation = end;
@@ -359,7 +353,7 @@ void Board::setCastleQueen(Color color) {
 		whiteCanCastleKingSide = false;
 		whiteCanCastleQueenSide = false;
 	}
-	else if (color == BLACK) {
+	else if (playerTurn == BLACK) {
 		pair<int, int> start = { 0,4 };
 		pair<int, int> end = { 0,2 };
 		blackKingLocation = end;

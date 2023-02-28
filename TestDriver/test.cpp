@@ -490,3 +490,8 @@ TEST(BoardIsCheck, blackPawnCheck) {
 	Board board("1k6/1P6/8/8/8/8/6p1/6K1 w - - 1 1");
 	EXPECT_FALSE(board.isCheck(WHITE));
 }
+
+TEST(Castle, kingGeneral) {
+	Board board("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
+	EXPECT_EQ(board.isValidMove({ 7,4 }, {7,6}), MOVE_SUCCESSFUL);
+}
