@@ -5,6 +5,26 @@
 
 #define BOARD_SIZE 8
 
+//enum Move_Type {
+//	PAWN_MOVE,
+//	ROOK_MOVE,
+//	KNIGHT_MOVE,
+//	BISHOP_MOVE,
+//	QUEEN_MOVE,
+//	KING_MOVE,
+//	CASTLE_KING_SIDE,
+//	CASTLE_QUEEN_SIDE
+//};
+
+enum Error_Return {
+	MOVE_SUCCESSFUL,
+	MOVE_CASTLE_KING_SUCCESSFUL,
+	MOVE_CASTLE_QUEEN_SUCCESSFUL,
+	MOVE_INVALID,
+	MOVE_OBSTRUCTION,
+	MOVE_CASTLE_FAILURE
+};
+
 //Representation of Board
 class Board {
 private:
@@ -41,11 +61,13 @@ private:
 	bool queenChecks(Color color, std::pair<int, int> kingLocation) const;
 
 	//Horizontal checks
+	//requires kingLocation to be a valid location
 	//increment is the number of rowAdd or colAdd from [kingLocation]
 	//Piece is the piece that is checking the king horizontally
 	bool horizontalChecks(Piece piece, std::pair<int, int> kingLocation) const;
 
 	//diag checks
+	//requires kingLocation to be a valid location
 	//increment is the number of rowAdd or colAdd from [kingLocation]
 	//Piece is the piece that is checking the king diagonally
 	bool diagonalChecks(Piece piece, std::pair<int, int> kingLocation) const;
@@ -55,31 +77,62 @@ private:
 	//IMPORTANT: colAdd is flipped because of the board representation
 	bool kingCheckHelper(std::pair<int, int> kingLocation, int rowAdd, int colAdd, Piece piece) const;
 
-	//helper function that checks if [piece] is [color] king and [color] is castling king side
-	//must pass isValidMove before call
-	bool attemptCastleKing(Piece piece, Color color, std::pair<int, int> start, std::pair<int, int> end) const;
+	//helper function that checks if [color] is castling king side
+	//requires the piece at [start] to be a KING
+	bool attemptCastleKing(std::pair<int, int> start, std::pair<int, int> end) const;
 
-	//helper function that checks if [piece] is [color] king and [color] is castling queen side
-	//must pass isValidMove before call
-	bool attemptCastleQueen(Piece piece, Color color, std::pair<int, int> start, std::pair<int, int> end) const;
+	//helper function that checks if [color] is castling queen side
+	//requires the piece at [start] to be a KING
+	bool attemptCastleQueen(std::pair<int, int> start, std::pair<int, int> end) const;
 
 	//set the position for [color] to castled position on king side
-	//must pass isValidMove() and isCastleKing()
-	void setCastleKing(Color color);
+	//modifies king location and corresponding side's rook location
+	void setCastleKing();
 
 	//set the position for [color] to castled position on queen side
-	//must pass isValidMove() and isCastleKing()
-	void setCastleQueen(Color color);
+	//modifies king location and corresponding side's rook location
+	void setCastleQueen();
+
+	/*
+	check if the move for the piece at start is valid
+	the following functions require:	
+		start and end are valid cells
+		start != end (might be a redundant requires)
+		start is a [playerTurn] piece
+		end is empty or a (not [playerTurn]) piece
+		[start] is the same as the piece of the move it is checking
+		for example, [start] for validPawnMove needs to be a Pawn
+	*/
+	Error_Return validPawnMove(std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return validRookMove(std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return validKnightMove(std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return validBishopMove(std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return validQueenMove(std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return validKingMove(std::pair<int, int> start, std::pair<int, int> end) const;
+	
+	/*
+	Extra requires:
+		start and end must be valid king castling locations
+		e.g. {7,4} and {7,6} for white king
+	These functions only check if [playerTurn] is able to castle on the specific side
+	*/
+	Error_Return validCastleKingSide(std::pair<int, int> start, std::pair<int, int> end) const;
+	Error_Return validCastleQueenSide(std::pair<int, int> start, std::pair<int, int> end) const;
 
 public:
 	//Initialize to the starting position
 	Board();
-
-	//use a FEN string to initialize the board 
-	// https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
-	// https://www.chess.com/terms/fen-chess
-	//input string must be a valid fen string
+	
+	/*
+	use a FEN string to initialize the board 
+	 https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+	 https://www.chess.com/terms/fen-chess
+	input string must be a valid fen string
+	*/
 	Board(std::string fen);
+
+	// Gets the current color of the player
+	Color getColor() const;
 
 	//get the piece at location
 	//requires a valid location
@@ -89,23 +142,39 @@ public:
 	//requires a valid piece and a valid location
 	void setPiece(Piece piece, std::pair<int, int> location);
 	
+	/*
+	Moves a piece from [start] to [end], deals with setting all the correct squares to
+	their respective values
+	requires:
+		start != end
+		start and end pass isValidMove
+	modifies:
+		kingLocation values if the king is moved
+		castle booleans if the king or rook is moved
+	*/
+	void movePiece(std::pair<int, int> start, std::pair<int, int> end);
+
 	//checks for check
 	//is the [playerTurn] king in check?
 	bool isCheck(Color playerTurn) const;
 	
 	//checks for checkmate
 	bool isCheckMate(Color playerTurn) const;
-
-	//check if the move for the piece at start is valid
-	//requires start and end to be valid cells
-	//needs to account for piece obstruction, pins, in checks, can castle
-	bool isValidMove(Color playerTurn, std::pair<int, int> start, std::pair<int, int> end) const;
+	/*
+	check if the move for the piece at start is valid
+	requires:	start and end are valid cells
+				start != end (might be a redundant requires)
+				start is a [playerTurn] piece
+				end is empty or a (not [playerTurn]) piece
+	
+	needs to account for piece obstruction, pins, in checks, can castle
+	*/
+	Error_Return isValidMove(std::pair<int, int> start, std::pair<int, int> end) const;
 
 	//move piece after it passes isValidMove
 	//requires start and end to be valid cells
-	//returns true if move sucessfully executes
-	//returns false if it does not
-	bool move(std::pair<int, int> start, std::pair<int, int> end);
+	//returns Error_Return from isValidMove for I/O to parse
+	Error_Return move(std::pair<int, int> start, std::pair<int, int> end);
 
 	// Translate a line of FEN code into a board position
 	void fenCodeToBoardPrint(std::string fenCode, std::ostream& os) const;

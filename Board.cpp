@@ -11,6 +11,10 @@ Board::Board(string fen) {
 	fenCodeToBoardStore(fen);
 }
 
+Color Board::getColor() const {
+	return playerTurn;
+}
+
 Piece Board::getPiece(pair<int, int> location) const {
 	assert(validLocation(location));
 	return board[location.first][location.second];
@@ -19,6 +23,47 @@ Piece Board::getPiece(pair<int, int> location) const {
 void Board::setPiece(Piece piece, pair<int, int> location) {
 	assert(validLocation(location));
 	board[location.first][location.second] = piece;
+}
+
+void Board::movePiece(pair<int, int> start, pair<int, int> end) {
+	assert(start != end);
+	//assert(isValidMove(start, end));
+	if (getPiece(start) == Piece(KING, WHITE)) {
+		whiteKingLocation = end;
+		whiteCanCastleKingSide = false;
+		whiteCanCastleQueenSide = false;
+	}
+	else if (getPiece(start) == Piece(KING, BLACK)) {
+		blackKingLocation = end;
+		blackCanCastleKingSide = false;
+		blackCanCastleQueenSide = false;
+	}
+
+	//disable castling rights when rook is moved for the first time
+	if (getPiece(start) == Piece(ROOK, WHITE) &&
+		start.first == 7 &&
+		start.second == 7){
+		whiteCanCastleKingSide = false;
+	}
+	if (getPiece(start) == Piece(ROOK, WHITE) &&
+		start.first == 7 &&
+		start.second == 0) {
+		whiteCanCastleQueenSide = false;
+	}
+	if (getPiece(start) == Piece(ROOK, BLACK) &&
+		start.first == 0 &&
+		start.second == 0) {
+		blackCanCastleQueenSide = false;
+	}
+	if (getPiece(start) == Piece(ROOK, BLACK) &&
+		start.first == 0 &&
+		start.second == 7) {
+		blackCanCastleKingSide = false;
+	}
+	
+	
+	setPiece(getPiece(start), end);
+	setPiece(Piece(), start);
 }
 
 bool Board::isCheck(Color playerTurn) const {
@@ -60,7 +105,6 @@ bool Board::diagonalChecks(Piece piece, pair<int, int> kingLocation) const {
 	int increment = 1;
 	//true if there is no obstruction in the given direction
 	bool checkUpLeft = true, checkUpRight = true, checkDownRight = true, checkDownLeft = true;
-	Piece empty;
 	while (increment < BOARD_SIZE) {
 		//check if there are bishops and no obstructions
 		//makes use of short circuit
@@ -70,22 +114,22 @@ bool Board::diagonalChecks(Piece piece, pair<int, int> kingLocation) const {
 		if (checkDownLeft && kingCheckHelper(kingLocation, increment, increment * -1, piece)) { return true; }
 
 		//check if there are obstructions
-		if (!kingCheckHelper(kingLocation, increment * -1, increment, empty) &&
+		if (!kingCheckHelper(kingLocation, increment * -1, increment, Piece()) &&
 			!kingCheckHelper(kingLocation, increment * -1, increment, piece)) {
 			checkUpLeft = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, increment * -1, increment * -1, empty) &&
+		if (!kingCheckHelper(kingLocation, increment * -1, increment * -1, Piece()) &&
 			!kingCheckHelper(kingLocation, increment * -1, increment * -1, piece)) {
 			checkUpRight = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, increment, increment, empty) &&
+		if (!kingCheckHelper(kingLocation, increment, increment, Piece()) &&
 			!kingCheckHelper(kingLocation, increment, increment, piece)) {
 			checkDownRight = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, increment, increment * -1, empty) &&
+		if (!kingCheckHelper(kingLocation, increment, increment * -1, Piece()) &&
 			!kingCheckHelper(kingLocation, increment, increment * -1, piece)) {
 			checkDownLeft = false;
 		}
@@ -96,18 +140,16 @@ bool Board::diagonalChecks(Piece piece, pair<int, int> kingLocation) const {
 
 // Because A8 is 00 so pawn moves have to be inverted
 bool Board::pawnChecks(Color color, pair<int, int> kingLocation) const {
-	Piece pawn(PAWN, color);
+	//black king
 	if (color == WHITE) {
 		return(
-			//black king
-			kingCheckHelper(kingLocation, 1, -1, pawn) ||
-			kingCheckHelper(kingLocation, 1, 1, pawn)
+			kingCheckHelper(kingLocation, 1, -1, Piece(PAWN, color)) ||
+			kingCheckHelper(kingLocation, 1, 1, Piece(PAWN, color))
 		);
 	}
-	return(
-		//white king
-		kingCheckHelper(kingLocation, -1, -1, pawn) ||
-		kingCheckHelper(kingLocation, -1, 1, pawn)
+	return( //white king
+		kingCheckHelper(kingLocation, -1, -1, Piece(PAWN, color)) ||
+		kingCheckHelper(kingLocation, -1, 1, Piece(PAWN, color))
 	);
 }
 
@@ -121,7 +163,6 @@ bool Board::horizontalChecks(Piece piece, pair<int, int> kingLocation) const {
 	int increment = 1;
 	//true if there is no obstruction in the given direction
 	bool checkUpper = true, checkUnder = true, checkRight = true, checkLeft = true;
-	Piece empty;
 	while (increment < BOARD_SIZE) {
 		//check if there are rooks and no obstructions
 		//makes use of short circuit
@@ -129,24 +170,23 @@ bool Board::horizontalChecks(Piece piece, pair<int, int> kingLocation) const {
 		if (checkUnder && kingCheckHelper(kingLocation, increment, 0, piece)) { return true; }
 		if (checkRight && kingCheckHelper(kingLocation, 0, increment, piece)) { return true; }
 		if (checkLeft && kingCheckHelper(kingLocation, 0, increment * -1, piece)) { return true; }
-
 		//check if there are obstructions
-		if (!kingCheckHelper(kingLocation, increment * -1, 0, empty) &&
+		if (!kingCheckHelper(kingLocation, increment * -1, 0, Piece()) &&
 			!kingCheckHelper(kingLocation, increment * -1, 0, piece)) {
 			checkUpper = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, increment, 0, empty) &&
+		if (!kingCheckHelper(kingLocation, increment, 0, Piece()) &&
 			!kingCheckHelper(kingLocation, increment, 0, piece)) {
 			checkUnder = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, 0, increment, empty) &&
+		if (!kingCheckHelper(kingLocation, 0, increment, Piece()) &&
 			!kingCheckHelper(kingLocation, 0, increment, piece)) {
 			checkRight = false;
 		}
 
-		if (!kingCheckHelper(kingLocation, 0, increment * -1, empty) &&
+		if (!kingCheckHelper(kingLocation, 0, increment * -1, Piece()) &&
 			!kingCheckHelper(kingLocation, 0, increment * -1, piece)) {
 			checkLeft = false;
 		}
@@ -159,166 +199,170 @@ bool Board::queenChecks(Color color, pair<int, int> kingLocation) const {
 	return horizontalChecks(Piece(QUEEN, color), kingLocation) || diagonalChecks(Piece(QUEEN, color), kingLocation);
 }
 
-bool Board::isCheckMate(Color playerTurn) const {
-	return false;
-}
-
 bool Board::kingCheckHelper(pair<int, int> kingLocation, int rowAdd, int colAdd, Piece piece) const {
 	return (validLocation({ kingLocation.first + rowAdd, kingLocation.second + colAdd }) &&
 		getPiece({ kingLocation.first + rowAdd, kingLocation.second + colAdd }) == piece);
 }
 
-bool Board::isValidMove(Color playerTurn, pair<int, int> start, pair<int, int> end) const {
-	assert(validLocation(start) && validLocation(end));
-	if (getPiece(start).isEmpty()) {
-		//start is empty
-		return false;
-	}
-	if (!getPiece(end).isEmpty() && getPiece(end).getColor() == playerTurn) {
-		//end contains a piece with the same color as playerTurn
-		return false;
-	}
-	
-	//check for invalid piece moves
-	switch (getPiece(start).getType()) {
-	case PAWN:
-		break;
-	case BISHOP:
-		break;
-	case KNIGHT:
-		break;
-	case ROOK:
-		break;
-	case QUEEN:
-		break;
-	case KING:
-		break;
-	}
-
-	return true;
-}
-
-bool Board::move(pair<int, int> start, pair<int, int> end) {
-	assert(validLocation(start) && validLocation(end));
-	if (isValidMove(playerTurn, start, end)) {
-		// Gets the piece at start, and sets that piece to end location
-		Piece piece = getPiece(start);
-		Piece empty;
-
-		//check if the king castled
-		if (attemptCastleKing(piece, WHITE, start, end)) {
-			setCastleKing(WHITE);
-			return true;
-		}
-		if (attemptCastleKing(piece, BLACK, start, end)) {
-			setCastleKing(BLACK);
-			return true;
-		}
-		if (attemptCastleQueen(piece, WHITE, start, end)) {
-			setCastleQueen(WHITE);
-			return true;
-		}
-		if (attemptCastleQueen(piece, BLACK, start, end)) {
-			setCastleQueen(BLACK);
-			return true;
-		}
-		setPiece(piece, end);
-		setPiece(empty, start);
-		if (piece == Piece(KING, WHITE)) {
-			whiteKingLocation = end;
-			whiteCanCastleKingSide = false;
-			whiteCanCastleQueenSide = false;
-		}
-		if (piece == Piece(KING, BLACK)) {
-			blackKingLocation = end;
-			blackCanCastleKingSide = false;
-			blackCanCastleQueenSide = false;
-		}
-		playerTurn = opposite(playerTurn);
-		return true;
-	}
+bool Board::isCheckMate(Color playerTurn) const {
 	return false;
 }
 
-//values are hard coded..
-bool Board::attemptCastleKing(Piece piece, Color color, pair<int, int> start, pair<int, int> end) const {
-	if (color == WHITE) {
-		return start.first == 7 && start.second == 4 && 
-			end.first == 7 && end.second == 6 && 
-			piece == Piece(KING, color);
+Error_Return Board::isValidMove(pair<int, int> start, pair<int, int> end) const {
+	assert(validLocation(start) && validLocation(end));
+	assert(getPiece(start).getColor() == playerTurn);
+	assert(getPiece(end).isEmpty() || opposite(getPiece(end).getColor()) == playerTurn);
+
+	switch (getPiece(start).getType()) {
+	case PAWN:
+		return validPawnMove(start, end);
+	case ROOK:
+		return validRookMove(start, end);
+	case KNIGHT:
+		return validKnightMove(start, end);
+	case BISHOP:
+		return validBishopMove(start, end);
+	case QUEEN:
+		return validQueenMove(start, end);
+	case KING:
+		return validKingMove(start, end);
 	}
-	//black castle
-	return start.first == 0 && start.second == 4 && 
-		end.first == 0 && end.second == 6 &&
-		piece == Piece(KING, color);
+}
+
+Error_Return Board::validPawnMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	// Four cases ignoring En Passant
+	// Diagonal to left
+	// Diagonal to right
+	// forward one step
+	// forward two steps
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validRookMove(std::pair<int, int> start, std::pair<int, int> end) const {
+
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validKnightMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	if (
+		!(abs(start.first - end.first) == 1 && abs(start.second - end.second) == 2) &&
+		!(abs(start.first - end.first) == 2 && abs(start.second - end.second) == 1)
+		) {
+		return MOVE_INVALID;
+	}
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validBishopMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	if ((start.first - end.first != start.second - end.second)) {
+		return MOVE_INVALID;
+	}
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validQueenMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validKingMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validCastleKingSide(std::pair<int, int> start, std::pair<int, int> end) const {
+	return MOVE_SUCCESSFUL;
+}
+
+Error_Return Board::validCastleQueenSide(std::pair<int, int> start, std::pair<int, int> end) const {
+	return MOVE_SUCCESSFUL;
+}
+
+// TODO lots of work
+Error_Return Board::move(pair<int, int> start, pair<int, int> end) {
+	assert(validLocation(start) && validLocation(end));
+	Error_Return returnedMoveType = isValidMove(start, end);
+
+	switch (returnedMoveType) {
+	case MOVE_SUCCESSFUL:
+		movePiece(start, end);
+		break;
+	case MOVE_CASTLE_KING_SUCCESSFUL:
+		//setCastleKing();
+		break;
+	case MOVE_CASTLE_QUEEN_SUCCESSFUL:
+		//setCastleQueen();
+		break;
+	}
+	playerTurn = opposite(playerTurn);
+	return returnedMoveType;
 }
 
 //values are hard coded..
-bool Board::attemptCastleQueen(Piece piece, Color color, pair<int, int> start, pair<int, int> end) const {
-	if (color == WHITE) {
-		return start.first == 7 && start.second == 4 && 
-			end.first == 7 && end.second == 2 &&
-			piece == Piece(KING, color);
+bool Board::attemptCastleKing(pair<int, int> start, pair<int, int> end) const {
+	assert(getPiece(start).getType() == KING);
+	if (playerTurn == WHITE) {
+		return start.first == 7 && start.second == 4 &&
+			end.first == 7 && end.second == 6;
 	}
 	//black castle
-	return start.first == 0 && start.second == 4 && 
-		end.first == 0 && end.second == 2 &&
-		piece == Piece(KING, color);
+	return start.first == 0 && start.second == 4 &&
+		end.first == 0 && end.second == 6;
 }
 
 //values are hard coded..
-void Board::setCastleKing(Color color) {
-	if (color == WHITE) {
+bool Board::attemptCastleQueen(pair<int, int> start, pair<int, int> end) const {
+	assert(getPiece(start).getType() == KING);
+	if (playerTurn == WHITE) {
+		return start.first == 7 && start.second == 4 &&
+			end.first == 7 && end.second == 2;
+	}
+	//black castle
+	return start.first == 0 && start.second == 4 &&
+		end.first == 0 && end.second == 2;
+}
+
+//values are hard coded..
+void Board::setCastleKing() {
+	if (playerTurn == WHITE) {
 		pair<int, int> start = { 7,4 };
 		pair<int, int> end = { 7,6 };
-		whiteKingLocation = end;
 		//move king
-		setPiece(Piece(KING, WHITE), end);
-		setPiece(Piece(), start);
-		//move rook
-		setPiece(Piece(ROOK, WHITE), { 7, 5 });
-		setPiece(Piece(), {7,7});
-		whiteCanCastleKingSide = false;
+		movePiece(start, end);
+		//move rook from {7,7} to {7,5}
+		movePiece({ 7,7 }, { 7,5 });
 	}
-	else if (color == BLACK) {
+	else if (playerTurn == BLACK) {
 		pair<int, int> start = { 0,4 };
 		pair<int, int> end = { 0,6 };
-		blackKingLocation = end;
 		//move king
-		setPiece(Piece(KING, WHITE), end);
-		setPiece(Piece(), start);
-		//move rook
-		setPiece(Piece(ROOK, BLACK), { 0,5 });
-		setPiece(Piece(), { 0,7 });
-		blackCanCastleKingSide = false;
+		movePiece(start, end);
+		//move rook from {0,7} to {0,5}
+		movePiece({ 0,7 }, { 0,5 });
 	}
 }
 
 //values are hard coded..
-void Board::setCastleQueen(Color color) {
-	if (color == WHITE) {
+void Board::setCastleQueen() {
+	if (playerTurn == WHITE) {
 		pair<int, int> start = { 7,4 };
 		pair<int, int> end = { 7,2 };
 		whiteKingLocation = end;
 		//move king
-		setPiece(Piece(KING, WHITE), end);
-		setPiece(Piece(), start);
-		//move rook
-		setPiece(Piece(ROOK, WHITE), { 7, 3 });
-		setPiece(Piece(), { 7,0 });
+		movePiece(start, end);
+		//move rook from {7,0} to {7,3}
+		movePiece({ 7,0 }, { 7,3 });
+		whiteCanCastleKingSide = false;
 		whiteCanCastleQueenSide = false;
 	}
-	else if (color == BLACK) {
+	else if (playerTurn == BLACK) {
 		pair<int, int> start = { 0,4 };
 		pair<int, int> end = { 0,2 };
 		blackKingLocation = end;
 		//move king
-		setPiece(Piece(KING, WHITE), end);
-		setPiece(Piece(), start);
-		//move rook
-		setPiece(Piece(ROOK, BLACK), { 0,3 });
-		setPiece(Piece(), { 0,0 });
+		movePiece(start, end);
+		//move rook from {0,0} to {0,3}
+		movePiece({ 0,0 }, { 0,3 });
 		blackCanCastleKingSide = false;
+		blackCanCastleQueenSide = false;
 	}
 }
 
