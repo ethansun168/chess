@@ -1,3 +1,4 @@
+#pragma once
 #include <sstream>
 #include "pch.h"
 #include "../Player.h"
@@ -9,10 +10,10 @@
 
 using namespace std;
 
-int main(int argc, char** argv) {
-	::testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
-}
+//int main(int argc, char** argv) {
+//	::testing::InitGoogleTest(&argc, argv);
+//	return RUN_ALL_TESTS();
+//}
 
 TEST(Piece, printVarious) {
 	Piece wPawn(PAWN, WHITE);
@@ -23,7 +24,6 @@ TEST(Piece, printVarious) {
 	ostringstream output;
 	output << wPawn << piece << bPawn << bBishop;
 	EXPECT_EQ(output.str(), "P pb");
-
 }
 
 TEST(Piece, charToPiece) {
@@ -73,7 +73,7 @@ TEST(BoardPrint, general) {
 		    << "2 | P P P P P P P P |\n"
 		    << "1 | R N B Q K B N R |\n"
 		    << "  |_________________|\n"
-		    << "    a b c d e f g h ";
+		    << "    a b c d e f g h \n";
 	EXPECT_EQ(os.str(), correct.str());
 }
 
@@ -93,7 +93,7 @@ TEST(BoardPrint, general2) {
 		    << "2 | P P P P . P P P |\n"
 		    << "1 | R N B Q K B N R |\n"
 		    << "  |_________________|\n"
-		    << "    a b c d e f g h ";
+		    << "    a b c d e f g h \n";
 	EXPECT_EQ(os.str(), correct.str());
 }
 
@@ -112,7 +112,7 @@ TEST(BoardPrint, general3) {
 		    << "2 | P P P P . P P P |\n"
 		    << "1 | R N B Q K B N R |\n"
 		    << "  |_________________|\n"
-		    << "    a b c d e f g h ";
+		    << "    a b c d e f g h \n";
 	EXPECT_EQ(os.str(), correct.str());
 }
 
@@ -131,7 +131,7 @@ TEST(BoardPrint, general4) {
 		    << "2 | P P P P . P P P |\n"
 		    << "1 | R N B Q K B . R |\n"
 		    << "  |_________________|\n"
-		    << "    a b c d e f g h ";
+		    << "    a b c d e f g h \n";
 	EXPECT_EQ(os.str(), correct.str());
 }
 
@@ -239,259 +239,362 @@ TEST(BoardSetPiece, setPiece) {
 		    << "2 | P P P P P P P P |\n"
 		    << "1 | R N B Q K B N R |\n"
 		    << "  |_________________|\n"
-		    << "    a b c d e f g h ";
+		    << "    a b c d e f g h \n";
 	EXPECT_EQ(os.str(), correct.str());
 }
 
 TEST(BoardIsCheck, whiteBishopCheck) {
-	Board board("rnbqkbnr/ppppp1pp/8/5p1B/8/8/PPPPPPPP/RNBQK1NR w KQkq - 0 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
-	EXPECT_FALSE(board.isCheck(WHITE));
+	Board board("rnbqkbnr/ppppp1pp/8/5p1B/8/8/PPPPPPPP/RNBQK1NR b KQkq - 0 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteBishopCheckBlocked) {
-	Board board("rnbqkbnr/pppppppp/8/7B/8/8/PPPPPPPP/RNBQK1NR w KQkq - 0 1");
-	EXPECT_FALSE(board.isCheck(BLACK));
+	Board board("rnbqkbnr/pppppppp/8/7B/8/8/PPPPPPPP/RNBQK1NR b KQkq - 0 1");
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteBishopCheck2) {
-	Board board("8/5K2/4B3/8/2k5/8/8/8 w - - 1 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
+	Board board("8/5K2/4B3/8/2k5/8/8/8 b - - 1 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackBishopCheck) {
 	Board board("8/8/8/2K5/8/4b1k1/8/8 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackBishopCheck2) {
 	Board board("8/8/8/2K5/3p4/b5k1/8/8 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackBishopCheckBlocked) {
 	Board board("8/8/8/2K5/3p4/4b1k1/8/8 w - - 0 1");
-	EXPECT_FALSE(board.isCheck(WHITE));
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteKnightCheck) {
-	Board board("rnbqkbnr/pppp2pp/5N2/4pp2/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
-	EXPECT_FALSE(board.isCheck(WHITE));
+	Board board("rnbqkbnr/pppp2pp/5N2/4pp2/8/8/PPPPPPPP/RNBQKB1R b KQkq - 0 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteKnightCheckBlocked) {
-	Board board("rnbqkbnr/pppppppp/5N2/8/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
-	EXPECT_FALSE(board.isCheck(WHITE));
+	Board board("rnbqkbnr/pppppppp/5N2/8/8/8/PPPPPPPP/RNBQKB1R b KQkq - 0 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteKnightCheck2) {
-	Board board("rnbqkbnr/pppppppp/3N4/8/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
+	Board board("rnbqkbnr/pppppppp/3N4/8/8/8/PPPPPPPP/RNBQKB1R b KQkq - 0 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackKnightCheck) {
 	Board board("8/8/8/2K5/3p4/1n4k1/8/8 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackKnightCheckBlocked) {
 	Board board("8/8/8/2K5/1pBp4/1n4k1/8/8 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackKnightCheck2) {
 	Board board("8/8/4n3/2K5/1pBp4/6k1/8/8 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteQueenCheckDiag) {
-	Board board("8/5K2/4Q3/8/2k5/8/8/8 w - - 1 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
+	Board board("8/5K2/4Q3/8/2k5/8/8/8 b - - 1 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteQueenCheckDiagBlocked) {
-	Board board("8/5K2/4Q3/3b4/2k5/8/8/8 w - - 1 1");
-	EXPECT_FALSE(board.isCheck(BLACK));
+	Board board("8/5K2/4Q3/3b4/2k5/8/8/8 b - - 1 1");
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteQueenCheckUp) {
-	Board board("4Q3/8/2B5/8/1p1p4/2n3K1/8/4k3 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
+	Board board("4Q3/8/2B5/8/1p1p4/2n3K1/8/4k3 b - - 0 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteQueenCheckUpBlocked) {
-	Board board("8/2Q2K2/8/2b5/2k5/8/8/8 w - - 1 1");
-	EXPECT_FALSE(board.isCheck(BLACK));
+	Board board("8/2Q2K2/8/2b5/2k5/8/8/8 b - - 1 1");
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteQueenCheckRight) {
-	Board board("8/5K2/8/2b5/2k4Q/8/8/8 w - - 1 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
+	Board board("8/5K2/8/2b5/2k4Q/8/8/8 b - - 1 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteQueenCheckLeft) {
 	Board board("8/8/2B5/8/1p1pQ2k/2n3K1/8/8 b - - 0 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteQueenCheckDiag2) {
-	Board board("8/5K2/8/2b5/2k5/8/Q7/8 w - - 1 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
+	Board board("8/5K2/8/2b5/2k5/8/Q7/8 b - - 1 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteQueenCheckDownBlocked) {
-	Board board("3k4/8/2B5/8/1p1p4/2n3K1/8/3Q4 w - - 0 1");
-	EXPECT_FALSE(board.isCheck(BLACK));
+	Board board("3k4/8/2B5/8/1p1p4/2n3K1/8/3Q4 b - - 0 1");
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteQueenCheckDown) {
-	Board board("8/8/2B5/5K2/1p1p4/2n3k1/8/6Q1 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
+	Board board("8/8/2B5/5K2/1p1p4/2n3k1/8/6Q1 b - - 0 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackQueenCheckDiag) {
 	Board board("5q2/8/8/2K5/1pBp4/6k1/8/8 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackQueenCheckDiag2) {
 	Board board("8/q7/8/2K5/1pBp4/6k1/8/8 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackQueenCheckDiagBlocked) {
 	Board board("8/q7/1B6/2K5/1p1p4/6k1/8/8 w - - 0 1");
-	EXPECT_FALSE(board.isCheck(WHITE));
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackQueenCheckRight) {
 	Board board("8/8/1B6/2K3q1/1p1p4/6k1/8/8 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackQueenCheckRightBlocked) {
 	Board board("8/8/8/2KB2q1/1p1p4/6k1/8/8 w - - 0 1");
-	EXPECT_FALSE(board.isCheck(WHITE));
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackQueenCheckLeft) {
 	Board board("8/8/8/q1KB4/1p1p4/6k1/8/8 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackQueenCheckLeftBlocked) {
 	Board board("8/3B4/8/qnK5/1p1p4/6k1/8/8 w - - 0 1");
-	EXPECT_FALSE(board.isCheck(WHITE));
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackQueenCheckUp) {
 	Board board("2q5/4B3/8/1nK5/1p1p4/6k1/8/8 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackQueenCheckUpBlocked) {
 	Board board("2q5/8/2B5/1nK5/1p1p4/6k1/8/8 w - - 0 1");
-	EXPECT_FALSE(board.isCheck(WHITE));
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackQueenCheckDown) {
 	Board board("8/8/2B5/1nK5/1p1p4/6k1/8/2q5 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackQueenCheckDownBlocked) {
 	Board board("8/8/2B5/2K5/1p1p4/2n3k1/8/2q5 w - - 0 1");
-	EXPECT_FALSE(board.isCheck(WHITE));
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteRookCheckUpBlocked) {
-	Board board("2R5/5K2/8/2B5/2kb4/8/8/8 w - - 1 1");
-	EXPECT_FALSE(board.isCheck(BLACK));
+	Board board("2R5/5K2/8/2B5/2kb4/8/8/8 b - - 1 1");
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteRookCheckUp) {
-	Board board("2R5/5K2/8/8/2kb4/8/8/8 w - - 1 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
+	Board board("2R5/5K2/8/8/2kb4/8/8/8 b - - 1 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteRookCheckRightBlocked) {
-	Board board("8/5K2/8/8/2kb3R/8/8/8 w - - 1 1");
-	EXPECT_FALSE(board.isCheck(BLACK));
+	Board board("8/5K2/8/8/2kb3R/8/8/8 b - - 1 1");
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteRookCheckRight) {
-	Board board("8/5K2/8/2b5/2k4R/8/8/8 w - - 1 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
+	Board board("8/5K2/8/2b5/2k4R/8/8/8 b - - 1 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whiteRookCheckRight2) {
-	Board board("8/5k2/8/2b5/2K4r/8/8/8 w - - 1 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	Board board("8/5k2/8/2b5/2K4r/8/8/8 b - - 1 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackRookCheckRight) {
 	Board board("8/8/2B5/2K4r/1p1p4/2n3k1/8/8 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackRookCheckRightBlocked) {
 	Board board("8/8/2B5/2Kp3r/1p6/2n3k1/8/8 w - - 0 1");
-	EXPECT_FALSE(board.isCheck(WHITE));
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackRookCheckLeft) {
 	Board board("8/8/2B5/r1Kp4/1p6/2n3k1/8/8 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackRookCheckLeftBlocked) {
 	Board board("8/8/2B5/rpKp4/8/2n3k1/8/8 w - - 0 1");
-	EXPECT_FALSE(board.isCheck(WHITE));
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackRookCheckDownBlocked) {
 	Board board("2r5/8/2B5/1pKp4/8/2n3k1/8/8 w - - 0 1");
-	EXPECT_FALSE(board.isCheck(WHITE));
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackRookCheckDown) {
 	Board board("2r5/8/3B4/1pKp4/8/2n3k1/8/8 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackRookCheckUp) {
 	Board board("8/8/3B4/1pKp4/8/1n4k1/8/2r5 w - - 0 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackRookCheckUpBlocked) {
 	Board board("8/8/3B4/1pKp4/8/2n3k1/8/2r5 w - - 0 1");
-	EXPECT_FALSE(board.isCheck(WHITE));
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whitePawnCheckEdge) {
-	Board board("k7/1P6/8/5K2/8/8/8/8 w - - 1 1");
-	EXPECT_TRUE(board.isCheck(BLACK));
+	Board board("k7/1P6/8/5K2/8/8/8/8 b - - 1 1");
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, whitePawnCheck) {
-	Board board("1k6/1P6/8/5K2/8/8/8/8 w - - 1 1");
-	EXPECT_FALSE(board.isCheck(BLACK));
+	Board board("1k6/1P6/8/5K2/8/8/8/8 b - - 1 1");
+	EXPECT_FALSE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackPawnCheckEdge) {
 	Board board("1k6/1P6/8/8/8/8/6p1/7K w - - 1 1");
-	EXPECT_TRUE(board.isCheck(WHITE));
+	EXPECT_TRUE(board.isCheck());
 }
 
 TEST(BoardIsCheck, blackPawnCheck) {
 	Board board("1k6/1P6/8/8/8/8/6p1/6K1 w - - 1 1");
-	EXPECT_FALSE(board.isCheck(WHITE));
+	EXPECT_FALSE(board.isCheck());
 }
 
-TEST(Castle, kingGeneral) {
+TEST(Convert, general1) {
+	EXPECT_EQ(convert('a', 6).first, 2);
+	EXPECT_EQ(convert('a', 6).second, 0);
+}
+
+TEST(Convert, general2) {
+	EXPECT_EQ(convert('f', 2).first, 6);
+	EXPECT_EQ(convert('f', 2).second, 5);
+}
+
+TEST(Castle, whiteKingGeneral) {
 	Board board("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
-	EXPECT_EQ(board.isValidMove({ 7,4 }, {7,6}), MOVE_SUCCESSFUL);
+	EXPECT_EQ(board.move(convert('e', 1), convert('g', 1)), MOVE_CASTLE_KING_SUCCESSFUL);
+	EXPECT_EQ(board.getPiece(convert('g', 1)), Piece(KING,WHITE));
+	EXPECT_EQ(board.getPiece(convert('f', 1)), Piece(ROOK, WHITE));
+}
+
+TEST(Castle, whiteKingInCheck) {
+	Board board("r3k2r/4q3/8/8/8/8/8/R3K2R w KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 1), convert('g', 1)), MOVE_CASTLE_FAILURE);
+}
+
+TEST(Castle, whiteKingThruCheck) {
+	Board board("r3k2r/8/1q6/8/8/8/8/R3K2R w KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 1), convert('g', 1)), MOVE_CASTLE_FAILURE);
+}
+
+TEST(Castle, whiteKingThruCheck2) {
+	Board board("r3k2r/8/8/1q6/8/8/8/R3K2R w KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 1), convert('g', 1)), MOVE_CASTLE_FAILURE);
+}
+
+TEST(Castle, whiteQueenGeneral) {
+	Board board("r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 1), convert('c', 1)), MOVE_CASTLE_QUEEN_SUCCESSFUL);
+	EXPECT_EQ(board.getPiece(convert('c', 1)), Piece(KING, WHITE));
+	EXPECT_EQ(board.getPiece(convert('d', 1)), Piece(ROOK, WHITE));
+}
+
+TEST(Castle, whiteQueenInCheck) {
+	Board board("r3k2r/8/8/8/7q/8/8/R3K2R w KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 1), convert('c', 1)), MOVE_CASTLE_FAILURE);
+}
+
+TEST(Castle, whiteQueenThruCheck) {
+	Board board("r3k2r/8/8/8/3q4/8/8/R3K2R w KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 1), convert('c', 1)), MOVE_CASTLE_FAILURE);
+}
+
+TEST(Castle, whiteQueenThruCheck2) {
+	Board board("r3k2r/8/8/8/5q2/8/8/R3K2R w KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 1), convert('c', 1)), MOVE_CASTLE_FAILURE);
+}
+
+TEST(Castle, whiteQueenThruCheck3) {
+	Board board("r3k2r/8/8/5q2/8/8/8/R3K2R w KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 1), convert('c', 1)), MOVE_CASTLE_FAILURE);
+}
+
+TEST(Castle, blackKingGeneral) {
+	Board board("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 8), convert('g', 8)), MOVE_CASTLE_KING_SUCCESSFUL);
+	EXPECT_EQ(board.getPiece(convert('g', 8)), Piece(KING, BLACK));
+	EXPECT_EQ(board.getPiece(convert('f', 8)), Piece(ROOK, BLACK));
+}
+
+TEST(Castle, blackKingInCheck) {
+	Board board("r3k2r/8/8/8/8/4Q3/8/R3K2R b KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 8), convert('g', 8)), MOVE_CASTLE_FAILURE);
+}
+
+TEST(Castle, blackKingThruCheck) {
+	Board board("r3k2r/8/8/8/1Q6/8/8/R3K2R b KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 8), convert('g', 8)), MOVE_CASTLE_FAILURE);
+}
+
+TEST(Castle, blackKingThruCheck2) {
+	Board board("r3k2r/8/8/8/6Q1/8/8/R3K2R b KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 8), convert('g', 8)), MOVE_CASTLE_FAILURE);
+}
+
+TEST(Castle, blackQueenGeneral) {
+	Board board("r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 8), convert('c', 8)), MOVE_CASTLE_QUEEN_SUCCESSFUL);
+	EXPECT_EQ(board.getPiece(convert('c', 8)), Piece(KING, BLACK));
+	EXPECT_EQ(board.getPiece(convert('d', 8)), Piece(ROOK, BLACK));
+}
+
+TEST(Castle, blackQueenInCheck) {
+	Board board("r3k2r/8/8/8/Q7/8/8/R3K2R b KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 8), convert('c', 8)), MOVE_CASTLE_FAILURE);
+}
+
+TEST(Castle, blackQueenThruCheck) {
+	Board board("r3k2r/8/1N6/8/8/8/8/R3K2R b KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 8), convert('c', 8)), MOVE_CASTLE_FAILURE);
+}
+
+TEST(Castle, blackQueenThruCheck2) {
+	Board board("r3k2r/8/8/8/2N5/6B1/8/R3K2R b KQkq - 0 1");
+	EXPECT_EQ(board.move(convert('e', 8), convert('c', 8)), MOVE_CASTLE_FAILURE);
+}
+
+TEST(Undo, general) {
+	Board board;
+	board.move(convert('e', 2), convert('e', 4));
+	EXPECT_EQ(board.generateFenCode(), "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1");
+	board.undo();
+	EXPECT_EQ(board.generateFenCode(), "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 }
