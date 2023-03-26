@@ -143,13 +143,13 @@ public:
 
 	//set the piece at location
 	//requires a valid piece and a valid location
+	//never use this -- use movePiece() instead, it has more checks
 	void setPiece(Piece piece, std::pair<int, int> location);
 	
 	/*
 	Moves a piece from [start] to [end], deals with setting all the correct squares to
 	their respective values
 	requires:
-		start != end
 		start and end pass isValidMove
 	modifies:
 		kingLocation values if the king is moved
@@ -168,7 +168,12 @@ public:
 	check if the move for the piece at start is valid
 	requires none
 	needs to account for piece obstruction, pins, in checks, can castle
-	does all the error checking
+	does all the error checking:	
+		start != end
+		start and end must be valid
+		start piece must have color [playerTurn]
+		start must not be empty
+		end color must not be the same as [playerTurn]
 	*/
 	Move_Return isValidMove(std::pair<int, int> start, std::pair<int, int> end) const;
 

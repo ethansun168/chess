@@ -10,10 +10,10 @@
 
 using namespace std;
 
-//int main(int argc, char** argv) {
-//	::testing::InitGoogleTest(&argc, argv);
-//	return RUN_ALL_TESTS();
-//}
+int main(int argc, char** argv) {
+	::testing::InitGoogleTest(&argc, argv);
+	return RUN_ALL_TESTS();
+}
 
 TEST(Piece, printVarious) {
 	Piece wPawn(PAWN, WHITE);
@@ -202,6 +202,16 @@ TEST(BoardValidFenCode, castleFail) {
 
 TEST(BoardValidFenCode, castleFailEdge) {
 	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w K-Qq e3 0 1";
+	EXPECT_FALSE(validFenCode(fen));
+}
+
+TEST(BoardValidFenCode, castleNone) {
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w - e3 0 1";
+	EXPECT_TRUE(validFenCode(fen));
+}
+
+TEST(BoardValidFenCode, castleNoneFail) {
+	string fen = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w -- e3 0 1";
 	EXPECT_FALSE(validFenCode(fen));
 }
 
@@ -423,8 +433,8 @@ TEST(BoardIsCheck, whiteRookCheckRight) {
 	EXPECT_TRUE(board.isCheck());
 }
 
-TEST(BoardIsCheck, whiteRookCheckRight2) {
-	Board board("8/5k2/8/2b5/2K4r/8/8/8 b - - 1 1");
+TEST(BoardIsCheck, blackRookCheckRight2) {
+	Board board("8/5k2/8/2b5/2K4r/8/8/8 w - - 1 1");
 	EXPECT_TRUE(board.isCheck());
 }
 
@@ -544,7 +554,7 @@ TEST(Castle, whiteQueenThruCheck2) {
 
 TEST(Castle, whiteQueenThruCheck3) {
 	Board board("r3k2r/8/8/5q2/8/8/8/R3K2R w KQkq - 0 1");
-	EXPECT_EQ(board.move(convert('e', 1), convert('c', 1)), MOVE_CASTLE_FAILURE);
+	EXPECT_EQ(board.move(convert('e', 1), convert('c', 1)), MOVE_CASTLE_QUEEN_SUCCESSFUL);
 }
 
 TEST(Castle, blackKingGeneral) {
@@ -588,7 +598,7 @@ TEST(Castle, blackQueenThruCheck) {
 
 TEST(Castle, blackQueenThruCheck2) {
 	Board board("r3k2r/8/8/8/2N5/6B1/8/R3K2R b KQkq - 0 1");
-	EXPECT_EQ(board.move(convert('e', 8), convert('c', 8)), MOVE_CASTLE_FAILURE);
+	EXPECT_EQ(board.move(convert('e', 8), convert('c', 8)), MOVE_CASTLE_QUEEN_SUCCESSFUL);
 }
 
 TEST(Undo, general) {
@@ -598,3 +608,4 @@ TEST(Undo, general) {
 	board.undo();
 	EXPECT_EQ(board.generateFenCode(), "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 }
+

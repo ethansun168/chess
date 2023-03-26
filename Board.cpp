@@ -149,7 +149,8 @@ bool Board::pawnChecks(Color color, pair<int, int> kingLocation) const {
 			kingCheckHelper(kingLocation, 1, 1, Piece(PAWN, color))
 		);
 	}
-	return( //white king
+	return( 
+		//white king
 		kingCheckHelper(kingLocation, -1, -1, Piece(PAWN, color)) ||
 		kingCheckHelper(kingLocation, -1, 1, Piece(PAWN, color))
 	);
@@ -215,31 +216,15 @@ Move_Return Board::isValidMove(pair<int, int> start, pair<int, int> end) const {
 	//assert(getPiece(start).getColor() == playerTurn);
 	//assert(getPiece(end).isEmpty() || opposite(getPiece(end).getColor()) == playerTurn);
 	
-	//start and end must be valid, start piece must have color [playerTurn], start must not be empty,
-	//end color must not be the same as [playerTurn]
+	//error checking described in RME
 	if (!validLocation(start) || 
 		!validLocation(end) ||
+		(start.first == end.first && start.second == end.second) ||
 		getPiece(start).isEmpty() ||
 		getPiece(start).getColor() != playerTurn ||
 		!getPiece(end).isEmpty() && getPiece(end).getColor() == playerTurn) {
 		return MOVE_INVALID;
 	}
-
-	/*if (!validLocation(start)) {
-		return MOVE_INVALID;
-	}
-	if (!validLocation(end)) {
-		return MOVE_INVALID;
-	}
-	if (getPiece(start).isEmpty()) {
-		return MOVE_INVALID;
-	}
-	if (getPiece(start).getColor() != playerTurn) {
-		return MOVE_INVALID;
-	}
-	if (!getPiece(end).isEmpty() && getPiece(end).getColor() == playerTurn) {
-		return MOVE_INVALID;
-	}*/
 
 	switch (getPiece(start).getType()) {
 	case PAWN:
@@ -300,33 +285,159 @@ Move_Return Board::validKingMove(std::pair<int, int> start, std::pair<int, int> 
 	else if (attemptCastleQueen(start, end)) {
 		return validCastleQueenSide(start, end);
 	}
-	//no obstructions for the king
-	if (abs(start.first - start.first) != 1 || abs(end.first - end.second) != 1) {
+	//king can only move in squares adjacent to it
+	if (abs(start.first - start.second) != 1 || abs(end.first - end.second) != 1) {
 		return MOVE_INVALID;
 	}
 	return MOVE_SUCCESSFUL;
 }
 
 Move_Return Board::validCastleKingSide(std::pair<int, int> start, std::pair<int, int> end) const {
-	//FINISH ME
-	string currentFen = generateFenCode();
-	Board tempBoard(currentFen);
-	if (isCheck()) {
-		return MOVE_CASTLE_FAILURE;
-	}
-
 	if (playerTurn == WHITE && !whiteCanCastleKingSide) {
 		return MOVE_CASTLE_FAILURE;
 	}
+	if (playerTurn == BLACK && !blackCanCastleKingSide) {
+		return MOVE_CASTLE_FAILURE;
+	}
+	//king cannot castle from, through, or into check
+	Board tempBoard(generateFenCode());
 	
+	//through check
+	if (playerTurn == WHITE) {
+		//no obstructions
+		if (!tempBoard.getPiece(convert('f', 1)).isEmpty()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		if (!tempBoard.getPiece(convert('g', 1)).isEmpty()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+
+		tempBoard.movePiece(convert('e', 1), convert('f', 1));
+		if (tempBoard.isCheck()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		tempBoard.undo();
+
+		tempBoard.movePiece(convert('e', 1), convert('g', 1));
+		if (tempBoard.isCheck()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		tempBoard.undo();
+	}
+	else {
+		//check for black
+		//no obstructions
+		if (!tempBoard.getPiece(convert('f', 8)).isEmpty()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		if (!tempBoard.getPiece(convert('g', 8)).isEmpty()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+
+		tempBoard.movePiece(convert('e', 8), convert('f', 8));
+		if (tempBoard.isCheck()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		tempBoard.undo();
+
+		tempBoard.movePiece(convert('e', 8), convert('g', 8));
+		if (tempBoard.isCheck()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		tempBoard.undo();
+	}
+
+	//from check
+	if (tempBoard.isCheck()) {
+		return MOVE_CASTLE_FAILURE;
+	}
+	
+	//into check
+	tempBoard.setCastleKing();
+	if (tempBoard.isCheck()) {
+		return MOVE_CASTLE_FAILURE;
+	}
+	tempBoard.undo();
 	return MOVE_CASTLE_KING_SUCCESSFUL;
 }
 
 Move_Return Board::validCastleQueenSide(std::pair<int, int> start, std::pair<int, int> end) const {
+	if (playerTurn == WHITE && !whiteCanCastleQueenSide) {
+		return MOVE_CASTLE_FAILURE;
+	}
+	if (playerTurn == BLACK && !blackCanCastleQueenSide) {
+		return MOVE_CASTLE_FAILURE;
+	}
+	//king cannot castle from, through, or into check
+	Board tempBoard(generateFenCode());
+
+	//through check
+	if (playerTurn == WHITE) {
+		//no obstructions
+		if (!tempBoard.getPiece(convert('d', 1)).isEmpty()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		if (!tempBoard.getPiece(convert('c', 1)).isEmpty()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		if (!tempBoard.getPiece(convert('b', 1)).isEmpty()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+
+		tempBoard.movePiece(convert('e', 1), convert('d', 1));
+		if (tempBoard.isCheck()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		tempBoard.undo();
+
+		tempBoard.movePiece(convert('e', 1), convert('c', 1));
+		if (tempBoard.isCheck()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		tempBoard.undo();
+	}
+	else {
+		//check for black
+		//no obstructions
+		if (!tempBoard.getPiece(convert('d', 8)).isEmpty()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		if (!tempBoard.getPiece(convert('c', 8)).isEmpty()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		if (!tempBoard.getPiece(convert('b', 8)).isEmpty()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+
+		tempBoard.movePiece(convert('e', 8), convert('d', 8));
+		if (tempBoard.isCheck()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		tempBoard.undo();
+
+		tempBoard.movePiece(convert('e', 8), convert('c', 8));
+		if (tempBoard.isCheck()) {
+			return MOVE_CASTLE_FAILURE;
+		}
+		tempBoard.undo();
+	}
+
+	//from check
+	if (tempBoard.isCheck()) {
+		return MOVE_CASTLE_FAILURE;
+	}
+
+	//into check
+	tempBoard.setCastleQueen();
+	if (tempBoard.isCheck()) {
+		return MOVE_CASTLE_FAILURE;
+	}
+	tempBoard.undo();
+	
 	return MOVE_CASTLE_QUEEN_SUCCESSFUL;
 }
 
-// TODO lots of work
+// TODO: lots of work
 Move_Return Board::move(pair<int, int> start, pair<int, int> end) {
 	//assert(validLocation(start) && validLocation(end));
 	Move_Return returnedMoveType = isValidMove(start, end);
@@ -343,10 +454,11 @@ Move_Return Board::move(pair<int, int> start, pair<int, int> end) {
 		break;
 	}
 	playerTurn = opposite(playerTurn);
+	//TODO: update full moves
+	//TODO: update half moves
 	return returnedMoveType;
 }
 
-//values are hard coded..
 bool Board::attemptCastleKing(pair<int, int> start, pair<int, int> end) const {
 	assert(getPiece(start).getType() == KING);
 	if (playerTurn == WHITE) {
@@ -683,6 +795,9 @@ bool validFenCode(string fen) {
 	string castle;
 	ss >> castle;
 	for (int i = 0; i < castle.length(); i++) {
+		if (castle[i] == '-' && castle.length() > 1) {
+			return false;
+		}
 		if (castle[i] != 'K' && castle[i] != 'Q' && castle[i] != 'k' && castle[i] != 'q' && castle[i] != '-') {
 			return false;
 		}
