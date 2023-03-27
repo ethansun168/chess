@@ -277,9 +277,43 @@ Move_Return Board::validPawnMove(std::pair<int, int> start, std::pair<int, int> 
 	return MOVE_SUCCESSFUL;
 }
 
-//TODO
 Move_Return Board::validRookMove(std::pair<int, int> start, std::pair<int, int> end) const {
+	if (start.first != end.first && start.second != end.second) {
+		return MOVE_INVALID;
+	}
+	//check for obstructions
+	int directionX;
+	int directionY;
+	
+	if (start.first == end.first) {
+		//moving left and right
+		directionY = 0;
+		directionX = (end.second - start.second) / abs(end.second - start.second);
+	}
+	if (start.second == end.second) {
+		//moving up and down
+		directionX = 0;
+		directionY = (end.first - start.first) / abs(end.first - start.first);
+	}
 
+	if (directionX) {
+		//moving left and right
+		for (int i = 1; i < abs(end.second - start.second); i++) {
+			//row is const
+			if (!getPiece({ start.first, start.second + i * directionX }).isEmpty()) {
+				return MOVE_OBSTRUCTION;
+			}
+		}
+	}
+	if (directionY) {
+		//moving up and down
+		for (int i = 1; i < abs(end.first - start.first); i++) {
+			//col is const
+			if (!getPiece({ start.first + i * directionY, start.second }).isEmpty()) {
+				return MOVE_OBSTRUCTION;
+			}
+		}
+	}
 	return MOVE_SUCCESSFUL;
 }
 
@@ -315,8 +349,8 @@ Move_Return Board::validBishopMove(std::pair<int, int> start, std::pair<int, int
 	else {
 		directionY = 1;
 	}
-
-	for (int i = 1; i < start.first - end.first; i++) {
+	//loop thru the diag in the direction
+	for (int i = 1; i < abs(start.first - end.first); i++) {
 		if (!getPiece({ start.first + i * directionY, start.second + i * directionX }).isEmpty()) {
 			return MOVE_OBSTRUCTION;
 		}
@@ -324,9 +358,18 @@ Move_Return Board::validBishopMove(std::pair<int, int> start, std::pair<int, int
 	return MOVE_SUCCESSFUL;
 }
 
-//TODO
 Move_Return Board::validQueenMove(std::pair<int, int> start, std::pair<int, int> end) const {
-	return MOVE_SUCCESSFUL;
+	Move_Return horizVert = validRookMove(start, end);
+	Move_Return diagonal = validBishopMove(start, end);
+	
+	if (horizVert == MOVE_SUCCESSFUL || diagonal == MOVE_SUCCESSFUL) {
+		return MOVE_SUCCESSFUL;
+	}
+	if (horizVert == MOVE_OBSTRUCTION || diagonal == MOVE_OBSTRUCTION) {
+		return MOVE_OBSTRUCTION;
+	}
+	
+	return MOVE_INVALID;
 }
 
 Move_Return Board::validKingMove(std::pair<int, int> start, std::pair<int, int> end) const {

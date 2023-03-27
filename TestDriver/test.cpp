@@ -659,3 +659,109 @@ TEST(validMove, bishopCapture) {
 	Board board("rnbqkb1r/pppppppp/4n3/8/5N2/1B6/PPPP2PP/RNBQK2R w KQkq - 0 1");
 	EXPECT_EQ(board.isValidMove(convert('b', 3), convert('e', 6)), MOVE_SUCCESSFUL);
 }
+
+TEST(validMove, rookGeneral) {
+	Board board("rnbqkb1r/pppppppp/8/2n3R1/8/8/PPPP2PP/RNBQKBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('g', 5), convert('d', 5)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, rookGeneral2) {
+	Board board("rnbqkb1r/pppppppp/8/2n3R1/8/8/PPPP2PP/RNBQKBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('g', 5), convert('g', 3)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, rookInvalid) {
+	Board board("rnbqkb1r/pppppppp/8/8/2n3R1/8/PPPP2PP/RNBQKBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('g', 5), convert('e', 6)), MOVE_INVALID);
+}
+
+TEST(validMove, rookObstruction) {
+	Board board("rnbqkb1r/pppppppp/8/2n3R1/8/8/PPPP2PP/RNBQKBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('g', 5), convert('a', 5)), MOVE_OBSTRUCTION);
+}
+
+TEST(validMove, rookObstruction2) {
+	Board board("rnbqkb1r/pppppppp/8/2n3R1/8/8/PPPP2PP/RNBQKBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('g', 5), convert('g', 8)), MOVE_OBSTRUCTION);
+}
+
+TEST(validMove, rookCapture) {
+	Board board("rnbqkb1r/pppppppp/8/2n3R1/8/8/PPPP2PP/RNBQKBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('g', 5), convert('c', 5)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, queenGeneral) {
+	Board board("rnbqkb1r/pppppppp/8/8/8/4Q3/PPP5/RNB1KBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 3), convert('e', 6)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, queenGeneral2) {
+	Board board("rnbqkb1r/pppppppp/8/8/8/4Q3/PPP5/RNB1KBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 3), convert('e', 2)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, queenGeneral3) {
+	Board board("rnbqkb1r/pppppppp/8/8/8/4Q3/PPP5/RNB1KBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 3), convert('h', 6)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, queenGeneral4) {
+	Board board("rnbqkb1r/pppppppp/8/8/8/4Q3/PPP5/RNB1KBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 3), convert('b', 6)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, queenGeneral5) {
+	Board board("rnbqkb1r/pppppppp/8/8/8/4Q3/PPP5/RNB1KBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 3), convert('d', 2)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, queenInvalid) {
+	Board board("rnbqkb1r/pppppppp/8/8/8/4Q3/PPP5/RNB1KBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 3), convert('d', 5)), MOVE_INVALID);
+}
+
+TEST(validMove, queenInvalid2) {
+	Board board("rnbqkb1r/pppppppp/8/8/8/4Q3/PPP5/RNB1KBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 3), convert('d', 8)), MOVE_INVALID);
+}
+
+TEST(validMove, queenObstruct) {
+	Board board("rnbqkb1r/pppppppp/8/8/8/4Q3/PPP5/RNB1KBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 3), convert('e', 8)), MOVE_OBSTRUCTION);
+}
+
+TEST(validMove, queenObstruct2) {
+	Board board("rnbqkb1r/pppppppp/8/8/8/5Q2/PPP5/RNB1KBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('f', 3), convert('a', 8)), MOVE_OBSTRUCTION);
+}
+
+TEST(validMove, queenCapture) {
+	Board board("rnbqkb1r/pppppppp/8/8/8/4Q3/PPP5/RNB1KBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 3), convert('e', 7)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, queenCapture2) {
+	Board board("rnbqkb1r/pppppppp/8/8/8/5Q2/PPP5/RNB1KBN1 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('f', 3), convert('b', 7)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, knightGeneral) {
+	Board board;
+	EXPECT_EQ(board.isValidMove(convert('g', 1), convert('f', 3)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, knightInvalid) {
+	Board board;
+	EXPECT_EQ(board.isValidMove(convert('g', 1), convert('d', 4)), MOVE_INVALID);
+}
+
+TEST(validMove, knightInvalid2) {
+	Board board("rnbqkb1r/pppppppp/8/8/8/4N3/PPP5/RNB1KB2 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 3), convert('c', 2)), MOVE_INVALID);
+}
+
+TEST(validMove, knightCapture) {
+	Board board("rnbqkb1r/pppppppp/8/5N2/8/8/PPP5/RNB1KB2 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('f', 5), convert('g', 7)), MOVE_SUCCESSFUL);
+}
+
