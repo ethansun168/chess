@@ -11,7 +11,7 @@ ostream& operator << (ostream& os, Move_Return move) {
 		"Castle queen successful",
 		"Move invalid",
 		"Move obstructed",
-		"Failed castle",
+		"Castling failed",
 		"Piece is pinned",
 		"King is in check"
 	};
