@@ -767,12 +767,22 @@ TEST(validMove, knightCapture) {
 
 TEST(validMove, knightPinned) {
 	Board board("rnbqk2r/pppppppp/8/8/1b6/2N5/PPP5/RNB1KB2 w Qkq - 0 1");
-	EXPECT_EQ(board.isValidMove(convert('c', 3), convert('d', 5)), PIECE_PINNED);
+	EXPECT_EQ(board.isValidMove(convert('c', 3), convert('d', 5)), KING_CHECKED);
 }
 
 TEST(validMove, knightPinned2) {
 	Board board("r1bnk2r/pppppppp/4q3/8/1b2N3/8/PPP5/RNB1KB2 w Qkq - 0 1");
-	EXPECT_EQ(board.isValidMove(convert('e', 4), convert('c', 3)), PIECE_PINNED);
+	EXPECT_EQ(board.isValidMove(convert('e', 4), convert('c', 3)), KING_CHECKED);
+}
+
+TEST(validMove, knightPinned3) {
+	Board board("r1bnk2r/pppppppp/4q3/8/1b2N3/8/PPP5/RNB1KB2 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 4), convert('g', 3)), KING_CHECKED);
+}
+
+TEST(validMove, knightPinned4) {
+	Board board("r1bnk2r/pppppppp/4q3/8/1b2N3/8/PPP5/RNB1KB2 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 4), convert('h', 4)), MOVE_INVALID);
 }
 
 TEST(validMove, knightKingChecked) {
@@ -784,4 +794,78 @@ TEST(validMove, knightKingCheckedBlock) {
 	Board board("rnbqk2r/pppppppp/8/8/1b2N3/8/PPP5/RNB1KB2 w Qkq - 0 1");
 	EXPECT_EQ(board.isValidMove(convert('e', 4), convert('c', 3)), MOVE_SUCCESSFUL);
 }
-//make more test cases for pinned pieces, block checks, and move piece during checks
+
+TEST(validMove, bishopPinned) {
+	Board board("rnb1kb1r/pppppppp/8/1N2q3/8/8/PPP1B3/RNB1K3 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 2), convert('g', 4)), KING_CHECKED);
+}
+
+TEST(validMove, bishopPinnedSuccess) {
+	Board board("rnb1kb1r/pppppppp/8/qN6/6B1/8/PPPB4/RN2K3 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('d', 2), convert('b', 4)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, bishopKingChecked) {
+	Board board("rnb1kb1r/pppppppp/8/1N2q3/6B1/8/PPP5/RNB1K3 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('g', 4), convert('h', 5)), KING_CHECKED);
+}
+
+TEST(validMove, bishopKingCheckedBlocked) {
+	Board board("rnb1kb1r/pppppppp/8/1N2q3/6B1/8/PPP5/RNB1K3 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('g', 4), convert('e', 2)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, rookPinned) {
+	Board board("rnb1kb1r/pppppppp/3B4/1N2K3/8/4R3/PPP5/RN2q3 w kq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 3), convert('e', 6)), KING_CHECKED);
+}
+
+TEST(validMove, rookPinnedSuccess) {
+	Board board("rnb1kb1r/pppppppp/3B4/1N2K3/8/4R3/PPP5/RN2q3 w kq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 3), convert('e', 4)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, rookKingChecked) {
+	Board board("rnb1kb1r/pppppppp/3B4/1N2K3/8/2R5/PPP5/RN2q3 w kq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('c', 3), convert('c', 5)), KING_CHECKED);
+}
+
+TEST(validMove, rookKingCheckedBlocked) {
+	Board board("rnb1kb1r/pppppppp/3B4/1N2K3/8/2R5/PPP5/RN2q3 w kq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('c', 3), convert('e', 3)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, queenPinned) {
+	Board board("rnbqkb2/pppppppp/3B4/1N6/r3Q1K1/8/PPP5/RN2R3 w q - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 4), convert('c', 6)), KING_CHECKED);
+}
+
+TEST(validMove, queenPinned2) {
+	Board board("rnbqk3/pppppppp/3B4/rN6/6K1/5Q2/PPP5/RN1bR3 w q - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('f', 3), convert('f', 6)), KING_CHECKED);
+}
+
+TEST(validMove, queenPinnedSuccess) {
+	Board board("rnbqkb2/pppppppp/3B4/1N6/r3Q1K1/8/PPP5/RN2R3 w q - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 4), convert('c', 4)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, queenPinnedSuccess2) {
+	Board board("rnbqk3/pppppppp/3B4/rN6/6K1/5Q2/PPP5/RN1bR3 w q - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('f', 3), convert('e', 2)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, queenKingChecked) {
+	Board board("rnbqk3/pppppppp/3B4/rN3Q2/6K1/8/PPP5/RN1bR3 w q - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('f', 5), convert('d', 7)), KING_CHECKED);
+}
+
+TEST(validMove, queenKingCheckedBlocked) {
+	Board board("rnbqk3/pppppppp/3B4/rN3Q2/6K1/8/PPP5/RN1bR3 w q - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('f', 5), convert('f', 3)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, checkObstruct) {
+	Board board("rnbqk3/pppppppp/3B4/rN6/6K1/5Q2/PPP5/RN1bR3 w q - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('f', 3), convert('f', 8)), KING_CHECKED);
+}
