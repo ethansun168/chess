@@ -37,7 +37,7 @@ private:
 	int halfMoves;
 	int fullMoves;
 	std::pair<int, int> enPassant;
-	std::string undoFen;
+	std::vector<std::string> undoFen;
 
 	//make sure to update the king locations after a move
 	std::pair<int, int> whiteKingLocation;
@@ -192,7 +192,8 @@ public:
 	std::string generateFenCode() const;
 
 	//undoes the move
-	void undo();
+	//returns if undo was successful or not
+	bool undo();
 };
 
 //print the board to os

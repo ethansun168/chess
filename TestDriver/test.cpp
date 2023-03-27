@@ -609,3 +609,53 @@ TEST(Undo, general) {
 	EXPECT_EQ(board.generateFenCode(), "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 }
 
+TEST(Undo, doubleUndo) {
+	Board board;
+	board.move(convert('g', 1), convert('f', 3));
+	board.move(convert('g', 8), convert('f', 6));
+	EXPECT_TRUE(board.undo());
+	EXPECT_TRUE(board.undo());
+	EXPECT_EQ(board.generateFenCode(), "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	EXPECT_FALSE(board.undo());
+}
+
+TEST(validMove, kingGeneral) {
+	Board board;
+	EXPECT_EQ(board.isValidMove(convert('e', 1), convert('f', 1)), MOVE_INVALID);
+	EXPECT_EQ(board.isValidMove(convert('e', 1), convert('a', 3)), MOVE_INVALID);
+}
+
+TEST(validMove, kingDiag) {
+	Board board("rnbqkbnr/pppppppp/8/8/8/8/PPPP2PP/RNBQKBNR w KQkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 1), convert('f', 2)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, kingCastleObstruct) {
+	Board board("rnbqkbnr/pppppppp/8/8/8/5N2/PPPP2PP/RNBQKB1R w KQkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 1), convert('g', 1)), MOVE_OBSTRUCTION);
+}
+
+TEST(validMove, bishopGeneral) {
+	Board board("rnbqkbnr/pppppppp/8/8/2B5/8/PPPP2PP/RNBQK1NR w KQkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('c', 4), convert('e', 6)), MOVE_SUCCESSFUL);
+}
+
+TEST(validMove, bishopObstruct) {
+	Board board("rnbqkbnr/pppppppp/8/3N4/2B5/8/PPPP2PP/RNBQK2R w KQkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('c', 4), convert('e', 6)), MOVE_OBSTRUCTION);
+}
+
+TEST(validMove, bishopObstruct2) {
+	Board board("rnbqkb1r/pppppppp/4n3/8/5N2/1B6/PPPP2PP/RNBQK2R w KQkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('b', 3), convert('f', 7)), MOVE_OBSTRUCTION);
+}
+
+TEST(validMove, bishopInvalid) {
+	Board board("rnbqkbnr/pppppppp/8/8/2B5/8/PPPP2PP/RNBQK1NR w KQkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('c', 4), convert('h', 3)), MOVE_INVALID);
+}
+
+TEST(validMove, bishopCapture) {
+	Board board("rnbqkb1r/pppppppp/4n3/8/5N2/1B6/PPPP2PP/RNBQK2R w KQkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('b', 3), convert('e', 6)), MOVE_SUCCESSFUL);
+}
