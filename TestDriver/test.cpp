@@ -765,3 +765,23 @@ TEST(validMove, knightCapture) {
 	EXPECT_EQ(board.isValidMove(convert('f', 5), convert('g', 7)), MOVE_SUCCESSFUL);
 }
 
+TEST(validMove, knightPinned) {
+	Board board("rnbqk2r/pppppppp/8/8/1b6/2N5/PPP5/RNB1KB2 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('c', 3), convert('d', 5)), PIECE_PINNED);
+}
+
+TEST(validMove, knightPinned2) {
+	Board board("r1bnk2r/pppppppp/4q3/8/1b2N3/8/PPP5/RNB1KB2 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 4), convert('c', 3)), PIECE_PINNED);
+}
+
+TEST(validMove, knightKingChecked) {
+	Board board("rnbqk2r/pppppppp/8/8/1b2N3/8/PPP5/RNB1KB2 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 4), convert('c', 5)), KING_CHECKED);
+}
+
+TEST(validMove, knightKingCheckedBlock) {
+	Board board("rnbqk2r/pppppppp/8/8/1b2N3/8/PPP5/RNB1KB2 w Qkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 4), convert('c', 3)), MOVE_SUCCESSFUL);
+}
+//make more test cases for pinned pieces, block checks, and move piece during checks

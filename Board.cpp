@@ -277,6 +277,7 @@ Move_Return Board::validPawnMove(std::pair<int, int> start, std::pair<int, int> 
 	return MOVE_SUCCESSFUL;
 }
 
+//TODO: check if piece is pinned and if the king is in check
 Move_Return Board::validRookMove(std::pair<int, int> start, std::pair<int, int> end) const {
 	if (start.first != end.first && start.second != end.second) {
 		return MOVE_INVALID;
@@ -317,6 +318,7 @@ Move_Return Board::validRookMove(std::pair<int, int> start, std::pair<int, int> 
 	return MOVE_SUCCESSFUL;
 }
 
+//TODO: check if piece is pinned and if the king is in check
 Move_Return Board::validKnightMove(std::pair<int, int> start, std::pair<int, int> end) const {
 	//no obstructions for the knight
 	if (
@@ -328,6 +330,7 @@ Move_Return Board::validKnightMove(std::pair<int, int> start, std::pair<int, int
 	return MOVE_SUCCESSFUL;
 }
 
+//TODO: check if piece is pinned and if the king is in check
 Move_Return Board::validBishopMove(std::pair<int, int> start, std::pair<int, int> end) const {
 	if (abs(start.first - end.first) != abs(start.second - end.second)) {
 		return MOVE_INVALID;
@@ -358,6 +361,7 @@ Move_Return Board::validBishopMove(std::pair<int, int> start, std::pair<int, int
 	return MOVE_SUCCESSFUL;
 }
 
+//TODO: check if piece is pinned and if the king is in check
 Move_Return Board::validQueenMove(std::pair<int, int> start, std::pair<int, int> end) const {
 	Move_Return horizVert = validRookMove(start, end);
 	Move_Return diagonal = validBishopMove(start, end);

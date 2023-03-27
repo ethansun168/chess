@@ -11,7 +11,9 @@ ostream& operator << (ostream& os, Move_Return move) {
 		"Castle queen successful",
 		"Move invalid",
 		"Move obstructed",
-		"Failed castle"
+		"Failed castle",
+		"Piece is pinned",
+		"King is in check"
 	};
 	for (int i = MOVE_SUCCESSFUL; i <= MOVE_CASTLE_FAILURE; i++) {
 		if (move == i) {
