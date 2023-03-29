@@ -630,6 +630,11 @@ TEST(validMove, kingDiag) {
 	EXPECT_EQ(board.isValidMove(convert('e', 1), convert('f', 2)), MOVE_SUCCESSFUL);
 }
 
+TEST(validMove, kingUp) {
+	Board board("rnbqkbnr/pppppppp/8/8/8/8/PPPP2PP/RNBQKBNR w KQkq - 0 1");
+	EXPECT_EQ(board.isValidMove(convert('e', 1), convert('e', 2)), MOVE_SUCCESSFUL);
+}
+
 TEST(validMove, kingCastleObstruct) {
 	Board board("rnbqkbnr/pppppppp/8/8/8/5N2/PPPP2PP/RNBQKB1R w KQkq - 0 1");
 	EXPECT_EQ(board.isValidMove(convert('e', 1), convert('g', 1)), MOVE_OBSTRUCTION);

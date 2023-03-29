@@ -1,5 +1,3 @@
-#include <iostream>
-#include <sstream>
 #include "Board.h"
 
 using namespace std;
@@ -14,7 +12,7 @@ ostream& operator << (ostream& os, Move_Return move) {
 		"Castling failed",
 		"King is in check"
 	};
-	for (int i = MOVE_SUCCESSFUL; i <= MOVE_CASTLE_FAILURE; i++) {
+	for (int i = MOVE_SUCCESSFUL; i <= KING_CHECKED; i++) {
 		if (move == i) {
 			os << moveTranslation[i] << endl;
 			break;
@@ -63,5 +61,11 @@ int main() {
 		cout << board.getColor() << "'s turn\n";
 
 	}
+
+	/*board.move(convert('e', 2), convert('e', 4));
+	board.move(convert('e', 7), convert('e', 5));
+	cout << board;
+	cout << board.move(convert('e', 1), convert('e', 2));*/
+
 	return 0;
 }

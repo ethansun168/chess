@@ -123,6 +123,13 @@ private:
 	Move_Return validCastleKingSide(std::pair<int, int> start, std::pair<int, int> end) const;
 	Move_Return validCastleQueenSide(std::pair<int, int> start, std::pair<int, int> end) const;
 
+	//runs if the move is successful
+	//switch playerTurn, updates full moves, and updates half moves
+	void moveUpdate();
+
+	//returns KING_CHECKED if moving the piece results in the king being checked
+	//returns MOVE_CASTLE_FAILURE if moving the piece is valid
+	Move_Return pinOrCheck(std::pair<int, int> start, std::pair<int, int> end) const;
 public:
 	//Initialize to the starting position
 	Board();

@@ -283,9 +283,7 @@ Move_Return Board::validRookMove(std::pair<int, int> start, std::pair<int, int> 
 	}
 
 	//check for king in check
-	Board tempBoard(generateFenCode());
-	tempBoard.movePiece(start, end);
-	if (tempBoard.isCheck()) {
+	if (pinOrCheck(start, end) == KING_CHECKED) {
 		return KING_CHECKED;
 	}
 
@@ -333,9 +331,8 @@ Move_Return Board::validKnightMove(std::pair<int, int> start, std::pair<int, int
 		) {
 		return MOVE_INVALID;
 	}
-	Board tempBoard(generateFenCode());
-	tempBoard.movePiece(start, end);
-	if (tempBoard.isCheck()) {
+	//check for king in check
+	if (pinOrCheck(start, end) == KING_CHECKED) {
 		return KING_CHECKED;
 	}
 	return MOVE_SUCCESSFUL;
@@ -347,9 +344,7 @@ Move_Return Board::validBishopMove(std::pair<int, int> start, std::pair<int, int
 	}
 
 	//check for king in check
-	Board tempBoard(generateFenCode());
-	tempBoard.movePiece(start, end);
-	if (tempBoard.isCheck()) {
+	if (pinOrCheck(start, end) == KING_CHECKED) {
 		return KING_CHECKED;
 	}
 
@@ -379,6 +374,17 @@ Move_Return Board::validBishopMove(std::pair<int, int> start, std::pair<int, int
 	return MOVE_SUCCESSFUL;
 }
 
+Move_Return Board::pinOrCheck(pair<int, int> start, pair<int, int> end) const {
+	Board tempBoard(generateFenCode());
+	tempBoard.movePiece(start, end);
+	if (tempBoard.isCheck()) {
+		return KING_CHECKED;
+	}
+	else {
+		return MOVE_CASTLE_FAILURE;
+	}
+}
+
 Move_Return Board::validQueenMove(std::pair<int, int> start, std::pair<int, int> end) const {
 	Move_Return horizVert = validRookMove(start, end);
 	Move_Return diagonal = validBishopMove(start, end);
@@ -404,7 +410,7 @@ Move_Return Board::validKingMove(std::pair<int, int> start, std::pair<int, int> 
 		return validCastleQueenSide(start, end);
 	}
 	//king can only move in squares adjacent to it
-	if (abs(start.first - end.first) != 1 || abs(start.second - end.second) != 1) {
+	if (abs(start.first - end.first) != 1 && abs(start.second - end.second) != 1) {
 		return MOVE_INVALID;
 	}
 	return MOVE_SUCCESSFUL;
@@ -563,19 +569,25 @@ Move_Return Board::move(pair<int, int> start, pair<int, int> end) {
 	switch (returnedMoveType) {
 	case MOVE_SUCCESSFUL:
 		movePiece(start, end);
-		playerTurn = opposite(playerTurn);
-		//TODO: update full moves
-		//TODO: update half moves
+		moveUpdate();
 		break;
 	case MOVE_CASTLE_KING_SUCCESSFUL:
 		setCastleKing();
+		moveUpdate();
 		break;
 	case MOVE_CASTLE_QUEEN_SUCCESSFUL:
 		setCastleQueen();
+		moveUpdate();
 		break;
 	}
 
 	return returnedMoveType;
+}
+
+void Board::moveUpdate() {
+	playerTurn = opposite(playerTurn);
+	//TODO: update full moves
+	//TODO: update half moves
 }
 
 bool Board::attemptCastleKing(pair<int, int> start, pair<int, int> end) const {
